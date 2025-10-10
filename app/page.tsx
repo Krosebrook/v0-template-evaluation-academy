@@ -30,6 +30,12 @@ import {
   FileJson,
   X,
   Keyboard,
+  BookOpen,
+  Library,
+  HelpCircle,
+  GraduationCap,
+  Upload,
+  GitCompare,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -40,6 +46,12 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import Link from "next/link" // Added import for Link
+// Added imports for new components
+import { HelpTooltip } from "@/components/help-tooltip"
+import { InlineHelp } from "@/components/inline-help"
+import { GuidedTour } from "@/components/guided-tour"
+import { ImportExportManager } from "@/components/import-export-manager"
 
 interface Persona {
   id: string
@@ -417,7 +429,49 @@ export default function Home() {
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false)
   const [configName, setConfigName] = useState("")
   const [showSaveDialog, setShowSaveDialog] = useState(false)
+  const [showImportExport, setShowImportExport] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  const tourSteps = [
+    {
+      target: "user-input",
+      title: "Start with Your Task",
+      content:
+        "Describe what you want to accomplish. Be specific about your goal - the more context you provide, the better your prompt will be.",
+      position: "bottom" as const,
+      action: "Try typing: 'Help me analyze market trends for a new SaaS product'",
+    },
+    {
+      target: "prompt-type",
+      title: "Choose Your Prompt Type",
+      content:
+        "Different prompt types serve different purposes. Golden Prompts are comprehensive and production-ready, while Chain-of-Thought is great for complex reasoning.",
+      position: "bottom" as const,
+    },
+    {
+      target: "personas",
+      title: "Select AI Personas",
+      content:
+        "Personas bring different expertise and perspectives. Combine 2-3 complementary personas for balanced, multi-faceted analysis.",
+      position: "right" as const,
+      action: "Try selecting Expert Analyst and Strategic Planner",
+    },
+    {
+      target: "layers",
+      title: "Configure Prompt Layers",
+      content:
+        "Layers are the building blocks of your prompt. Start with essential layers (Role, Context, Task), then add others based on your needs.",
+      position: "right" as const,
+    },
+    {
+      target: "generate",
+      title: "Generate Your Prompt",
+      content:
+        "Click Generate (or press Cmd+Enter) to create your custom prompt. You can then copy it and use it with any AI tool.",
+      position: "top" as const,
+      action: "Click the Generate button to see your prompt!",
+    },
+  ]
 
   useEffect(() => {
     const saved = localStorage.getItem("promptConfigs")
@@ -464,6 +518,8 @@ export default function Home() {
         setShowSaved(false)
         setShowKeyboardShortcuts(false)
         setShowSaveDialog(false)
+        // Close Import/Export modal on Escape
+        setShowImportExport(false)
       }
       // ? to show keyboard shortcuts
       if (e.key === "?" && !e.metaKey && !e.ctrlKey) {
@@ -680,6 +736,19 @@ export default function Home() {
     setGeneratedPrompt(entry.prompt)
     setShowHistory(false)
     showNotification("Loaded from history", "success")
+  }
+
+  const handleImportComplete = (data: any) => {
+    // Refresh data from localStorage
+    const configs = localStorage.getItem("promptConfigs") // Corrected key name
+    if (configs) {
+      setSavedConfigs(JSON.parse(configs))
+    }
+    const history = localStorage.getItem("promptHistory")
+    if (history) {
+      setPromptHistory(JSON.parse(history))
+    }
+    showNotification("Import completed successfully!", "success")
   }
 
   const generateGoldenPrompt = (input: string, personas: Persona[], layers: PromptLayer[]) => {
@@ -1147,6 +1216,8 @@ Begin the recursive refinement process now.`
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+      <GuidedTour tourId="main-app" steps={tourSteps} />
+
       {showToast && (
         <div
           className="fixed top-4 right-4 z-50 animate-in slide-in-from-top-2 duration-300"
@@ -1386,6 +1457,10 @@ Begin the recursive refinement process now.`
         </div>
       )}
 
+      {showImportExport && (
+        <ImportExportManager onClose={() => setShowImportExport(false)} onImport={handleImportComplete} />
+      )}
+
       <div className="max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
         <header className="text-center space-y-3 mb-8">
           <div className="flex items-center justify-center gap-3">
@@ -1402,6 +1477,31 @@ Begin the recursive refinement process now.`
           </p>
 
           <div className="flex items-center justify-center gap-2 pt-4">
+            {/* CHANGE: Added Tutorials link */}
+            <Link href="/tutorials">
+              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+                <GraduationCap className="w-4 h-4" />
+                Tutorials
+              </Button>
+            </Link>
+            <Link href="/library">
+              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+                <Library className="w-4 h-4" />
+                Prompt Library
+              </Button>
+            </Link>
+            <Link href="/knowledge">
+              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+                <BookOpen className="w-4 h-4" />
+                Knowledge Base
+              </Button>
+            </Link>
+            <Link href="/help">
+              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+                <HelpCircle className="w-4 h-4" />
+                Help Center
+              </Button>
+            </Link>
             <Button variant="outline" size="sm" onClick={() => setShowSaved(true)} className="gap-2">
               <FolderOpen className="w-4 h-4" />
               Saved ({savedConfigs.length})
@@ -1418,8 +1518,28 @@ Begin the recursive refinement process now.`
               <Keyboard className="w-4 h-4" />
               Shortcuts
             </Button>
+            {/* New Button: Upload */}
+            <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+              <Upload className="w-4 h-4" />
+              Upload
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setShowImportExport(true)} className="gap-2">
+              <Upload className="w-4 h-4" />
+              Import/Export
+            </Button>
+            <Link href="/compare">
+              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+                <GitCompare className="w-4 h-4" />
+                Compare
+              </Button>
+            </Link>
           </div>
         </header>
+
+        <InlineHelp type="tip" className="mb-6">
+          <strong>Pro Tip:</strong> New to prompt engineering? Try a Quick Start Template below to see how different
+          configurations work. Click "Use Template" for instant results or "Remix" to customize before generating.
+        </InlineHelp>
 
         <Card className="p-6 mb-6 bg-gradient-to-r from-accent/30 via-primary/10 to-secondary/20 border-primary/30 shadow-lg">
           <div className="flex items-start gap-4">
@@ -1559,9 +1679,17 @@ Begin the recursive refinement process now.`
             <Card className="p-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="user-input" className="text-lg font-semibold">
-                    Your Task or Question
-                  </Label>
+                  <div className="flex items-center gap-2">
+                    <Label htmlFor="user-input" className="text-lg font-semibold">
+                      Your Task or Question
+                    </Label>
+                    <HelpTooltip
+                      title="Task Input"
+                      content="Describe your goal as specifically as possible. Include context about what you're trying to accomplish, who the audience is, and any constraints or requirements."
+                      example="Instead of 'help me write code', try 'Create a React component for a pricing card with three tiers, hover effects, and mobile responsiveness'"
+                      learnMoreUrl="/help"
+                    />
+                  </div>
                   <span className="text-xs text-muted-foreground">{userInput.length} characters</span>
                 </div>
                 <Textarea
@@ -1584,12 +1712,20 @@ Begin the recursive refinement process now.`
 
             <Card className="p-6">
               <div className="space-y-4">
-                <Label className="text-lg font-semibold flex items-center gap-2">
-                  <Zap className="w-5 h-5 text-primary" />
-                  Prompt Type
-                </Label>
-                <Select value={promptType} onValueChange={setPromptType}>
-                  <SelectTrigger className="h-auto py-3" aria-label="Select prompt type">
+                <div className="flex items-center gap-2">
+                  <Label className="text-lg font-semibold flex items-center gap-2">
+                    <Zap className="w-5 h-5 text-primary" />
+                    Prompt Type
+                  </Label>
+                  <HelpTooltip
+                    title="Prompt Types"
+                    content="Different prompt types are optimized for different use cases. Golden Prompts are comprehensive and production-ready. Chain-of-Thought shows reasoning steps. Meta Prompts help you create better prompts."
+                    learnMoreUrl="/help"
+                    position="bottom"
+                  />
+                </div>
+                <Select value={promptType} onValueChange={setPromptType} aria-label="Select prompt type">
+                  <SelectTrigger className="h-auto py-3" id="prompt-type">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -1673,10 +1809,23 @@ Begin the recursive refinement process now.`
                   <TabsTrigger value="personas" className="flex items-center gap-2">
                     <Users className="w-4 h-4" />
                     Personas ({selectedPersonas.length})
+                    <HelpTooltip
+                      title="AI Personas"
+                      content="Personas represent different expertise areas and thinking styles. Combining multiple personas gives you multi-faceted analysis from different perspectives."
+                      example="Combine Expert Analyst + Creative Innovator for technical solutions with innovative approaches"
+                      learnMoreUrl="/help"
+                      position="bottom"
+                    />
                   </TabsTrigger>
                   <TabsTrigger value="layers" className="flex items-center gap-2">
                     <Layers className="w-4 h-4" />
                     Layers ({selectedLayers.length})
+                    <HelpTooltip
+                      title="Prompt Layers"
+                      content="Layers are structural components that make up a complete prompt. Essential layers (Role, Context, Task) form the foundation. Add optional layers for more control and specificity."
+                      learnMoreUrl="/help"
+                      position="bottom"
+                    />
                   </TabsTrigger>
                 </TabsList>
 
@@ -1775,6 +1924,7 @@ Begin the recursive refinement process now.`
                 !userInput.trim() || selectedPersonas.length === 0 || selectedLayers.length === 0 || isGenerating
               }
               aria-label="Generate prompt"
+              id="generate" // Added id for tour target
             >
               {isGenerating ? (
                 <>
