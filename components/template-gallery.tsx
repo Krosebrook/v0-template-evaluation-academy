@@ -1,90 +1,153 @@
+"use client"
+
+import { useState } from "react"
 import { TemplateCard } from "@/components/template-card"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Search, Filter } from "lucide-react"
 
-const templates = [
-  {
-    id: 1,
-    title: "Next.js Starter",
-    description: "A Next.js App Router template configured with TypeScript and Tailwind CSS.",
-    difficulty: "Beginner",
-    rating: 4.8,
-    evaluations: 1234,
-    tags: ["Next.js", "TypeScript", "Tailwind"],
-  },
-  {
-    id: 2,
-    title: "E-commerce Platform",
-    description: "Full-featured e-commerce template with Stripe integration and admin dashboard.",
-    difficulty: "Advanced",
-    rating: 4.9,
-    evaluations: 856,
-    tags: ["Next.js", "Stripe", "Database"],
-  },
-  {
-    id: 3,
-    title: "SaaS Starter Kit",
-    description: "Complete SaaS boilerplate with authentication, billing, and team management.",
-    difficulty: "Intermediate",
-    rating: 4.7,
-    evaluations: 2103,
-    tags: ["Auth", "Payments", "Multi-tenant"],
-  },
-  {
-    id: 4,
-    title: "AI Chatbot",
-    description: "An open-source AI chatbot template built with the Vercel AI SDK and OpenAI.",
-    difficulty: "Intermediate",
-    rating: 4.9,
-    evaluations: 3421,
-    tags: ["AI", "OpenAI", "Streaming"],
-  },
-  {
-    id: 5,
-    title: "Portfolio Template",
-    description: "Modern portfolio template with MDX blog, project showcase, and contact form.",
-    difficulty: "Beginner",
-    rating: 4.6,
-    evaluations: 987,
-    tags: ["MDX", "Blog", "Portfolio"],
-  },
-  {
-    id: 6,
-    title: "Admin Dashboard",
-    description: "Feature-rich admin dashboard with charts, tables, and data visualization.",
-    difficulty: "Intermediate",
-    rating: 4.8,
-    evaluations: 1567,
-    tags: ["Dashboard", "Charts", "Analytics"],
-  },
-]
+interface Template {
+  id: string
+  title: string
+  description: string
+  category: string
+  difficulty: string
+  tags: string[]
+  preview_url: string | null
+  github_url: string | null
+  demo_url: string | null
+  submitted_by: string
+  created_at: string
+  profiles: {
+    display_name: string | null
+    avatar_url: string | null
+  } | null
+  averageScore: number | null
+  evaluationCount: number
+}
 
-export function TemplateGallery() {
+export function TemplateGallery({ initialTemplates }: { initialTemplates: Template[] }) {
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState<string>("all")
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all")
+  const [sortBy, setSortBy] = useState<string>("recent")
+
+  // Get unique categories and difficulties
+  const categories = ["all", ...Array.from(new Set(initialTemplates.map((t) => t.category)))]
+  const difficulties = ["all", "Beginner", "Intermediate", "Advanced"]
+
+  // Filter templates
+  const filteredTemplates = initialTemplates
+    .filter((template) => {
+      const matchesSearch =
+        template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        template.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        template.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+
+      const matchesCategory = selectedCategory === "all" || template.category === selectedCategory
+      const matchesDifficulty = selectedDifficulty === "all" || template.difficulty === selectedDifficulty
+
+      return matchesSearch && matchesCategory && matchesDifficulty
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "rating":
+          return (b.averageScore || 0) - (a.averageScore || 0)
+        case "evaluations":
+          return b.evaluationCount - a.evaluationCount
+        case "recent":
+        default:
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      }
+    })
+
   return (
-    <section className="py-24">
-      <div className="container mx-auto px-4">
-        <div className="mb-12 flex items-end justify-between">
-          <div>
-            <h2 className="text-balance text-3xl font-bold md:text-4xl">Featured Templates</h2>
-            <p className="mt-2 text-pretty text-muted-foreground">
-              Practice evaluating real-world templates used by thousands of developers
-            </p>
-          </div>
-          <Button variant="outline" asChild className="hidden md:flex bg-transparent">
-            <Link href="/browse">View All</Link>
-          </Button>
+    <div className="space-y-6">
+      {/* Search and Filters */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Search templates..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
         </div>
+
+        <div className="flex flex-wrap gap-2">
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-[160px]">
+              <Filter className="w-4 h-4 mr-2" />
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((category) => (
+                <SelectItem key={category} value={category}>
+                  {category === "all" ? "All Categories" : category}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={selectedDifficulty} onValueChange={setSelectedDifficulty}>
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="Difficulty" />
+            </SelectTrigger>
+            <SelectContent>
+              {difficulties.map((difficulty) => (
+                <SelectItem key={difficulty} value={difficulty}>
+                  {difficulty === "all" ? "All Levels" : difficulty}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="recent">Most Recent</SelectItem>
+              <SelectItem value="rating">Highest Rated</SelectItem>
+              <SelectItem value="evaluations">Most Evaluated</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Results count */}
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">
+          Showing {filteredTemplates.length} of {initialTemplates.length} templates
+        </p>
+        {(searchQuery || selectedCategory !== "all" || selectedDifficulty !== "all") && (
+          <button
+            onClick={() => {
+              setSearchQuery("")
+              setSelectedCategory("all")
+              setSelectedDifficulty("all")
+            }}
+            className="text-sm text-primary hover:underline"
+          >
+            Clear filters
+          </button>
+        )}
+      </div>
+
+      {/* Template Grid */}
+      {filteredTemplates.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {templates.map((template) => (
+          {filteredTemplates.map((template) => (
             <TemplateCard key={template.id} template={template} />
           ))}
         </div>
-        <div className="mt-8 text-center md:hidden">
-          <Button variant="outline" asChild>
-            <Link href="/browse">View All Templates</Link>
-          </Button>
+      ) : (
+        <div className="text-center py-12">
+          <p className="text-lg text-muted-foreground mb-2">No templates found</p>
+          <p className="text-sm text-muted-foreground">Try adjusting your search or filters</p>
         </div>
-      </div>
-    </section>
+      )}
+    </div>
   )
 }

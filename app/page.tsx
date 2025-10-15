@@ -1477,7 +1477,13 @@ Begin the recursive refinement process now.`
           </p>
 
           <div className="flex items-center justify-center gap-2 pt-4">
-            {/* CHANGE: Added Tutorials link */}
+            {/* CHANGE: Added link to templates gallery in header */}
+            <Link href="/templates">
+              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+                <Library className="w-4 h-4" />
+                Template Gallery
+              </Button>
+            </Link>
             <Link href="/tutorials">
               <Button variant="outline" size="sm" className="gap-2 bg-transparent">
                 <GraduationCap className="w-4 h-4" />
@@ -1486,14 +1492,8 @@ Begin the recursive refinement process now.`
             </Link>
             <Link href="/library">
               <Button variant="outline" size="sm" className="gap-2 bg-transparent">
-                <Library className="w-4 h-4" />
-                Prompt Library
-              </Button>
-            </Link>
-            <Link href="/knowledge">
-              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
                 <BookOpen className="w-4 h-4" />
-                Knowledge Base
+                Prompt Library
               </Button>
             </Link>
             <Link href="/help">

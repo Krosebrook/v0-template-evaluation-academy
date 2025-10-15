@@ -1,29 +1,49 @@
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { SocialShare } from "@/components/social-share"
-import { Star, Users } from "lucide-react"
+import { Star, Users, ExternalLink, Github } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 interface Template {
-  id: number
+  id: string
   title: string
   description: string
+  category: string
   difficulty: string
-  rating: number
-  evaluations: number
   tags: string[]
+  preview_url: string | null
+  github_url: string | null
+  demo_url: string | null
+  profiles: {
+    display_name: string | null
+    avatar_url: string | null
+  } | null
+  averageScore: number | null
+  evaluationCount: number
 }
 
 export function TemplateCard({ template }: { template: Template }) {
   const difficultyColor = {
-    Beginner: "bg-success/10 text-success border-success/20",
-    Intermediate: "bg-warning/10 text-warning border-warning/20",
-    Advanced: "bg-destructive/10 text-destructive border-destructive/20",
+    Beginner: "bg-green-500/10 text-green-500 border-green-500/20",
+    Intermediate: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
+    Advanced: "bg-red-500/10 text-red-500 border-red-500/20",
   }
 
   return (
-    <Card className="group flex flex-col transition-colors hover:border-muted-foreground/50">
+    <Card className="group flex flex-col transition-all hover:border-primary/50 hover:shadow-lg">
+      {/* Preview Image */}
+      {template.preview_url && (
+        <div className="relative w-full h-48 overflow-hidden rounded-t-lg">
+          <Image
+            src={template.preview_url || "/placeholder.svg"}
+            alt={template.title}
+            fill
+            className="object-cover transition-transform group-hover:scale-105"
+          />
+        </div>
+      )}
+
       <CardHeader>
         <div className="mb-3 flex items-start justify-between gap-2">
           <h3 className="text-balance text-xl font-semibold leading-tight">{template.title}</h3>
@@ -31,34 +51,76 @@ export function TemplateCard({ template }: { template: Template }) {
             {template.difficulty}
           </Badge>
         </div>
-        <p className="text-pretty text-sm leading-relaxed text-muted-foreground">{template.description}</p>
+        <p className="text-pretty text-sm leading-relaxed text-muted-foreground line-clamp-2">{template.description}</p>
       </CardHeader>
-      <CardContent className="flex-1">
+
+      <CardContent className="flex-1 space-y-3">
         <div className="flex flex-wrap gap-2">
-          {template.tags.map((tag) => (
+          {template.tags.slice(0, 3).map((tag) => (
             <Badge key={tag} variant="secondary" className="text-xs">
               {tag}
             </Badge>
           ))}
+          {template.tags.length > 3 && (
+            <Badge variant="secondary" className="text-xs">
+              +{template.tags.length - 3}
+            </Badge>
+          )}
         </div>
+
+        {/* Submitted by */}
+        {template.profiles && (
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span>by</span>
+            <span className="font-medium">{template.profiles.display_name || "Anonymous"}</span>
+          </div>
+        )}
       </CardContent>
-      <CardFooter className="flex items-center justify-between border-t border-border pt-4">
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <Star className="h-4 w-4 fill-current text-warning" />
-            <span>{template.rating}</span>
+
+      <CardFooter className="flex flex-col gap-3 border-t border-border pt-4">
+        <div className="flex items-center justify-between w-full text-sm text-muted-foreground">
+          <div className="flex items-center gap-4">
+            {template.averageScore !== null && (
+              <div className="flex items-center gap-1">
+                <Star className="h-4 w-4 fill-current text-yellow-500" />
+                <span>{template.averageScore.toFixed(1)}</span>
+              </div>
+            )}
+            <div className="flex items-center gap-1">
+              <Users className="h-4 w-4" />
+              <span>{template.evaluationCount}</span>
+            </div>
           </div>
-          <div className="flex items-center gap-1">
-            <Users className="h-4 w-4" />
-            <span>{template.evaluations.toLocaleString()}</span>
+
+          <div className="flex items-center gap-2">
+            {template.github_url && (
+              <a
+                href={template.github_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Github className="h-4 w-4" />
+              </a>
+            )}
+            {template.demo_url && (
+              <a
+                href={template.demo_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <ExternalLink className="h-4 w-4" />
+              </a>
+            )}
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <SocialShare title={`Check out ${template.title} on Template Academy`} />
-          <Button size="sm" variant="ghost" asChild>
-            <Link href={`/evaluate/${template.id}`}>Evaluate</Link>
+
+        <Link href={`/templates/evaluate/${template.id}`} className="w-full">
+          <Button size="sm" className="w-full">
+            Evaluate Template
           </Button>
-        </div>
+        </Link>
       </CardFooter>
     </Card>
   )
