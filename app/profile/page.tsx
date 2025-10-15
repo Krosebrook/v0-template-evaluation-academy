@@ -2,8 +2,22 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { User, Trophy, Target, TrendingUp, Award, BookOpen, CheckCircle, Clock, ArrowLeft, Star } from "lucide-react"
+import {
+  User,
+  Trophy,
+  Target,
+  TrendingUp,
+  Award,
+  BookOpen,
+  CheckCircle,
+  Clock,
+  ArrowLeft,
+  Star,
+  FileText,
+} from "lucide-react"
 import { ShareButton } from "@/components/share-button"
+import { createClient } from "@/lib/supabase/client"
+import { useRouter } from "next/navigation"
 
 const TIERS = ["novice", "intermediate", "advanced"]
 
@@ -54,6 +68,13 @@ const BADGES = [
 
 export default function ProfilePage() {
   const [progress, setProgress] = useState<any>(null)
+  const [user, setUser] = useState<any>(null)
+  const [userTemplates, setUserTemplates] = useState<any[]>([])
+  const [userEvaluations, setUserEvaluations] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
+  const supabase = createClient()
+
   const [stats, setStats] = useState({
     totalModules: 9,
     completedModules: 0,
@@ -65,30 +86,63 @@ export default function ProfilePage() {
   })
 
   useEffect(() => {
-    const saved = localStorage.getItem("template-academy-progress")
-    if (saved) {
-      try {
-        const data = JSON.parse(saved)
-        setProgress(data)
+    const loadUserData = async () => {
+      const {
+        data: { user: authUser },
+      } = await supabase.auth.getUser()
 
-        // Calculate stats
-        const completedModules = data.completedModules.length
-        const completionRate = Math.round((completedModules / 9) * 100)
-
-        setStats({
-          totalModules: 9,
-          completedModules,
-          totalPoints: data.score,
-          badgesEarned: data.badges.length,
-          currentStreak: calculateStreak(data),
-          completionRate,
-          averageScore: completedModules > 0 ? Math.round(data.score / completedModules) : 0,
-        })
-      } catch (e) {
-        console.error("Failed to load progress")
+      if (!authUser) {
+        router.push("/auth/login?redirect=/profile")
+        return
       }
+
+      setUser(authUser)
+
+      const { data: templates } = await supabase
+        .from("templates")
+        .select("*")
+        .eq("user_id", authUser.id)
+        .order("created_at", { ascending: false })
+
+      setUserTemplates(templates || [])
+
+      const { data: evaluations } = await supabase
+        .from("evaluations")
+        .select("*, templates(*)")
+        .eq("evaluator_id", authUser.id)
+        .order("created_at", { ascending: false })
+
+      setUserEvaluations(evaluations || [])
+
+      // Load localStorage progress for learning modules
+      const saved = localStorage.getItem("template-academy-progress")
+      if (saved) {
+        try {
+          const data = JSON.parse(saved)
+          setProgress(data)
+
+          const completedModules = data.completedModules.length
+          const completionRate = Math.round((completedModules / 9) * 100)
+
+          setStats({
+            totalModules: 9,
+            completedModules,
+            totalPoints: data.score,
+            badgesEarned: data.badges.length,
+            currentStreak: calculateStreak(data),
+            completionRate,
+            averageScore: completedModules > 0 ? Math.round(data.score / completedModules) : 0,
+          })
+        } catch (e) {
+          console.error("Failed to load progress")
+        }
+      }
+
+      setLoading(false)
     }
-  }, [])
+
+    loadUserData()
+  }, [supabase, router])
 
   const calculateStreak = (data: any) => {
     // Simple streak calculation - in real app would use timestamps
@@ -101,7 +155,7 @@ export default function ProfilePage() {
     return { completed, total: 3 }
   }
 
-  if (!progress) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center">
         <div className="text-center">
@@ -134,7 +188,7 @@ export default function ProfilePage() {
                   <User className="w-10 h-10 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-800 mb-1">Your Learning Profile</h1>
+                  <h1 className="text-3xl font-bold text-gray-800 mb-1">{user?.email || "Your Profile"}</h1>
                   <p className="text-gray-600">Track your progress and achievements</p>
                 </div>
               </div>
@@ -345,6 +399,72 @@ export default function ProfilePage() {
                 <p className="text-sm text-indigo-700">Complete more modules to unlock your next achievement!</p>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* User Templates and Evaluations */}
+        <div className="grid md:grid-cols-2 gap-6 mt-6">
+          {/* User Templates */}
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <FileText className="w-6 h-6 text-indigo-600" />
+              My Templates ({userTemplates.length})
+            </h2>
+            <div className="space-y-3">
+              {userTemplates.slice(0, 5).map((template) => (
+                <Link
+                  key={template.id}
+                  href={`/templates/results/${template.id}`}
+                  className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <div className="font-medium text-gray-800">{template.title}</div>
+                  <div className="text-sm text-gray-600 mt-1">{template.category}</div>
+                  <div className="text-xs text-gray-500 mt-1">{new Date(template.created_at).toLocaleDateString()}</div>
+                </Link>
+              ))}
+              {userTemplates.length === 0 && (
+                <p className="text-sm text-gray-500 text-center py-4">No templates submitted yet.</p>
+              )}
+            </div>
+            {userTemplates.length > 0 && (
+              <Link
+                href="/templates?filter=my-templates"
+                className="block mt-4 text-center text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+              >
+                View all templates →
+              </Link>
+            )}
+          </div>
+
+          {/* User Evaluations */}
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <Star className="w-6 h-6 text-yellow-600" />
+              My Evaluations ({userEvaluations.length})
+            </h2>
+            <div className="space-y-3">
+              {userEvaluations.slice(0, 5).map((evaluation) => (
+                <Link
+                  key={evaluation.id}
+                  href={`/templates/results/${evaluation.template_id}`}
+                  className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                >
+                  <div className="font-medium text-gray-800">{evaluation.templates?.title || "Template"}</div>
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="text-sm text-gray-600">Overall:</span>
+                    <span className="text-sm font-bold text-indigo-600">
+                      {typeof evaluation.overall_score === "number" ? evaluation.overall_score.toFixed(1) : "N/A"}/10
+                    </span>
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {new Date(evaluation.created_at).toLocaleDateString()}
+                  </div>
+                </Link>
+              ))}
+              {userEvaluations.length === 0 && (
+                <p className="text-sm text-gray-500 text-center py-4">No evaluations submitted yet.</p>
+              )}
+            </div>
           </div>
         </div>
 
