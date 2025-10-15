@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R-I-S-E Framework Prompt Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .framework-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        .input-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .label-description {
+            color: #999;
+            font-size: 12px;
+            font-weight: normal;
+            margin-left: 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .output {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+            display: none;
+        }
+        .output.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .output-label {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .prompt-output {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            border: 1px solid #e0e0e0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .copy-btn {
+            background: #28a745;
+            margin-top: 15px;
+            width: auto;
+            padding: 10px 20px;
+            font-size: 14px;
+        }
+        .copy-btn:hover {
+            background: #218838;
+        }
+        .copied-notification {
+            display: none;
+            color: #28a745;
+            font-size: 14px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        .copied-notification.show {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="framework-badge">R-I-S-E FRAMEWORK</div>
+        <h1>Prompt Generator</h1>
+        <p class="subtitle">Role → Input → Stops → Expectation</p>
+
+        <div class="input-group">
+            <label>
+                Role <span class="label-description">(Who should the AI be?)</span>
+            </label>
+            <input type="text" id="role" placeholder="e.g., Senior Marketing Strategist with 15 years B2B experience">
+        </div>
+
+        <div class="input-group">
+            <label>
+                Input <span class="label-description">(What information are you providing?)</span>
+            </label>
+            <textarea id="input" placeholder="e.g., Company: Tech startup, Target: Enterprise clients, Budget: $50K/month"></textarea>
+        </div>
+
+        <div class="input-group">
+            <label>
+                Stops <span class="label-description">(What should the AI avoid?)</span>
+            </label>
+            <textarea id="stops" placeholder="e.g., No generic advice, avoid jargon without definitions, no tactics requiring >$100K budget"></textarea>
+        </div>
+
+        <div class="input-group">
+            <label>
+                Expectation <span class="label-description">(What exact output do you want?)</span>
+            </label>
+            <textarea id="expectation" placeholder="e.g., 3-page marketing strategy with: audience personas, 5 channels with specific tactics, 90-day timeline, ROI projections"></textarea>
+        </div>
+
+        <button onclick="generatePrompt()">Generate R-I-S-E Prompt</button>
+
+        <div class="output" id="output">
+            <div class="output-label">✨ Your Generated Prompt:</div>
+            <div class="prompt-output" id="promptOutput"></div>
+            <button class="copy-btn" onclick="copyPrompt()">📋 Copy to Clipboard</button>
+            <div class="copied-notification" id="copiedNotif">✅ Copied to clipboard!</div>
+        </div>
+    </div>
+
+    <script>
+        function generatePrompt() {
+            const role = document.getElementById('role').value;
+            const input = document.getElementById('input').value;
+            const stops = document.getElementById('stops').value;
+            const expectation = document.getElementById('expectation').value;
+
+            if (!role || !input || !expectation) {
+                alert('Please fill in at least Role, Input, and Expectation fields');
+                return;
+            }
+
+            const prompt = `Role: ${role}
+
+Input: ${input}
+
+${stops ? `Stops: ${stops}` : ''}
+
+Expectation: ${expectation}`;
+
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('output').classList.add('show');
+            document.getElementById('copiedNotif').classList.remove('show');
+        }
+
+        function copyPrompt() {
+            const promptText = document.getElementById('promptOutput').textContent;
+            navigator.clipboard.writeText(promptText).then(() => {
+                const notif = document.getElementById('copiedNotif');
+                notif.classList.add('show');
+                setTimeout(() => {
+                    notif.classList.remove('show');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

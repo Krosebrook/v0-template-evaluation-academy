@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Quality Checker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: all 0.3s;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .analyze-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        .results {
+            display: none;
+            margin-top: 40px;
+        }
+        .results.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .score-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .score-value {
+            font-size: 72px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .score-label {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        .score-grade {
+            font-size: 24px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .metric-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+        .metric-name {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .feedback-section {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .feedback-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .feedback-item {
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .feedback-item.good {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        .feedback-item.warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        .feedback-item.bad {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        .icon {
+            margin-right: 8px;
+        }
+        .suggestions {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        .suggestions h3 {
+            color: #1976d2;
+            margin-bottom: 15px;
+        }
+        .suggestion-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #bbdefb;
+        }
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="badge">PROMPT QUALITY ANALYZER</div>
+        <h1>🔍 Prompt Quality Checker</h1>
+        <p class="subtitle">Paste your prompt → Get instant quality score + improvement suggestions</p>
+
+        <textarea id="promptInput" placeholder="Paste your prompt here...
+
+Example:
+Write a blog post about AI trends
+
+(This is a weak prompt - try it to see the analysis!)"></textarea>
+
+        <button class="analyze-btn" onclick="analyzePrompt()">🚀 Analyze Prompt Quality</button>
+
+        <div class="results" id="results">
+            <div class="score-card">
+                <div class="score-label">Overall Quality Score</div>
+                <div class="score-value" id="scoreValue">--</div>
+                <div class="score-grade" id="scoreGrade">--</div>
+            </div>
+
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <div class="metric-name">Clarity</div>
+                    <div class="metric-value" id="clarityScore">--</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-name">Specificity</div>
+                    <div class="metric-value" id="specificityScore">--</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-name">Context</div>
+                    <div class="metric-value" id="contextScore">--</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-name">Structure</div>
+                    <div class="metric-value" id="structureScore">--</div>
+                </div>
+            </div>
+
+            <div class="feedback-section">
+                <div class="feedback-title">✅ Strengths</div>
+                <div id="strengthsFeedback"></div>
+            </div>
+
+            <div class="feedback-section">
+                <div class="feedback-title">⚠️ Issues Found</div>
+                <div id="issuesFeedback"></div>
+            </div>
+
+            <div class="suggestions">
+                <h3>💡 Improvement Suggestions</h3>
+                <div id="suggestionsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function analyzePrompt() {
+            const prompt = document.getElementById('promptInput').value;
+            
+            if (!prompt.trim()) {
+                alert('Please enter a prompt to analyze');
+                return;
+            }
+
+            // Scoring logic
+            let clarityScore = 0;
+            let specificityScore = 0;
+            let contextScore = 0;
+            let structureScore = 0;
+            
+            const strengths = [];
+            const issues = [];
+            const suggestions = [];
+
+            // Clarity checks
+            if (prompt.length > 30) clarityScore += 3;
+            if (prompt.includes('?') || prompt.includes('Task:') || prompt.includes('Create')) {
+                clarityScore += 2;
+                strengths.push('Clear task indicator present');
+            } else {
+                issues.push('Missing clear task indicator (e.g., "Create...", "Write...", "Generate...")');
+                suggestions.push('Add explicit task verb: "Write a...", "Generate...", "Create..."');
+            }
+            if (prompt.split(' ').length > 15) {
+                clarityScore += 2;
+            } else {
+                issues.push('Prompt is too short (under 15 words)');
+                suggestions.push('Expand prompt with more context and constraints');
+            }
+            if (!/\bstunning\b|\bcozy\b|\bcharming\b|\bamazing\b/i.test(prompt)) {
+                clarityScore += 1;
+            }
+            if (clarityScore > 7) clarityScore = 7;
+
+            // Specificity checks
+            if (/\d+/.test(prompt)) {
+                specificityScore += 2;
+                strengths.push('Includes specific numbers/metrics');
+            } else {
+                issues.push('No specific numbers or metrics');
+                suggestions.push('Add specific metrics: "1200 words", "5 examples", "3 sections"');
+            }
+            if (/audience|target|for \w+/i.test(prompt)) {
+                specificityScore += 2;
+                strengths.push('Specifies target audience');
+            } else {
+                issues.push('Target audience not specified');
+                suggestions.push('Add audience: "for tech professionals", "targeting millennials"');
+            }
+            if (prompt.toLowerCase().includes('format') || prompt.includes(':') || prompt.includes('-')) {
+                specificityScore += 2;
+                strengths.push('Includes format/structure guidance');
+            } else {
+                issues.push('No format specification');
+                suggestions.push('Specify format: "Output as bullet points", "Table with 3 columns"');
+            }
+            if (specificityScore > 6) specificityScore = 6;
+
+            // Context checks
+            if (/role:|act as|you are/i.test(prompt)) {
+                contextScore += 3;
+                strengths.push('Defines AI role/persona');
+            } else {
+                issues.push('No role definition');
+                suggestions.push('Add role: "Act as a senior marketing strategist..."');
+            }
+            if (/background|context|situation/i.test(prompt)) {
+                contextScore += 2;
+                strengths.push('Provides background context');
+            } else {
+                issues.push('Missing background context');
+                suggestions.push('Add context: "Background: Company is a B2B SaaS startup..."');
+            }
+            if (/avoid|don't|not|exclude/i.test(prompt)) {
+                contextScore += 2;
+                strengths.push('Specifies constraints/exclusions');
+            } else {
+                suggestions.push('Add constraints: "Avoid: jargon, generic advice"');
+            }
+            if (contextScore > 7) contextScore = 7;
+
+            // Structure checks
+            if (prompt.includes('\n')) {
+                structureScore += 2;
+                strengths.push('Uses multi-line structure');
+            } else {
+                issues.push('Single-line prompt (hard to parse)');
+                suggestions.push('Break into sections with line breaks');
+            }
+            if (/input:|output:|expectation:|steps:/i.test(prompt)) {
+                structureScore += 3;
+                strengths.push('Uses framework structure (R-I-S-E, etc.)');
+            } else {
+                suggestions.push('Use framework: R-I-S-E, F-L-O-W, or R-O-S-E');
+            }
+            if (prompt.split('\n').length >= 3) {
+                structureScore += 2;
+            }
+            if (structureScore > 7) structureScore = 7;
+
+            // Calculate overall score
+            const overallScore = Math.round((clarityScore + specificityScore + contextScore + structureScore) / 27 * 100);
+            
+            // Determine grade
+            let grade = '';
+            if (overallScore >= 90) grade = 'A+ Excellent';
+            else if (overallScore >= 80) grade = 'A Good';
+            else if (overallScore >= 70) grade = 'B Average';
+            else if (overallScore >= 60) grade = 'C Needs Work';
+            else grade = 'D Poor';
+
+            // Display results
+            document.getElementById('scoreValue').textContent = overallScore;
+            document.getElementById('scoreGrade').textContent = grade;
+            document.getElementById('clarityScore').textContent = clarityScore + '/7';
+            document.getElementById('specificityScore').textContent = specificityScore + '/6';
+            document.getElementById('contextScore').textContent = contextScore + '/7';
+            document.getElementById('structureScore').textContent = structureScore + '/7';
+
+            // Display strengths
+            const strengthsHTML = strengths.length > 0 
+                ? strengths.map(s => `<div class="feedback-item good"><span class="icon">✅</span>${s}</div>`).join('')
+                : '<div class="feedback-item warning"><span class="icon">⚠️</span>No major strengths detected</div>';
+            document.getElementById('strengthsFeedback').innerHTML = strengthsHTML;
+
+            // Display issues
+            const issuesHTML = issues.length > 0
+                ? issues.map(i => `<div class="feedback-item bad"><span class="icon">❌</span>${i}</div>`).join('')
+                : '<div class="feedback-item good"><span class="icon">✅</span>No critical issues found</div>';
+            document.getElementById('issuesFeedback').innerHTML = issuesHTML;
+
+            // Display suggestions
+            const suggestionsHTML = suggestions.map((s, i) => 
+                `<div class="suggestion-item"><strong>${i + 1}.</strong> ${s}</div>`
+            ).join('');
+            document.getElementById('suggestionsList').innerHTML = suggestionsHTML || '<div>Your prompt is solid! Consider testing variations to optimize further.</div>';
+
+            document.getElementById('results').classList.add('show');
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

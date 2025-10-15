@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta-Prompt Optimizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            color: #f5576c;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        .input-section {
+            margin-bottom: 30px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: all 0.3s;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #f5576c;
+            box-shadow: 0 0 0 3px rgba(245, 87, 108, 0.1);
+        }
+        .optimize-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+        .optimize-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 87, 108, 0.3);
+        }
+        .results {
+            display: none;
+            margin-top: 40px;
+        }
+        .results.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .result-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid #f5576c;
+        }
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .result-title {
+            font-weight: 600;
+            color: #f5576c;
+            font-size: 18px;
+        }
+        .technique-badge {
+            background: #f5576c;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .result-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 15px;
+        }
+        .result-analysis {
+            font-size: 13px;
+            color: #666;
+            padding: 15px;
+            background: #fff3f5;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .analysis-label {
+            font-weight: 600;
+            color: #f5576c;
+            margin-bottom: 5px;
+        }
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .copy-btn:hover {
+            background: #218838;
+            transform: scale(1.05);
+        }
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+        .info-title {
+            font-weight: 600;
+            color: #1976d2;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="badge">META-PROMPT OPTIMIZER</div>
+            <h1>🧠 AI Prompt Optimizer</h1>
+            <p class="subtitle">Paste your prompt → Get 3 AI-optimized versions using APE, APO & OPRO techniques</p>
+        </div>
+
+        <div class="info-box">
+            <div class="info-title">💡 How This Works</div>
+            This tool uses community-discovered meta-prompting techniques to automatically improve your prompts:
+            <br>• <strong>APE</strong> (Automatic Prompt Engineering): AI rewrites for clarity
+            <br>• <strong>APO</strong> (Automatic Prompt Optimization): Adds structure & constraints
+            <br>• <strong>OPRO</strong> (Optimization by Prompting): Enhances for better results
+        </div>
+
+        <div class="input-section">
+            <label>📝 Paste Your Prompt (any length)</label>
+            <textarea id="originalPrompt" placeholder="Example: Write a blog post about AI trends in 2025
+
+Paste your basic prompt here and watch it transform into 3 optimized versions..."></textarea>
+        </div>
+
+        <button class="optimize-btn" onclick="optimizePrompt()">🚀 Generate 3 Optimized Versions</button>
+
+        <div class="results" id="results">
+            <h2 style="color: #f5576c; margin-bottom: 20px;">✨ Your Optimized Prompts</h2>
+            
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="result-title">Version 1: Clarity-Enhanced (APE)</div>
+                    <div class="technique-badge">APE</div>
+                </div>
+                <div class="result-analysis">
+                    <div class="analysis-label">🎯 Optimization Strategy:</div>
+                    Adds explicit role, context, and output format. Removes ambiguity by specifying audience, tone, and structure.
+                </div>
+                <div class="result-content" id="result1"></div>
+                <button class="copy-btn" onclick="copyResult('result1')">📋 Copy Version 1</button>
+            </div>
+
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="result-title">Version 2: Structure-Focused (APO)</div>
+                    <div class="technique-badge">APO</div>
+                </div>
+                <div class="result-analysis">
+                    <div class="analysis-label">🎯 Optimization Strategy:</div>
+                    Adds constraints, examples, and iterative refinement instructions. Includes quality checkpoints and verification steps.
+                </div>
+                <div class="result-content" id="result2"></div>
+                <button class="copy-btn" onclick="copyResult('result2')">📋 Copy Version 2</button>
+            </div>
+
+            <div class="result-card">
+                <div class="result-header">
+                    <div class="result-title">Version 3: Performance-Maximized (OPRO)</div>
+                    <div class="technique-badge">OPRO</div>
+                </div>
+                <div class="result-analysis">
+                    <div class="analysis-label">🎯 Optimization Strategy:</div>
+                    Combines role-playing, chain-of-thought reasoning, and success metrics. Optimized for highest-quality AI output.
+                </div>
+                <div class="result-content" id="result3"></div>
+                <button class="copy-btn" onclick="copyResult('result3')">📋 Copy Version 3</button>
+            </div>
+
+            <div class="info-box" style="margin-top: 30px;">
+                <div class="info-title">📊 Which Version Should You Use?</div>
+                • <strong>Version 1 (APE):</strong> Best for quick, clear responses<br>
+                • <strong>Version 2 (APO):</strong> Best for complex tasks needing structure<br>
+                • <strong>Version 3 (OPRO):</strong> Best for highest-quality, detailed output<br><br>
+                💡 <strong>Pro Tip:</strong> Test all 3 and see which gives better results for your specific use case!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function optimizePrompt() {
+            const original = document.getElementById('originalPrompt').value;
+            
+            if (!original.trim()) {
+                alert('Please enter a prompt to optimize');
+                return;
+            }
+
+            // APE Version - Clarity Enhancement
+            const apeVersion = `Role: Expert content strategist and writer specializing in emerging technology
+
+Task: ${original}
+
+Context: Target audience is tech-savvy professionals (age 25-45) who read industry blogs to stay ahead of trends
+
+Output Format:
+- 800-1200 word blog post
+- Include: Hook opening, 3-5 key trends with examples, data/statistics, actionable takeaways
+- Tone: Professional but conversational, authoritative but accessible
+- Structure: H2 subheadings for each trend, bullet points for key insights
+
+Constraints:
+- Cite credible sources (research firms, major tech companies)
+- Avoid hype or unsubstantiated claims
+- Include at least 2 real-world case studies or examples`;
+
+            // APO Version - Structure-Focused
+            const apoVersion = `${original}
+
+Quality Requirements:
+1. Start with a compelling hook that addresses reader pain points
+2. Each trend must include: definition, why it matters, 1-2 examples, future implications
+3. Use data to support claims (cite sources)
+4. End with actionable next steps for readers
+
+Format Guidelines:
+- Opening: 2 paragraphs establishing relevance
+- Body: 3-5 trends (each 200-250 words)
+- Closing: Summary + 3 actionable recommendations
+- Add strategic inline links to authoritative sources
+
+Verification Checklist (self-review before submitting):
+☐ Does the opening grab attention in first 2 sentences?
+☐ Are all trends backed by data or examples?
+☐ Is the tone consistent throughout?
+☐ Would the target audience find this valuable?
+☐ Are there clear actionable takeaways?
+
+If any checkbox fails, revise that section.`;
+
+            // OPRO Version - Performance-Maximized
+            const oproVersion = `You are a senior tech journalist with 15 years experience covering AI/ML for publications like TechCrunch, Wired, and MIT Technology Review. You have deep industry connections and access to insider insights.
+
+Mission: Create a comprehensive, engaging blog post about AI trends in 2025 that establishes thought leadership and drives organic search traffic.
+
+Approach:
+1. **Research Phase** (think step-by-step):
+   - Consider: What are the most talked-about AI developments right now?
+   - Identify: Which trends have real staying power vs. hype?
+   - Synthesize: How do these trends interconnect?
+
+2. **Writing Phase**:
+   Structure: [Hook] → [Context] → [Trend #1] → [Trend #2] → [Trend #3] → [Synthesis] → [Future Outlook] → [Actionable Advice]
+   
+   For each trend, answer:
+   - What is it? (2 sentences)
+   - Why does it matter? (business impact, societal implications)
+   - Who's leading? (companies, researchers, examples)
+   - What's the timeline? (near-term vs. 5+ years)
+
+3. **Quality Gates**:
+   After first draft, self-critique:
+   - "Would industry experts respect this analysis?"
+   - "Is there a unique insight or angle here?"
+   - "Could a beginner AND expert both gain value?"
+   
+   If not, revise and improve.
+
+Target Metrics:
+- 1200-1500 words (comprehensive but scannable)
+- 3-5 H2 subheadings (SEO-optimized)
+- 8-10 minute read time
+- Include: 2-3 data points, 3-5 real examples, 1-2 expert quotes (or paraphrase known expert positions)
+
+Voice: Authoritative, forward-thinking, balanced (acknowledge both opportunities AND risks)`;
+
+            // Display results
+            document.getElementById('result1').textContent = apeVersion;
+            document.getElementById('result2').textContent = apoVersion;
+            document.getElementById('result3').textContent = oproVersion;
+            document.getElementById('results').classList.add('show');
+            
+            // Smooth scroll to results
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function copyResult(resultId) {
+            const content = document.getElementById(resultId).textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                const btn = event.target;
+                const original = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                btn.style.background = '#28a745';
+                setTimeout(() => {
+                    btn.textContent = original;
+                    btn.style.background = '';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

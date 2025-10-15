@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Niche Template Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #fa709a;
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        .profession-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+        .profession-btn {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .profession-btn:hover {
+            border-color: #fa709a;
+            transform: translateY(-2px);
+        }
+        .profession-btn.active {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+            border-color: #fa709a;
+        }
+        .task-selector {
+            margin-bottom: 30px;
+        }
+        .task-selector label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .task-option {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .task-option:hover {
+            border-color: #fa709a;
+        }
+        .task-option.active {
+            background: #fa709a;
+            color: white;
+            border-color: #fa709a;
+        }
+        .custom-input {
+            margin-top: 20px;
+        }
+        .custom-input input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        .generate-btn {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(250, 112, 154, 0.3);
+        }
+        .output {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            display: none;
+        }
+        .output.show {
+            display: block;
+            animation: slideUp 0.5s;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .template-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 4px solid #fa709a;
+        }
+        .template-title {
+            font-weight: 600;
+            color: #fa709a;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .template-content {
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="badge">NICHE TEMPLATE GENERATOR</div>
+        <h1>🎯 Profession-Specific Prompts</h1>
+        <p class="subtitle">Select your profession + task type → Get battle-tested prompt templates</p>
+
+        <div>
+            <label style="display: block; font-weight: 600; margin-bottom: 15px; color: #333;">👤 Select Your Profession:</label>
+            <div class="profession-grid">
+                <div class="profession-btn active" onclick="selectProfession('realtor')">🏠 Realtor</div>
+                <div class="profession-btn" onclick="selectProfession('therapist')">🧠 Therapist</div>
+                <div class="profession-btn" onclick="selectProfession('developer')">💻 Developer</div>
+                <div class="profession-btn" onclick="selectProfession('marketer')">📊 Marketer</div>
+                <div class="profession-btn" onclick="selectProfession('teacher')">📚 Teacher</div>
+                <div class="profession-btn" onclick="selectProfession('lawyer')">⚖️ Lawyer</div>
+                <div class="profession-btn" onclick="selectProfession('doctor')">🏥 Doctor</div>
+                <div class="profession-btn" onclick="selectProfession('writer')">✍️ Writer</div>
+                <div class="profession-btn" onclick="selectProfession('designer')">🎨 Designer</div>
+                <div class="profession-btn" onclick="selectProfession('consultant')">💼 Consultant</div>
+            </div>
+        </div>
+
+        <div class="task-selector">
+            <label>📋 What do you need help with?</label>
+            <div class="task-grid" id="taskGrid">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+
+        <div class="custom-input">
+            <label style="font-weight: 600; margin-bottom: 8px; display: block; color: #333;">🔧 Customize (optional):</label>
+            <input type="text" id="customDetails" placeholder="e.g., For luxury properties in Miami, targeting millennials...">
+        </div>
+
+        <button class="generate-btn" onclick="generateTemplate()">Generate Prompt Template</button>
+
+        <div class="output" id="output">
+            <div id="templatesContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentProfession = 'realtor';
+        let currentTask = '';
+
+        const professionTasks = {
+            realtor: ['Property Listing', 'Client Follow-up', 'Market Analysis', 'Open House Script'],
+            therapist: ['Session Notes', 'Treatment Plan', 'Client Communication', 'Progress Report'],
+            developer: ['Code Review', 'Bug Report', 'API Documentation', 'Feature Spec'],
+            marketer: ['Campaign Brief', 'Ad Copy', 'Email Sequence', 'Social Media Posts'],
+            teacher: ['Lesson Plan', 'Student Feedback', 'Assignment Creation', 'Parent Communication'],
+            lawyer: ['Legal Memo', 'Contract Review', 'Client Letter', 'Case Summary'],
+            doctor: ['Patient Notes', 'Diagnosis Report', 'Treatment Plan', 'Referral Letter'],
+            writer: ['Article Outline', 'Character Development', 'Plot Summary', 'Editor Pitch'],
+            designer: ['Design Brief', 'Client Presentation', 'Revision Feedback', 'Style Guide'],
+            consultant: ['Proposal', 'Strategy Brief', 'Client Report', 'Workshop Agenda']
+        };
+
+        const templates = {
+            realtor: {
+                'Property Listing': `Role: Senior Real Estate Copywriter with 15 years luxury property experience
+
+Task: Create compelling property listing for [PROPERTY_ADDRESS]
+
+Property Details:
+- Bedrooms: [#]
+- Bathrooms: [#]
+- Sq Ft: [#]
+- Key Features: [list 3-5 unique selling points]
+- Neighborhood: [area name]
+- Price: [amount]
+
+Output Format:
+1. Headline (8-12 words, benefit-focused)
+2. Opening paragraph (2-3 sentences establishing desire)
+3. Feature highlights (5-7 bullet points with emotional triggers)
+4. Neighborhood description (1 paragraph lifestyle-focused)
+5. Call-to-action (urgent, specific)
+
+Voice: Aspirational but authentic, sophisticated, emphasizes lifestyle over features
+
+Constraints:
+- No clichés ("stunning," "charming," "cozy")
+- Focus on buyer transformation, not just property specs
+- Include 2-3 specific neighborhood benefits
+- End with clear next step`,
+
+                'Client Follow-up': `Role: Top-producing realtor relationship expert
+
+Situation: Following up with [CLIENT_NAME] after [showing/offer/closing]
+
+Context:
+- Property: [address]
+- Current Status: [interested/submitted offer/thinking/passed]
+- Last Interaction: [date]
+- Client Type: [first-time buyer/investor/relocating]
+
+Generate email that:
+1. Opens with specific reference to our last conversation
+2. Provides 1-2 relevant market updates or property insights
+3. Addresses any concerns they mentioned
+4. Offers specific next step
+5. Keeps door open without being pushy
+
+Tone: Professional, helpful, relationship-focused (not sales-y)
+Length: 150-200 words
+Include: 1 question to re-engage conversation`
+            },
+            developer: {
+                'Code Review': `Role: Senior Software Engineer
+
+Code to Review:
+[PASTE CODE]
+
+Context:
+- Language/Framework: [specify]
+- Purpose: [what this code does]
+- Concerns: [any specific areas to focus on]
+
+Review Checklist:
+1. **Security**: Vulnerabilities, input validation, auth issues
+2. **Performance**: Bottlenecks, inefficient algorithms, memory leaks
+3. **Maintainability**: Code clarity, naming, structure, documentation
+4. **Best Practices**: Framework conventions, design patterns
+5. **Testing**: Coverage, edge cases, test quality
+
+Output Format:
+- Critical Issues (must fix): [list]
+- Suggestions (should consider): [list]
+- Nitpicks (nice to have): [list]
+- Positive Highlights: [what's well done]
+- Overall Score: [1-10]
+
+Be constructive, specific, and provide code examples for fixes.`,
+
+                'Bug Report': `Role: QA Engineer
+
+Bug Summary:
+- Title: [One-line description]
+- Severity: [Critical/High/Medium/Low]
+- Environment: [browser/OS/version]
+
+Steps to Reproduce:
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+
+Expected Behavior:
+[What should happen]
+
+Actual Behavior:
+[What actually happens]
+
+Additional Context:
+- Console errors: [if any]
+- Screenshots: [describe]
+- Frequency: [always/intermittent]
+- Related tickets: [if any]
+
+Impact:
+- Users affected: [estimate]
+- Workaround available: [yes/no]
+- Blocks: [other features/releases]
+
+Format as GitHub issue with proper markdown.`
+            },
+            marketer: {
+                'Campaign Brief': `Role: Marketing Strategist
+
+Campaign Overview:
+- Objective: [increase sales/brand awareness/lead gen]
+- Target Audience: [demographics, psychographics]
+- Budget: [amount]
+- Timeline: [start-end dates]
+- KPIs: [specific metrics]
+
+Create comprehensive brief with:
+
+1. Situation Analysis (2-3 paragraphs)
+   - Market context
+   - Competitive landscape
+   - Opportunity identified
+
+2. Strategy (1 paragraph)
+   - Big idea/creative concept
+   - Why this will resonate
+
+3. Tactical Plan
+   - Channels (3-5 with rationale)
+   - Content types per channel
+   - Posting frequency
+
+4. Messaging Framework
+   - Core message (1 sentence)
+   - Supporting messages (3 points)
+   - Proof points/social proof
+
+5. Success Metrics
+   - Primary KPI with target
+   - Secondary metrics
+   - Measurement method
+
+6. Budget Breakdown
+   - Channel allocation
+   - Creative costs
+   - Tools/software
+
+7. Timeline (week-by-week)`,
+
+                'Ad Copy': `Role: Direct Response Copywriter
+
+Ad Details:
+- Platform: [Facebook/Google/LinkedIn]
+- Product/Service: [name]
+- Target: [audience description]
+- Goal: [click/conversion/awareness]
+- Character Limit: [if applicable]
+
+Generate 3 variations:
+
+**Version 1: Pain-Focused**
+Hook: [Lead with problem]
+Body: [Agitate pain, introduce solution]
+CTA: [Specific action]
+
+**Version 2: Benefit-Led**
+Hook: [Lead with transformation]
+Body: [Paint outcome, build desire]
+CTA: [Specific action]
+
+**Version 3: Social Proof**
+Hook: [Lead with testimonial/stat]
+Body: [Build credibility, show proof]
+CTA: [Specific action]
+
+Each version:
+- Headline (5-10 words)
+- Body (50-100 words)
+- CTA (3-5 words)
+
+Include: 1 emoji per version, power words, urgency element`
+            }
+        };
+
+        function selectProfession(profession) {
+            currentProfession = profession;
+            
+            document.querySelectorAll('.profession-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            updateTaskGrid();
+        }
+
+        function updateTaskGrid() {
+            const tasks = professionTasks[currentProfession];
+            const grid = document.getElementById('taskGrid');
+            
+            grid.innerHTML = tasks.map((task, index) => 
+                `<div class="task-option ${index === 0 ? 'active' : ''}" onclick="selectTask('${task}')">${task}</div>`
+            ).join('');
+            
+            currentTask = tasks[0];
+        }
+
+        function selectTask(task) {
+            currentTask = task;
+            
+            document.querySelectorAll('.task-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        function generateTemplate() {
+            const customDetails = document.getElementById('customDetails').value;
+            
+            let template = templates[currentProfession]?.[currentTask] || 
+                `Custom template for ${currentProfession} - ${currentTask}`;
+            
+            if (customDetails) {
+                template = template.replace(/\[CUSTOM\]/g, customDetails);
+            }
+            
+            const container = document.getElementById('templatesContainer');
+            container.innerHTML = `
+                <div class="template-card">
+                    <div class="template-title">📝 ${currentProfession.toUpperCase()} - ${currentTask}</div>
+                    <div class="template-content">${template}</div>
+                    <button class="copy-btn" onclick="copyTemplate()">📋 Copy Template</button>
+                </div>
+            `;
+            
+            document.getElementById('output').classList.add('show');
+            document.getElementById('output').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyTemplate() {
+            const template = document.querySelector('.template-content').textContent;
+            navigator.clipboard.writeText(template).then(() => {
+                const btn = event.target;
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy Template';
+                }, 2000);
+            });
+        }
+
+        // Initialize
+        updateTaskGrid();
+    </script>
+</body>
+</html>

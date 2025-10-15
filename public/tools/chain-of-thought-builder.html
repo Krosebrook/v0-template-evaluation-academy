@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chain-of-Thought Builder</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #4facfe;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        .technique-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .technique-card {
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .technique-card:hover {
+            border-color: #4facfe;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.2);
+        }
+        .technique-card.active {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border-color: #4facfe;
+        }
+        .technique-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        .technique-desc {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        textarea, input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+        .generate-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+        .output {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            display: none;
+        }
+        .output.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .prompt-output {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            border: 1px solid #e0e0e0;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="badge">CHAIN-OF-THOUGHT BUILDER</div>
+        <h1>🧩 CoT Prompt Generator</h1>
+        <p class="subtitle">Transform basic prompts into step-by-step reasoning prompts that improve AI accuracy</p>
+
+        <div class="info-box">
+            <strong>💡 What is Chain-of-Thought?</strong><br>
+            CoT prompting makes AI "think out loud" by breaking down problems into steps. Improves accuracy by 20-40% on complex tasks!
+        </div>
+
+        <div class="technique-selector">
+            <div class="technique-card active" onclick="selectTechnique('basic')">
+                <div class="technique-name">Basic CoT</div>
+                <div class="technique-desc">"Let's think step by step"</div>
+            </div>
+            <div class="technique-card" onclick="selectTechnique('zero-shot')">
+                <div class="technique-name">Zero-Shot CoT</div>
+                <div class="technique-desc">No examples needed</div>
+            </div>
+            <div class="technique-card" onclick="selectTechnique('few-shot')">
+                <div class="technique-name">Few-Shot CoT</div>
+                <div class="technique-desc">With example reasoning</div>
+            </div>
+            <div class="technique-card" onclick="selectTechnique('tree')">
+                <div class="technique-name">Tree of Thoughts</div>
+                <div class="technique-desc">Multiple paths explored</div>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>📝 Your Task/Question</label>
+            <textarea id="task" placeholder="Example: Calculate the ROI of implementing AI chatbot for customer support"></textarea>
+        </div>
+
+        <div class="input-group" id="stepsInput" style="display: none;">
+            <label>📊 Number of Reasoning Steps</label>
+            <input type="number" id="numSteps" value="5" min="3" max="10">
+        </div>
+
+        <div class="input-group" id="exampleInput" style="display: none;">
+            <label>📚 Example Reasoning (optional)</label>
+            <textarea id="example" placeholder="Provide an example of step-by-step reasoning for a similar problem..."></textarea>
+        </div>
+
+        <button class="generate-btn" onclick="generateCoT()">Generate CoT Prompt</button>
+
+        <div class="output" id="output">
+            <div style="font-weight: 600; color: #4facfe; margin-bottom: 10px;">✨ Your Chain-of-Thought Prompt:</div>
+            <div class="prompt-output" id="promptOutput"></div>
+            <button class="copy-btn" onclick="copyPrompt()">📋 Copy Prompt</button>
+        </div>
+    </div>
+
+    <script>
+        let currentTechnique = 'basic';
+
+        function selectTechnique(technique) {
+            currentTechnique = technique;
+            
+            document.querySelectorAll('.technique-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            event.target.closest('.technique-card').classList.add('active');
+            
+            // Show/hide additional inputs based on technique
+            document.getElementById('stepsInput').style.display = 
+                (technique === 'tree') ? 'block' : 'none';
+            document.getElementById('exampleInput').style.display = 
+                (technique === 'few-shot') ? 'block' : 'none';
+        }
+
+        function generateCoT() {
+            const task = document.getElementById('task').value;
+            
+            if (!task.trim()) {
+                alert('Please enter a task or question');
+                return;
+            }
+
+            let prompt = '';
+
+            switch(currentTechnique) {
+                case 'basic':
+                    prompt = `${task}
+
+Let's approach this step by step:
+
+1. First, let me identify the key components and variables
+2. Then, I'll analyze each component systematically
+3. Next, I'll consider the relationships between components
+4. After that, I'll work through the calculations or logic
+5. Finally, I'll synthesize the findings into a clear answer
+
+Let's begin:`;
+                    break;
+
+                case 'zero-shot':
+                    prompt = `Task: ${task}
+
+Before providing the final answer, let me think through this carefully and show my reasoning:
+
+[Think step-by-step and explain your thought process as you work through this problem. Show all intermediate steps, assumptions, and logic. Only after completing your reasoning should you provide the final answer.]
+
+My step-by-step reasoning:`;
+                    break;
+
+                case 'few-shot':
+                    const example = document.getElementById('example').value;
+                    prompt = `I'll solve this by breaking it down step-by-step, similar to this example:
+
+${example ? `Example Problem: [Similar problem]
+Step 1: [First reasoning step]
+Step 2: [Second reasoning step]
+Step 3: [Conclusion]
+
+Now for your problem:` : ''}
+
+Task: ${task}
+
+Step-by-step solution:
+1. [First, I will...]
+2. [Next, I'll consider...]
+3. [Then, I'll analyze...]
+4. [After that, I'll...]
+5. [Finally, I'll conclude...]
+
+Let me work through each step:`;
+                    break;
+
+                case 'tree':
+                    const numSteps = document.getElementById('numSteps').value;
+                    prompt = `Task: ${task}
+
+I'll explore multiple reasoning paths (Tree of Thoughts approach):
+
+Path A - Optimistic Scenario:
+1. [Step 1 assuming best conditions]
+2. [Step 2 building on optimal assumptions]
+3. [Conclusion for Path A]
+
+Path B - Realistic Scenario:
+1. [Step 1 with practical constraints]
+2. [Step 2 considering typical challenges]
+3. [Conclusion for Path B]
+
+Path C - Conservative Scenario:
+1. [Step 1 with risk considerations]
+2. [Step 2 accounting for obstacles]
+3. [Conclusion for Path C]
+
+Now I'll evaluate which path provides the most reliable answer:
+- Path A probability: [%]
+- Path B probability: [%]
+- Path C probability: [%]
+
+Most likely answer: [Select the path with highest probability and explain why]`;
+                    break;
+            }
+
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('output').classList.add('show');
+            document.getElementById('output').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyPrompt() {
+            const prompt = document.getElementById('promptOutput').textContent;
+            navigator.clipboard.writeText(prompt).then(() => {
+                const btn = event.target;
+                const original = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = original;
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

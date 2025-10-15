@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Framework Prompt Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .framework-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .framework-btn {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .framework-btn:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+        .framework-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+        .framework-name {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .framework-desc {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        .output {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            display: none;
+        }
+        .output.show {
+            display: block;
+        }
+        .prompt-output {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            border: 1px solid #e0e0e0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .copy-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Multi-Framework Prompt Generator</h1>
+        <p class="subtitle">Choose your framework, fill the fields, generate perfect prompts instantly</p>
+
+        <div class="framework-selector">
+            <div class="framework-btn active" onclick="selectFramework('rise')">
+                <div class="framework-name">R-I-S-E</div>
+                <div class="framework-desc">Role, Input, Stops, Expectation</div>
+            </div>
+            <div class="framework-btn" onclick="selectFramework('rain')">
+                <div class="framework-name">R-A-I-N</div>
+                <div class="framework-desc">Role, Aim, Input, Numeric</div>
+            </div>
+            <div class="framework-btn" onclick="selectFramework('flow')">
+                <div class="framework-name">F-L-O-W</div>
+                <div class="framework-desc">Function, Level, Output, Win</div>
+            </div>
+            <div class="framework-btn" onclick="selectFramework('rose')">
+                <div class="framework-name">R-O-S-E</div>
+                <div class="framework-desc">Role, Objective, Steps, Expected</div>
+            </div>
+            <div class="framework-btn" onclick="selectFramework('plan')">
+                <div class="framework-name">P-L-A-N</div>
+                <div class="framework-desc">Problem, Limit, Action, Number</div>
+            </div>
+            <div class="framework-btn" onclick="selectFramework('pivo')">
+                <div class="framework-name">P-I-V-O</div>
+                <div class="framework-desc">Problem, Insight, Voice, Outcome</div>
+            </div>
+        </div>
+
+        <!-- R-I-S-E Form -->
+        <div id="rise-form" class="form-section active">
+            <div class="input-group">
+                <label>Role (Who should the AI be?)</label>
+                <input type="text" id="rise-role" placeholder="Senior Marketing Strategist">
+            </div>
+            <div class="input-group">
+                <label>Input (What data/context?)</label>
+                <textarea id="rise-input" placeholder="Company details, target audience, budget..."></textarea>
+            </div>
+            <div class="input-group">
+                <label>Stops (What to avoid?)</label>
+                <textarea id="rise-stops" placeholder="No generic advice, no jargon..."></textarea>
+            </div>
+            <div class="input-group">
+                <label>Expectation (Desired output?)</label>
+                <textarea id="rise-expectation" placeholder="3-page strategy with personas, tactics, timeline..."></textarea>
+            </div>
+            <button class="generate-btn" onclick="generatePrompt('rise')">Generate R-I-S-E Prompt</button>
+        </div>
+
+        <!-- R-A-I-N Form -->
+        <div id="rain-form" class="form-section">
+            <div class="input-group">
+                <label>Role</label>
+                <input type="text" id="rain-role" placeholder="Expert Consultant">
+            </div>
+            <div class="input-group">
+                <label>Aim (Goal)</label>
+                <textarea id="rain-aim" placeholder="Increase conversions by 25%"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Input (Context)</label>
+                <textarea id="rain-input" placeholder="Current metrics, resources..."></textarea>
+            </div>
+            <div class="input-group">
+                <label>Numeric Target</label>
+                <input type="text" id="rain-numeric" placeholder="3 strategies, 90 days, $50K budget">
+            </div>
+            <button class="generate-btn" onclick="generatePrompt('rain')">Generate R-A-I-N Prompt</button>
+        </div>
+
+        <!-- F-L-O-W Form -->
+        <div id="flow-form" class="form-section">
+            <div class="input-group">
+                <label>Function (Core purpose)</label>
+                <input type="text" id="flow-function" placeholder="Optimize email campaigns">
+            </div>
+            <div class="input-group">
+                <label>Level (Expertise level)</label>
+                <input type="text" id="flow-level" placeholder="Advanced, Enterprise-grade">
+            </div>
+            <div class="input-group">
+                <label>Output (Deliverable format)</label>
+                <textarea id="flow-output" placeholder="Step-by-step playbook with templates"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Win Metric (Success criteria)</label>
+                <input type="text" id="flow-win" placeholder="30% open rate improvement in 60 days">
+            </div>
+            <button class="generate-btn" onclick="generatePrompt('flow')">Generate F-L-O-W Prompt</button>
+        </div>
+
+        <!-- R-O-S-E Form -->
+        <div id="rose-form" class="form-section">
+            <div class="input-group">
+                <label>Role</label>
+                <input type="text" id="rose-role" placeholder="Product Manager">
+            </div>
+            <div class="input-group">
+                <label>Objective</label>
+                <textarea id="rose-objective" placeholder="Launch new feature successfully"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Steps (Process outline)</label>
+                <textarea id="rose-steps" placeholder="1. Research\n2. Design\n3. Build\n4. Launch"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Expected Result</label>
+                <textarea id="rose-expected" placeholder="1000 active users in 30 days"></textarea>
+            </div>
+            <button class="generate-btn" onclick="generatePrompt('rose')">Generate R-O-S-E Prompt</button>
+        </div>
+
+        <!-- P-L-A-N Form -->
+        <div id="plan-form" class="form-section">
+            <div class="input-group">
+                <label>Problem</label>
+                <textarea id="plan-problem" placeholder="Low customer retention rate"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Limit (Constraints)</label>
+                <input type="text" id="plan-limit" placeholder="$10K budget, 2 weeks timeline">
+            </div>
+            <div class="input-group">
+                <label>Action (What needs doing?)</label>
+                <textarea id="plan-action" placeholder="Design retention program"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Number (Specific targets)</label>
+                <input type="text" id="plan-number" placeholder="5 tactics, 3 KPIs, 90-day plan">
+            </div>
+            <button class="generate-btn" onclick="generatePrompt('plan')">Generate P-L-A-N Prompt</button>
+        </div>
+
+        <!-- P-I-V-O Form -->
+        <div id="pivo-form" class="form-section">
+            <div class="input-group">
+                <label>Problem</label>
+                <textarea id="pivo-problem" placeholder="Users not completing onboarding"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Insight (Key data/observation)</label>
+                <textarea id="pivo-insight" placeholder="75% drop-off at step 3"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Voice (Tone/style)</label>
+                <input type="text" id="pivo-voice" placeholder="Data-driven, actionable, concise">
+            </div>
+            <div class="input-group">
+                <label>Outcome (Desired result)</label>
+                <textarea id="pivo-outcome" placeholder="Reduce drop-off to 30% in 45 days"></textarea>
+            </div>
+            <button class="generate-btn" onclick="generatePrompt('pivo')">Generate P-I-V-O Prompt</button>
+        </div>
+
+        <div class="output" id="output">
+            <div style="font-weight: 600; color: #667eea; margin-bottom: 10px;">✨ Generated Prompt:</div>
+            <div class="prompt-output" id="promptOutput"></div>
+            <button class="copy-btn" onclick="copyPrompt()">📋 Copy to Clipboard</button>
+        </div>
+    </div>
+
+    <script>
+        let currentFramework = 'rise';
+
+        function selectFramework(framework) {
+            currentFramework = framework;
+            
+            // Update button states
+            document.querySelectorAll('.framework-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.framework-btn').classList.add('active');
+            
+            // Update form visibility
+            document.querySelectorAll('.form-section').forEach(form => {
+                form.classList.remove('active');
+            });
+            document.getElementById(framework + '-form').classList.add('active');
+            
+            // Hide output
+            document.getElementById('output').classList.remove('show');
+        }
+
+        function generatePrompt(framework) {
+            let prompt = '';
+            
+            switch(framework) {
+                case 'rise':
+                    const role = document.getElementById('rise-role').value;
+                    const input = document.getElementById('rise-input').value;
+                    const stops = document.getElementById('rise-stops').value;
+                    const expectation = document.getElementById('rise-expectation').value;
+                    prompt = `Role: ${role}\n\nInput: ${input}\n\n${stops ? `Stops: ${stops}\n\n` : ''}Expectation: ${expectation}`;
+                    break;
+                    
+                case 'rain':
+                    prompt = `Role: ${document.getElementById('rain-role').value}\n\nAim: ${document.getElementById('rain-aim').value}\n\nInput: ${document.getElementById('rain-input').value}\n\nNumeric Target: ${document.getElementById('rain-numeric').value}`;
+                    break;
+                    
+                case 'flow':
+                    prompt = `Function: ${document.getElementById('flow-function').value}\n\nLevel: ${document.getElementById('flow-level').value}\n\nOutput: ${document.getElementById('flow-output').value}\n\nWin Metric: ${document.getElementById('flow-win').value}`;
+                    break;
+                    
+                case 'rose':
+                    prompt = `Role: ${document.getElementById('rose-role').value}\n\nObjective: ${document.getElementById('rose-objective').value}\n\nSteps:\n${document.getElementById('rose-steps').value}\n\nExpected Result: ${document.getElementById('rose-expected').value}`;
+                    break;
+                    
+                case 'plan':
+                    prompt = `Problem: ${document.getElementById('plan-problem').value}\n\nLimit: ${document.getElementById('plan-limit').value}\n\nAction: ${document.getElementById('plan-action').value}\n\nNumber: ${document.getElementById('plan-number').value}`;
+                    break;
+                    
+                case 'pivo':
+                    prompt = `Problem: ${document.getElementById('pivo-problem').value}\n\nInsight: ${document.getElementById('pivo-insight').value}\n\nVoice: ${document.getElementById('pivo-voice').value}\n\nOutcome: ${document.getElementById('pivo-outcome').value}`;
+                    break;
+            }
+            
+            document.getElementById('promptOutput').textContent = prompt;
+            document.getElementById('output').classList.add('show');
+        }
+
+        function copyPrompt() {
+            const prompt = document.getElementById('promptOutput').textContent;
+            navigator.clipboard.writeText(prompt).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                btn.style.background = '#28a745';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
