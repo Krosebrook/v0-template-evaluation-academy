@@ -2,8 +2,10 @@ import { createServerClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { AnalyticsDashboard } from "@/components/analytics-dashboard"
 
+export const dynamic = "force-dynamic"
+
 export default async function AnalyticsPage() {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   const {
     data: { user },
