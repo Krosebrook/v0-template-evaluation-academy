@@ -747,7 +747,9 @@ export default function LibraryPage() {
                 <Badge variant="secondary">{selectedPrompt.promptType}</Badge>
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4 fill-yellow-500 text-yellow-500" />
-                  <span className="font-medium">{selectedPrompt.rating.toFixed(1)}</span>
+                  <span className="font-medium">
+                    {typeof selectedPrompt.rating === "number" ? selectedPrompt.rating.toFixed(1) : "N/A"}
+                  </span>
                   <span className="text-muted-foreground text-sm">({selectedPrompt.totalRatings})</span>
                 </div>
                 <div className="flex items-center gap-1 text-sm text-muted-foreground">
@@ -1092,7 +1094,7 @@ export default function LibraryPage() {
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
-                      <span>{prompt.rating.toFixed(1)}</span>
+                      <span>{typeof prompt.rating === "number" ? prompt.rating.toFixed(1) : "N/A"}</span>
                     </div>
                     <span>•</span>
                     <div className="flex items-center gap-1">

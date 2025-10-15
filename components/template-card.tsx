@@ -80,7 +80,7 @@ export function TemplateCard({ template }: { template: Template }) {
       <CardFooter className="flex flex-col gap-3 border-t border-border pt-4">
         <div className="flex items-center justify-between w-full text-sm text-muted-foreground">
           <div className="flex items-center gap-4">
-            {template.averageScore !== null && (
+            {typeof template.averageScore === "number" && (
               <div className="flex items-center gap-1">
                 <Star className="h-4 w-4 fill-current text-yellow-500" />
                 <span>{template.averageScore.toFixed(1)}</span>

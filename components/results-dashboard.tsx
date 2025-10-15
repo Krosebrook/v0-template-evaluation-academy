@@ -143,7 +143,9 @@ export function ResultsDashboard({ template }: { template: Template }) {
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Overall Score</p>
-              <p className="text-2xl font-bold">{hasEvaluations ? overallAverage.toFixed(1) : "N/A"}</p>
+              <p className="text-2xl font-bold">
+                {hasEvaluations && typeof overallAverage === "number" ? overallAverage.toFixed(1) : "N/A"}
+              </p>
             </div>
           </div>
         </Card>
@@ -199,7 +201,8 @@ export function ResultsDashboard({ template }: { template: Template }) {
                   <div className="flex items-center justify-between">
                     <span className="font-medium">{label}</span>
                     <span className="text-lg font-bold">
-                      {score.toFixed(1)} <span className="text-sm text-muted-foreground">/10</span>
+                      {typeof score === "number" ? score.toFixed(1) : "N/A"}{" "}
+                      <span className="text-sm text-muted-foreground">/10</span>
                     </span>
                   </div>
                   <Progress value={percentage} className="h-3" />
