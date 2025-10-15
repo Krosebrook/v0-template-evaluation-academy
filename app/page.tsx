@@ -168,11 +168,11 @@ const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
     layers: ["role", "context", "task", "format", "examples", "validation"],
     type: "golden",
     prefill:
-      "Create a reusable React component for a pricing card with three tiers. Include hover effects, responsive design, and accessibility features.",
+      "Create a production-ready React component for a pricing card with three tiers (Starter, Pro, Enterprise). Requirements: TypeScript with strict mode, Tailwind CSS for styling, smooth hover animations using CSS transitions, fully responsive (mobile-first approach), WCAG 2.1 AA accessibility compliance including ARIA labels and keyboard navigation, props interface for customization (title, price, features array, CTA text, highlighted tier), and proper semantic HTML structure. Include JSDoc comments and export both the component and its TypeScript interface.",
     nextIdeas: [
-      "Add animation library integration (Framer Motion)",
-      "Generate component tests with React Testing Library",
-      "Create Storybook documentation",
+      "Add Framer Motion for advanced animations (stagger effects, spring physics)",
+      "Generate comprehensive test suite with React Testing Library (user interactions, accessibility, edge cases)",
+      "Create interactive Storybook documentation with all variants and controls",
     ],
   },
   {
@@ -184,11 +184,11 @@ const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
     layers: ["role", "context", "task", "validation", "constraints"],
     type: "chain",
     prefill:
-      "Design a RESTful API for a task management system with user authentication, CRUD operations, and real-time notifications.",
+      "Design a production-grade RESTful API for a task management system following REST best practices and industry standards. Core requirements: User authentication with JWT tokens (access + refresh), bcrypt password hashing, role-based access control (admin, manager, member), CRUD operations for tasks with filtering, sorting, and pagination, real-time notifications using WebSockets or Server-Sent Events, rate limiting (100 requests/minute per user), comprehensive error handling with standardized error responses, request validation using Joi or Zod, API versioning strategy (/v1/), and OpenAPI 3.0 documentation. Database: PostgreSQL with proper indexing. Include endpoint specifications, request/response examples, status codes, and security considerations.",
     nextIdeas: [
-      "Add GraphQL schema design",
-      "Generate database migration scripts",
-      "Create API documentation with OpenAPI",
+      "Design GraphQL schema with queries, mutations, subscriptions, and resolver structure",
+      "Generate database migration scripts with rollback support and seed data",
+      "Create comprehensive API documentation with Swagger/OpenAPI including authentication flows and example requests",
     ],
   },
   {
@@ -200,11 +200,11 @@ const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
     layers: ["role", "context", "task", "format", "validation"],
     type: "context",
     prefill:
-      "Build a complete authentication system with email/password, OAuth, JWT tokens, and password reset functionality.",
+      "Build a complete, production-ready authentication system with enterprise-grade security. Features required: Email/password registration with email verification, OAuth 2.0 integration (Google, GitHub), JWT-based authentication with access tokens (15min expiry) and refresh tokens (7 days), secure password reset flow with time-limited tokens, account lockout after 5 failed attempts, session management with device tracking, CSRF protection, rate limiting on auth endpoints, secure HTTP-only cookies, password strength requirements (min 12 chars, uppercase, lowercase, numbers, symbols), and audit logging. Tech stack: Node.js/Express backend, React frontend, PostgreSQL database, Redis for session storage. Include database schema, API endpoints, frontend components, security middleware, and deployment considerations.",
     nextIdeas: [
-      "Add multi-factor authentication",
-      "Implement session management",
-      "Create admin dashboard for user management",
+      "Implement multi-factor authentication (TOTP, SMS, email codes) with backup codes",
+      "Add advanced session management with concurrent session limits and remote logout",
+      "Create comprehensive admin dashboard for user management, security monitoring, and audit logs",
     ],
   },
 
@@ -218,11 +218,11 @@ const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
     layers: ["role", "context", "task", "format", "tone"],
     type: "golden",
     prefill:
-      "Design a landing page for a SaaS productivity tool targeting remote teams. Include hero section, features, pricing, testimonials, and CTA.",
+      "Design a high-converting landing page for a SaaS productivity tool targeting remote teams (25-500 employees). Apply conversion optimization principles and modern design trends. Required sections: (1) Hero: Compelling headline addressing pain point, subheadline with value proposition, primary CTA above fold, hero image/video showing product in action, social proof badges (G2, Capterra ratings). (2) Features: 6 key features with icons, benefits-focused copy, and micro-interactions. (3) Pricing: 3 tiers with feature comparison table, annual/monthly toggle, highlighted recommended plan. (4) Testimonials: 6 customer testimonials with photos, company logos, specific results/metrics. (5) FAQ: 8 common questions. (6) Final CTA: Strong closing statement with urgency element. Design system: Modern, clean aesthetic with generous whitespace, primary color (trust-building blue), accent color for CTAs, consistent 8px grid system, mobile-first responsive design, accessibility considerations, and micro-animations for engagement. Include wireframes, visual hierarchy notes, and conversion optimization rationale.",
     nextIdeas: [
-      "Add A/B testing variations",
-      "Generate mobile-first responsive layouts",
-      "Create conversion optimization checklist",
+      "Design A/B testing variations for hero headline, CTA copy, and pricing presentation",
+      "Generate complete mobile-first responsive layouts with breakpoint specifications (320px, 768px, 1024px, 1440px)",
+      "Create comprehensive conversion optimization checklist with heatmap analysis recommendations and user flow diagrams",
     ],
   },
   {
@@ -234,8 +234,12 @@ const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
     layers: ["role", "context", "task", "format", "examples"],
     type: "context",
     prefill:
-      "Design an analytics dashboard for an e-commerce platform showing sales metrics, user behavior, inventory status, and revenue trends.",
-    nextIdeas: ["Add real-time data visualization", "Create customizable widget system", "Design dark mode variant"],
+      "Design a comprehensive analytics dashboard for an e-commerce platform serving business analysts and store managers. Information architecture: (1) Overview page: KPI cards (revenue, orders, conversion rate, AOV) with trend indicators, revenue chart (line graph, 30-day view with comparison), top products table (sortable), recent orders list. (2) Sales metrics: Revenue breakdown by category (pie chart), sales by region (map visualization), time-series analysis with date range picker, cohort analysis table. (3) User behavior: Traffic sources (bar chart), user journey funnel, session duration distribution, bounce rate by page. (4) Inventory: Stock levels with low-stock alerts, reorder recommendations, supplier performance metrics. (5) Revenue trends: MoM/YoY comparisons, forecasting visualization, seasonal patterns. Design requirements: Dark mode support, customizable widget layout (drag-and-drop), data export functionality, real-time updates indicator, responsive design (desktop-first), color-coded status indicators, loading states, empty states, error states, and accessibility (WCAG AA). Include component specifications, interaction patterns, and data visualization best practices.",
+    nextIdeas: [
+      "Add real-time data visualization with WebSocket integration and live update animations",
+      "Create customizable widget system with user preferences, saved layouts, and shareable dashboard URLs",
+      "Design comprehensive dark mode variant with proper contrast ratios and color palette adjustments",
+    ],
   },
   {
     category: "UI Designer",
@@ -246,8 +250,12 @@ const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
     layers: ["role", "context", "task", "format", "constraints"],
     type: "few_shot",
     prefill:
-      "Design a mobile fitness tracking app with workout logging, progress charts, social features, and personalized recommendations.",
-    nextIdeas: ["Add gesture-based interactions", "Create onboarding flow", "Design notification system"],
+      "Design a native mobile fitness tracking app following iOS Human Interface Guidelines and Material Design principles. Core features: (1) Workout logging: Exercise library with search/filter, quick-add favorites, timer with rest intervals, rep/set tracking, notes field, photo attachments. (2) Progress charts: Weight progression line graphs, body measurements tracking, workout frequency heatmap, personal records timeline, goal progress rings. (3) Social features: Activity feed with likes/comments, friend challenges, achievement badges, leaderboards, workout sharing. (4) Personalized recommendations: AI-suggested workouts based on history, rest day reminders, form tips, nutrition suggestions. Navigation: Bottom tab bar (Home, Workouts, Progress, Social, Profile). Interactions: Swipe gestures for quick actions, pull-to-refresh, haptic feedback, smooth transitions, skeleton loading states. Design system: Motivational color palette (energetic orange/blue), SF Pro/Roboto typography, 4dp/8pt grid, thumb-friendly touch targets (44pt minimum), dark mode support. Include onboarding flow (3 screens), empty states, error handling, and accessibility features (VoiceOver/TalkBack support, dynamic type, high contrast mode).",
+    nextIdeas: [
+      "Add advanced gesture-based interactions (swipe to delete, long-press menus, pinch-to-zoom charts)",
+      "Create comprehensive onboarding flow with progressive disclosure, value demonstration, and permission requests",
+      "Design intelligent notification system with workout reminders, achievement celebrations, and friend activity alerts",
+    ],
   },
 
   // Artist Templates
@@ -260,11 +268,11 @@ const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
     layers: ["role", "context", "task", "format", "tone", "examples"],
     type: "golden",
     prefill:
-      "Create a cyberpunk cityscape at night with neon lights, flying vehicles, holographic advertisements, and rain-soaked streets. Style: Blade Runner meets Ghost in the Shell.",
+      "Create a highly detailed art prompt for AI image generation (Midjourney/DALL-E/Stable Diffusion). Scene: Cyberpunk cityscape at night during heavy rain. Composition: Wide-angle establishing shot from elevated perspective (rule of thirds), strong leading lines from street converging to vanishing point. Key elements: Towering skyscrapers with neon signage (kanji characters, holographic advertisements), flying vehicles with light trails, rain-soaked streets reflecting neon lights (wet asphalt shader), steam rising from grates, crowds with umbrellas, street vendors with glowing food stalls. Lighting: Dramatic chiaroscuro with neon color palette (cyan, magenta, amber), volumetric fog/god rays, rim lighting on characters, practical lights from storefronts. Atmosphere: Moody, noir aesthetic, high contrast, cinematic depth of field (f/2.8), slight lens flare. Style references: Blade Runner (1982) meets Ghost in the Shell (1995), Syd Mead's industrial design, Simon Stålenhag's atmospheric storytelling. Technical parameters: 8K resolution, photorealistic rendering, octane render, unreal engine quality, trending on ArtStation. Negative prompts: cartoon, anime, low quality, blurry, oversaturated.",
     nextIdeas: [
-      "Add lighting and mood variations",
-      "Generate character design prompts",
-      "Create style transfer combinations",
+      "Generate lighting and mood variations (golden hour, overcast day, dawn, dusk) with adjusted color palettes",
+      "Create detailed character design prompts with costume, pose, expression, and backstory elements",
+      "Design style transfer combinations blending multiple artistic movements (impressionism + cyberpunk, art nouveau + sci-fi)",
     ],
   },
   {
@@ -276,11 +284,11 @@ const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
     layers: ["role", "context", "task", "format", "examples"],
     type: "context",
     prefill:
-      "Design a fantasy warrior character: female elf ranger with nature magic abilities, leather armor with leaf motifs, carrying an enchanted bow.",
+      "Design a complete fantasy character with visual and narrative depth. Character concept: Female wood elf ranger, age 127 (appears mid-20s), guardian of the Whisperwood Forest. Physical attributes: Athletic build (5'8\"), sun-kissed tan skin with leaf-pattern tattoos (nature magic conduits), emerald green eyes with golden flecks, long auburn hair in practical braid with small flowers woven in, pointed ears with silver cuff earrings. Costume design: Weathered leather armor (forest green/brown) with embossed leaf motifs, asymmetrical design for mobility, hooded cloak with camouflage enchantment, leather bracers with carved runes, practical boots with silent soles, utility belt with pouches (herbs, arrows, rope). Weapons/equipment: Enchanted longbow (living wood, glows when drawn) with quiver of 20 arrows, dual hunting knives, small satchel with survival gear. Personality indicators: Confident stance, alert expression, slight smile suggesting wisdom, weathered hands showing experience, small scars telling stories. Color palette: Earth tones (forest green, bark brown, moss), accent colors (gold, deep red), magical glow (soft green). Art style: Semi-realistic fantasy illustration, detailed linework, painterly shading. Include front view, side profile, back view, and close-up of face and equipment details.",
     nextIdeas: [
-      "Generate character turnaround sheets",
-      "Create expression and pose variations",
-      "Design character evolution stages",
+      "Generate complete character turnaround sheet (8 angles) with consistent proportions and details",
+      "Create expression sheet showing 12 emotions (joy, anger, surprise, fear, disgust, sadness, etc.) with subtle variations",
+      "Design character evolution stages (young apprentice, current form, elder master) showing progression",
     ],
   },
   {
@@ -292,11 +300,11 @@ const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
     layers: ["role", "context", "task", "format", "tone"],
     type: "chain",
     prefill:
-      "Design a floating island civilization with ancient ruins, magical crystals, waterfalls cascading into clouds, and steampunk airships.",
+      "Design a detailed environment concept for a fantasy world. Setting: Floating island civilization suspended 10,000 feet above the clouds. Architecture: Ancient ruins (weathered stone, overgrown with luminescent vines) mixed with steampunk technology (brass pipes, rotating gears, steam vents). Central structure: Massive crystal spire (source of levitation magic) pulsing with blue energy, surrounded by concentric rings of buildings. Districts: (1) Upper tier: Noble estates with hanging gardens, glass domes, observation decks. (2) Middle tier: Market district with airship docks, mechanical elevators, suspension bridges. (3) Lower tier: Industrial zone with foundries, workshops, massive propellers for stabilization. Key features: Waterfalls cascading off edges into clouds below, creating perpetual rainbows; steampunk airships (various sizes) docking at towers; wind turbines harnessing updrafts; floating smaller islands connected by chain bridges. Atmosphere: Golden hour lighting (warm sunset), volumetric clouds, lens flare from crystal, sense of scale (tiny figures for reference). Composition: Dramatic three-quarter view showing depth, strong foreground/midground/background separation, atmospheric perspective. Color palette: Warm golds/oranges (sunset), cool blues (crystal/sky), bronze/copper (steampunk elements), green (vegetation). Art style: Painterly concept art, detailed but loose brushwork, cinematic lighting. Include architectural callouts, scale reference, and material notes.",
     nextIdeas: [
-      "Add architectural detail passes",
-      "Generate color palette variations",
-      "Create day/night/weather variants",
+      "Add architectural detail passes focusing on specific buildings (market, temple, airship dock) with floor plans",
+      "Generate color palette variations (dawn, midday, dusk, night, storm) with lighting studies",
+      "Create comprehensive day/night/weather variants showing how environment transforms (clear, rain, fog, storm, snow)",
     ],
   },
 
@@ -310,11 +318,11 @@ const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
     layers: ["role", "context", "task", "format", "tone", "validation"],
     type: "golden",
     prefill:
-      "Create a 30-second product launch video for an AI writing assistant. Show problem (writer's block), solution (our tool), and results (happy productive writer).",
+      'Create a comprehensive 30-second product launch video for an AI writing assistant targeting content creators and marketers. Marketing framework: Problem-Agitate-Solution (PAS). Structure: (1) Hook (0-3s): Attention-grabbing opening - frustrated writer staring at blank screen, clock ticking. Text overlay: "Writer\'s block costing you time?" (2) Problem (3-10s): Quick cuts showing pain points - missed deadlines, deleted paragraphs, stress. Voiceover: "Every content creator knows the struggle..." (3) Solution introduction (10-18s): Smooth transition to our AI tool interface, clean UI showcase, typing animation showing AI suggestions appearing, satisfied user expression. Voiceover: "Meet [Product Name] - your AI writing partner." (4) Benefits (18-25s): Split-screen showing before/after, metrics appearing (3x faster, 10x ideas, 100% original), happy user working efficiently. (5) CTA (25-30s): Strong closing with product logo, website URL, limited-time offer badge. Text: "Start writing smarter today. 14-day free trial." Visual style: Modern, clean, professional with energetic pacing. Color grading: Warm, inviting tones. Music: Upbeat, motivational (120 BPM). Transitions: Smooth cuts, occasional zoom. Text: Bold, readable, on-brand typography. Include shot list with timings, camera angles, and transition notes.',
     nextIdeas: [
-      "Add script variations for A/B testing",
-      "Generate storyboard with shot descriptions",
-      "Create social media cut-downs (15s, 10s, 6s)",
+      "Generate A/B testing script variations for different hooks (question, statistic, bold statement) and CTAs",
+      "Create detailed storyboard with 12 frames showing key moments, camera angles, and visual effects",
+      "Design social media cut-downs optimized for platforms (15s TikTok, 10s Instagram Reels, 6s YouTube Shorts) with platform-specific hooks",
     ],
   },
   {
@@ -326,11 +334,11 @@ const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
     layers: ["role", "context", "task", "format", "examples"],
     type: "chain",
     prefill:
-      "Create a tutorial video teaching beginners how to use Figma: interface overview, creating shapes, using components, and exporting assets.",
+      "Create a comprehensive tutorial video teaching Figma basics to complete beginners (10-12 minutes). Learning objectives: By the end, viewers will be able to navigate Figma interface, create basic shapes, use components, and export assets. Structure: (1) Introduction (0-1min): Welcome, what they'll learn, final project preview (simple mobile app mockup). (2) Interface overview (1-3min): Toolbar walkthrough, layers panel, properties panel, canvas navigation (zoom, pan). Screen recording with cursor highlights and callout annotations. (3) Creating shapes (3-5min): Rectangle, circle, polygon tools; fill and stroke properties; alignment and distribution; grouping. Hands-on example: Create a button. (4) Working with text (5-6min): Text tool, font selection, text properties, text alignment. Example: Add button label. (5) Components (6-9min): What are components, creating a component, using instances, overrides. Example: Turn button into reusable component. (6) Exporting (9-10min): Export settings, formats (PNG, SVG, PDF), resolution options, batch export. (7) Practice project (10-11min): Quick challenge - create a simple card component. (8) Conclusion (11-12min): Recap, next steps, resources. Presentation style: Clear, patient narration; step-by-step demonstrations; pause points for practice; visual callouts for important UI elements; keyboard shortcuts shown; common mistakes highlighted. Include chapter markers, on-screen text for key points, and downloadable practice file.",
     nextIdeas: [
-      "Add chapter markers and timestamps",
-      "Generate quiz questions for engagement",
-      "Create supplementary written guide",
+      "Add detailed chapter markers with timestamps and clickable navigation for easy reference",
+      "Generate interactive quiz questions at key points to reinforce learning and boost engagement",
+      "Create comprehensive supplementary written guide with screenshots, keyboard shortcuts cheat sheet, and troubleshooting section",
     ],
   },
   {
@@ -342,11 +350,11 @@ const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
     layers: ["role", "context", "task", "tone", "constraints"],
     type: "few_shot",
     prefill:
-      "Create a 15-second Instagram Reel showing 5 productivity hacks for remote workers. Fast-paced, energetic, with text overlays and trending audio.",
+      'Create a viral-optimized 15-second Instagram Reel showcasing 5 productivity hacks for remote workers. Viral content principles: Pattern interrupt, value delivery, shareability. Structure: (1) Hook (0-2s): Attention-grabbing opening - "5 productivity hacks that changed my life" with energetic jump cut. Must stop scroll immediately. (2) Rapid-fire tips (2-13s): Hack 1 (2-4s): Pomodoro timer visual, "25min focus blocks". Hack 2 (4-6s): Dual monitor setup, "2 screens = 2x productivity". Hack 3 (6-8s): Standing desk, "Stand every hour". Hack 4 (8-10s): Noise-canceling headphones, "Block distractions". Hack 5 (10-13s): Time blocking calendar, "Schedule everything". Each hack: 2-second demonstration with bold text overlay. (3) CTA (13-15s): "Follow for more tips!" with profile tag and save reminder. Visual style: Fast-paced jump cuts (every 2s), dynamic camera movements, bold sans-serif text (high contrast), consistent color grading (bright, energetic). Audio: Trending upbeat music (check Instagram audio library), sound effects for transitions. Optimization: Vertical 9:16 format, captions for sound-off viewing, first frame must be compelling thumbnail, hashtag strategy (#productivity #remotework #workhacks). Include shot list, text overlays, transition timing, and trending audio suggestions.',
     nextIdeas: [
-      "Generate hook variations for first 3 seconds",
-      "Create series of related content",
-      "Add call-to-action optimization",
+      "Generate 10 hook variations for first 3 seconds testing different angles (question, bold claim, relatable problem, shocking statistic)",
+      "Create content series strategy with 20 related video ideas maintaining consistent format and branding",
+      "Design CTA optimization experiments (follow, save, share, comment) with different end screens and engagement tactics",
     ],
   },
 
@@ -360,11 +368,11 @@ const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
     layers: ["role", "context", "task", "format", "validation"],
     type: "chain",
     prefill:
-      "Create a Zapier workflow that monitors Gmail for invoices, extracts data, creates records in Airtable, and sends Slack notifications to the finance team.",
+      "Design a production-ready Zapier workflow automating invoice processing for a small business. Business requirement: Monitor Gmail for invoices, extract data, store in Airtable, notify finance team. Workflow steps: (1) Trigger: Gmail - New email matching search (from:invoices@*, subject contains 'invoice'). Filter: Only emails with PDF attachments. (2) Action: Gmail - Download attachment. Store PDF temporarily. (3) Action: Formatter - Extract text from PDF using OCR. Parse invoice number, date, amount, vendor name using regex patterns. (4) Action: Formatter - Date/Time formatting. Convert invoice date to ISO format. (5) Action: Formatter - Number formatting. Clean amount (remove currency symbols, commas). (6) Action: Airtable - Create record. Table: Invoices. Fields: Invoice Number, Date, Amount, Vendor, Status (Pending), PDF URL, Received Date (now). (7) Action: Filter - Only if amount > $1000. (8) Action: Slack - Send message to #finance channel. Message: 'New invoice received: [Vendor] - $[Amount]. Review in Airtable: [Link]'. Include @finance-team mention. Error handling: (1) If PDF extraction fails, send error notification. (2) If duplicate invoice number, update existing record instead. (3) Log all actions to Google Sheets for audit trail. Testing: Include test data examples and expected outputs. Documentation: Workflow diagram, field mappings, and troubleshooting guide.",
     nextIdeas: [
-      "Add error handling and retry logic",
-      "Create conditional branching paths",
-      "Generate workflow documentation",
+      "Add sophisticated error handling with retry logic (3 attempts with exponential backoff) and fallback notifications",
+      "Create conditional branching paths for different invoice types (recurring, one-time, international) with custom processing rules",
+      "Generate comprehensive workflow documentation with flowchart, data mapping table, and step-by-step setup guide",
     ],
   },
   {
@@ -376,11 +384,11 @@ const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
     layers: ["role", "context", "task", "format", "examples", "validation"],
     type: "context",
     prefill:
-      "Build an n8n workflow that scrapes product data from competitor websites, analyzes pricing trends, updates our database, and alerts when prices drop below threshold.",
+      "Build an advanced n8n workflow for competitive price monitoring and dynamic pricing strategy. Business goal: Track competitor prices, analyze trends, automatically adjust our prices to stay competitive while maintaining margins. Workflow architecture: (1) Schedule Trigger: Cron (every 6 hours). (2) HTTP Request nodes: Scrape 5 competitor websites (use rotating proxies to avoid blocks). Extract: Product name, price, availability, last updated. Handle pagination and rate limiting. (3) Function node: Data cleaning and normalization. Remove currency symbols, convert to numbers, standardize product names, handle missing data. (4) PostgreSQL node: Store raw data in 'competitor_prices' table with timestamp. (5) Function node: Price analysis algorithm. Calculate: Average competitor price, price range (min/max), our current position, trend analysis (7-day moving average), price volatility. (6) Decision node: Pricing strategy logic. If our price > avg + 10%: Flag for review. If competitor dropped price > 15%: Trigger alert. If we're cheapest by > 20%: Consider price increase. (7) PostgreSQL node: Update 'our_products' table with recommended prices. (8) HTTP Request: Update prices in Shopify via API (only if within margin thresholds). (9) Slack notification: Send daily summary report with: Price changes made, products flagged for review, competitor insights, revenue impact estimate. (10) Google Sheets: Log all price changes for audit trail. Error handling: Retry failed requests (3x), fallback to cached data if scraping fails, alert on critical errors. Include: Node configuration details, SQL queries, JavaScript functions, API authentication, and monitoring setup.",
     nextIdeas: [
-      "Add data transformation nodes",
-      "Create scheduled execution triggers",
-      "Implement webhook integrations",
+      "Add advanced data transformation nodes with machine learning price prediction using historical data",
+      "Create scheduled execution triggers with intelligent timing based on competitor update patterns and traffic analysis",
+      "Implement comprehensive webhook integrations for real-time price alerts and Slack/Discord notifications with custom formatting",
     ],
   },
   {
@@ -392,11 +400,11 @@ const QUICK_START_TEMPLATES: QuickStartTemplate[] = [
     layers: ["role", "context", "task", "format", "constraints"],
     type: "golden",
     prefill:
-      "Design a Make.com scenario that syncs customer data between Shopify, Mailchimp, and Google Sheets, with duplicate detection and data validation.",
+      "Design a comprehensive Make.com scenario for customer data synchronization across Shopify, Mailchimp, and Google Sheets with data validation and deduplication. Business requirement: Maintain single source of truth for customer data across platforms, prevent duplicates, enrich data, ensure GDPR compliance. Scenario flow: (1) Trigger: Shopify - Watch new customers (webhook). Receives: Customer ID, email, name, phone, address, tags, created date. (2) Data validation module: Check email format (regex), validate phone number format, ensure required fields present, flag incomplete records. (3) Deduplication check: Search Google Sheets for existing email. If found: Compare data, update if newer, skip if duplicate. If not found: Proceed to create. (4) Data enrichment: Use Clearbit API to enrich with company data, job title, social profiles. Timeout: 5 seconds, continue if fails. (5) Router (parallel paths): Path A - Mailchimp: Check if subscriber exists. If yes: Update subscriber with new data, add tags. If no: Create subscriber, add to 'New Customers' segment, trigger welcome email. Path B - Google Sheets: Append row with: Customer ID, Email, Name, Phone, Address, Tags, Source (Shopify), Created Date, Last Updated, Enrichment Data. Path C - Airtable: Create record in 'Customers' base for CRM tracking. (6) Aggregator: Wait for all paths to complete. (7) Error handling: If any path fails, log to error sheet, send Slack notification to #ops channel, retry after 5 minutes. (8) GDPR compliance: Check for opt-out requests, respect email preferences, log all data processing. (9) Confirmation: Send success notification with summary (records processed, duplicates found, errors). Include: Module configuration, data mapping tables, filter conditions, error handling logic, and testing checklist.",
     nextIdeas: [
-      "Add multi-step approval workflows",
-      "Create data enrichment modules",
-      "Generate scenario templates library",
+      "Add multi-step approval workflows for high-value customers requiring manual review before sync",
+      "Create data enrichment modules using multiple APIs (Clearbit, FullContact, Hunter.io) with fallback logic",
+      "Generate scenario templates library for common use cases (e-commerce, SaaS, B2B) with customization guides",
     ],
   },
 ]

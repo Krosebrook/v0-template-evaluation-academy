@@ -3,10 +3,12 @@
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { Star, TrendingUp, Users, Award, Github, ExternalLink } from "lucide-react"
+import { Star, TrendingUp, Users, Award, Github, ExternalLink, Maximize2, Code2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import Image from "next/image"
 import Link from "next/link"
+import { useState } from "react"
 
 interface Evaluation {
   id: string
@@ -52,6 +54,7 @@ const CRITERIA_LABELS = {
 }
 
 export function ResultsDashboard({ template }: { template: Template }) {
+  const [previewMode, setPreviewMode] = useState<"desktop" | "tablet" | "mobile">("desktop")
   const evaluations = template.evaluations || []
   const hasEvaluations = evaluations.length > 0
 
@@ -68,6 +71,12 @@ export function ResultsDashboard({ template }: { template: Template }) {
     : null
 
   const overallAverage = averageScores?.overall_score || 0
+
+  const previewWidths = {
+    desktop: "100%",
+    tablet: "768px",
+    mobile: "375px",
+  }
 
   return (
     <div className="space-y-6">
@@ -133,6 +142,122 @@ export function ResultsDashboard({ template }: { template: Template }) {
           </div>
         </div>
       </div>
+
+      {/* Interactive Preview Sandbox */}
+      {template.demo_url && (
+        <Card className="p-6">
+          <Tabs defaultValue="preview" className="w-full">
+            <div className="flex items-center justify-between mb-4">
+              <TabsList>
+                <TabsTrigger value="preview" className="gap-2">
+                  <Maximize2 className="h-4 w-4" />
+                  Live Preview
+                </TabsTrigger>
+                <TabsTrigger value="info" className="gap-2">
+                  <Code2 className="h-4 w-4" />
+                  Details
+                </TabsTrigger>
+              </TabsList>
+
+              <div className="flex gap-2">
+                <Button
+                  variant={previewMode === "desktop" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setPreviewMode("desktop")}
+                >
+                  Desktop
+                </Button>
+                <Button
+                  variant={previewMode === "tablet" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setPreviewMode("tablet")}
+                >
+                  Tablet
+                </Button>
+                <Button
+                  variant={previewMode === "mobile" ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setPreviewMode("mobile")}
+                >
+                  Mobile
+                </Button>
+              </div>
+            </div>
+
+            <TabsContent value="preview" className="mt-0">
+              <div className="bg-muted/30 rounded-lg p-4 flex justify-center">
+                <div
+                  className="bg-background rounded-lg shadow-lg overflow-hidden transition-all duration-300"
+                  style={{ width: previewWidths[previewMode], maxWidth: "100%" }}
+                >
+                  <iframe
+                    src={template.demo_url}
+                    className="w-full h-[600px] border-0"
+                    title={`${template.title} Preview`}
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                  />
+                </div>
+              </div>
+              <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
+                <p>Interactive preview in {previewMode} mode</p>
+                <a href={template.demo_url} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  Open in new tab →
+                </a>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="info" className="mt-0">
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium mb-1">Category</p>
+                    <Badge variant="secondary">{template.category}</Badge>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium mb-1">Difficulty</p>
+                    <Badge variant="outline">{template.difficulty}</Badge>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium mb-2">Technologies</p>
+                  <div className="flex flex-wrap gap-2">
+                    {template.tags.map((tag) => (
+                      <Badge key={tag} variant="secondary">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium mb-2">Description</p>
+                  <p className="text-sm text-muted-foreground">{template.description}</p>
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  {template.github_url && (
+                    <a href={template.github_url} target="_blank" rel="noopener noreferrer" className="flex-1">
+                      <Button variant="outline" className="w-full gap-2 bg-transparent">
+                        <Github className="w-4 h-4" />
+                        View Source Code
+                      </Button>
+                    </a>
+                  )}
+                  {template.demo_url && (
+                    <a href={template.demo_url} target="_blank" rel="noopener noreferrer" className="flex-1">
+                      <Button variant="outline" className="w-full gap-2 bg-transparent">
+                        <ExternalLink className="w-4 h-4" />
+                        Open Live Demo
+                      </Button>
+                    </a>
+                  )}
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </Card>
+      )}
 
       {/* Stats Overview */}
       <div className="grid gap-4 md:grid-cols-4">

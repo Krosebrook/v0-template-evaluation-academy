@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { UserNav } from "@/components/user-nav"
+import { NotificationsDropdown } from "@/components/notifications-dropdown"
 
 export function SiteHeader() {
   return (
@@ -25,6 +26,7 @@ export function SiteHeader() {
           </nav>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
+          <NotificationsDropdown />
           <UserNav />
         </div>
       </div>

@@ -9,8 +9,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Save, User, Mail, Shield } from "lucide-react"
+import { ArrowLeft, Save, User, Mail, Shield, Bell } from "lucide-react"
 import Link from "next/link"
 
 export default function SettingsPage() {
@@ -21,6 +22,11 @@ export default function SettingsPage() {
   const [profile, setProfile] = useState({
     display_name: "",
     role: "user",
+  })
+  const [emailPreferences, setEmailPreferences] = useState({
+    evaluation_notifications: true,
+    comment_notifications: true,
+    weekly_digest: true,
   })
   const router = useRouter()
   const supabase = createClient()
@@ -44,6 +50,27 @@ export default function SettingsPage() {
         setProfile({
           display_name: profileData.display_name || "",
           role: profileData.role || "user",
+        })
+      }
+
+      const { data: prefsData } = await supabase
+        .from("email_preferences")
+        .select("*")
+        .eq("user_id", authUser.id)
+        .single()
+
+      if (prefsData) {
+        setEmailPreferences({
+          evaluation_notifications: prefsData.evaluation_notifications,
+          comment_notifications: prefsData.comment_notifications,
+          weekly_digest: prefsData.weekly_digest,
+        })
+      } else {
+        await supabase.from("email_preferences").insert({
+          user_id: authUser.id,
+          evaluation_notifications: true,
+          comment_notifications: true,
+          weekly_digest: true,
         })
       }
 
@@ -72,6 +99,27 @@ export default function SettingsPage() {
       setMessage({ type: "success", text: "Profile updated successfully!" })
     } catch (error) {
       setMessage({ type: "error", text: error instanceof Error ? error.message : "Failed to update profile" })
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleSaveEmailPreferences = async () => {
+    setSaving(true)
+    setMessage(null)
+
+    try {
+      const { error } = await supabase.from("email_preferences").upsert({
+        user_id: user.id,
+        ...emailPreferences,
+        updated_at: new Date().toISOString(),
+      })
+
+      if (error) throw error
+
+      setMessage({ type: "success", text: "Email preferences updated successfully!" })
+    } catch (error) {
+      setMessage({ type: "error", text: error instanceof Error ? error.message : "Failed to update preferences" })
     } finally {
       setSaving(false)
     }
@@ -159,6 +207,65 @@ export default function SettingsPage() {
                   {saving ? "Saving..." : "Save Changes"}
                 </Button>
               </form>
+            </CardContent>
+          </Card>
+
+          {/* Email Notifications */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Bell className="w-5 h-5" />
+                Email Notifications
+              </CardTitle>
+              <CardDescription>Manage your email notification preferences</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="evaluation-notifications">Evaluation Notifications</Label>
+                  <p className="text-sm text-muted-foreground">Receive emails when your templates are evaluated</p>
+                </div>
+                <Switch
+                  id="evaluation-notifications"
+                  checked={emailPreferences.evaluation_notifications}
+                  onCheckedChange={(checked) =>
+                    setEmailPreferences({ ...emailPreferences, evaluation_notifications: checked })
+                  }
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="comment-notifications">Comment Notifications</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Receive emails when someone comments on your templates
+                  </p>
+                </div>
+                <Switch
+                  id="comment-notifications"
+                  checked={emailPreferences.comment_notifications}
+                  onCheckedChange={(checked) =>
+                    setEmailPreferences({ ...emailPreferences, comment_notifications: checked })
+                  }
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <Label htmlFor="weekly-digest">Weekly Digest</Label>
+                  <p className="text-sm text-muted-foreground">Receive a weekly summary of activity</p>
+                </div>
+                <Switch
+                  id="weekly-digest"
+                  checked={emailPreferences.weekly_digest}
+                  onCheckedChange={(checked) => setEmailPreferences({ ...emailPreferences, weekly_digest: checked })}
+                />
+              </div>
+
+              <Button onClick={handleSaveEmailPreferences} disabled={saving} className="w-full">
+                <Save className="w-4 h-4 mr-2" />
+                {saving ? "Saving..." : "Save Preferences"}
+              </Button>
             </CardContent>
           </Card>
 
