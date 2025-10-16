@@ -113,6 +113,19 @@ const PERSONAS: Persona[] = [
   { id: "researcher", name: "Thorough Researcher", description: "Evidence-based and comprehensive", icon: "🔬" },
   { id: "engineer", name: "Technical Engineer", description: "Implementation-focused and practical", icon: "⚙️" },
   { id: "consultant", name: "Business Consultant", description: "ROI-focused and pragmatic", icon: "💼" },
+  { id: "architect", name: "System Architect", description: "Designs scalable, maintainable systems", icon: "🏗️" },
+  {
+    id: "security",
+    name: "Security Specialist",
+    description: "Identifies vulnerabilities and security best practices",
+    icon: "🔒",
+  },
+  { id: "ux", name: "UX Designer", description: "User-centered design and accessibility focus", icon: "🎨" },
+  { id: "data", name: "Data Scientist", description: "Statistical analysis and ML insights", icon: "📊" },
+  { id: "devops", name: "DevOps Engineer", description: "CI/CD, infrastructure, and automation", icon: "🚀" },
+  { id: "product", name: "Product Manager", description: "User needs, roadmaps, and prioritization", icon: "📋" },
+  { id: "legal", name: "Legal Advisor", description: "Compliance, regulations, and risk management", icon: "⚖️" },
+  { id: "ethicist", name: "Ethics Specialist", description: "Moral implications and responsible AI", icon: "🤝" },
 ]
 
 const PROMPT_LAYERS: PromptLayer[] = [
@@ -124,6 +137,30 @@ const PROMPT_LAYERS: PromptLayer[] = [
   { id: "constraints", name: "Constraints", description: "Limitations and boundaries", essential: false },
   { id: "tone", name: "Tone & Style", description: "Communication style preferences", essential: false },
   { id: "validation", name: "Validation Criteria", description: "Success metrics and checks", essential: false },
+  {
+    id: "audience",
+    name: "Target Audience",
+    description: "Who will consume this output and their expertise level",
+    essential: false,
+  },
+  {
+    id: "iteration",
+    name: "Iteration Strategy",
+    description: "How to refine and improve the output",
+    essential: false,
+  },
+  {
+    id: "dependencies",
+    name: "Dependencies & Prerequisites",
+    description: "Required knowledge, tools, or context",
+    essential: false,
+  },
+  {
+    id: "fallback",
+    name: "Fallback & Error Handling",
+    description: "What to do when constraints can't be met",
+    essential: false,
+  },
 ]
 
 const PROMPT_TYPES = {
@@ -813,6 +850,26 @@ export default function Home() {
       prompt += "□ Recommendations are actionable\n"
     }
 
+    // Add new layers here if they are part of the golden prompt structure
+    if (layers.find((l) => l.id === "audience")) {
+      prompt += "## TARGET AUDIENCE\n"
+      prompt +=
+        "[Describe the intended audience for the output, e.g., beginner developers, marketing executives, general public]\n\n"
+    }
+    if (layers.find((l) => l.id === "iteration")) {
+      prompt += "## ITERATION STRATEGY\n"
+      prompt +=
+        "Plan for iterative improvement: Suggest ways to refine the output based on feedback or new information.\n\n"
+    }
+    if (layers.find((l) => l.id === "dependencies")) {
+      prompt += "## DEPENDENCIES & PREREQUISITES\n"
+      prompt += "[List any necessary tools, knowledge, or data required to implement the output]\n\n"
+    }
+    if (layers.find((l) => l.id === "fallback")) {
+      prompt += "## FALLBACK & ERROR HANDLING\n"
+      prompt += "Outline what to do if specific constraints cannot be met or errors occur during implementation.\n\n"
+    }
+
     return prompt
   }
 
@@ -865,8 +922,8 @@ Begin your analysis and prompt generation now.`
 ## ENVIRONMENTAL CONTEXT
 - **Domain**: ${input || "[Specify domain]"}
 - **Complexity**: ${complexity}
-- **Audience**: ${personas.map((p) => p.name).join(", ")}
 - **Temperature**: ${temperature}
+${layers.find((l) => l.id === "audience") ? "- **Audience**: [Describe target audience, e.g., Developers, Marketers, General Public]\n" : ""}
 
 ## SITUATIONAL FRAMING
 You are operating in a scenario where:
@@ -904,6 +961,7 @@ ${input || "[Your specific task or question]"}
 - Account for current best practices
 - Anticipate future implications
 - Balance theory with practicality
+${layers.find((l) => l.id === "constraints") ? "- Adhere to specified constraints:\n" : ""}
 
 ## OUTPUT REQUIREMENTS
 Provide a response that:
