@@ -1470,75 +1470,102 @@ Begin the recursive refinement process now.`
       )}
 
       <div className="max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8">
-        <header className="text-center space-y-3 mb-8">
-          <div className="flex items-center justify-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-xl">
-              <Sparkles className="w-8 h-8 text-primary" />
+        <header className="text-center space-y-3 mb-8 px-4">
+          <div className="flex items-center justify-center gap-2 md:gap-3">
+            <div className="p-1.5 md:p-2 bg-primary/10 rounded-xl">
+              <Sparkles className="w-6 h-6 md:w-8 md:h-8 text-primary" />
             </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
               Prompt Engineering Academy
             </h1>
           </div>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed px-4">
             Generate golden prompts, meta prompts, and context-engineered prompts with advanced persona and layer
             customization
           </p>
 
-          <div className="flex items-center justify-center gap-2 pt-4">
-            {/* CHANGE: Added link to templates gallery in header */}
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-4 px-2">
             <Link href="/templates">
-              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
-                <Library className="w-4 h-4" />
-                Template Gallery
+              <Button variant="outline" size="sm" className="gap-1.5 md:gap-2 bg-transparent text-xs md:text-sm">
+                <Library className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                <span className="hidden sm:inline">Template Gallery</span>
+                <span className="sm:hidden">Templates</span>
               </Button>
             </Link>
             <Link href="/tutorials">
-              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
-                <GraduationCap className="w-4 h-4" />
-                Tutorials
+              <Button variant="outline" size="sm" className="gap-1.5 md:gap-2 bg-transparent text-xs md:text-sm">
+                <GraduationCap className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                <span className="hidden sm:inline">Tutorials</span>
+                <span className="sm:hidden">Learn</span>
               </Button>
             </Link>
             <Link href="/library">
-              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
-                <BookOpen className="w-4 h-4" />
-                Prompt Library
+              <Button variant="outline" size="sm" className="gap-1.5 md:gap-2 bg-transparent text-xs md:text-sm">
+                <BookOpen className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                <span className="hidden sm:inline">Prompt Library</span>
+                <span className="sm:hidden">Library</span>
               </Button>
             </Link>
             <Link href="/help">
-              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
-                <HelpCircle className="w-4 h-4" />
-                Help Center
+              <Button variant="outline" size="sm" className="gap-1.5 md:gap-2 bg-transparent text-xs md:text-sm">
+                <HelpCircle className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                <span className="hidden sm:inline">Help Center</span>
+                <span className="sm:hidden">Help</span>
               </Button>
             </Link>
-            <Button variant="outline" size="sm" onClick={() => setShowSaved(true)} className="gap-2">
-              <FolderOpen className="w-4 h-4" />
-              Saved ({savedConfigs.length})
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowSaved(true)}
+              className="gap-1.5 md:gap-2 text-xs md:text-sm"
+            >
+              <FolderOpen className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              <span className="hidden sm:inline">Saved ({savedConfigs.length})</span>
+              <span className="sm:hidden">({savedConfigs.length})</span>
             </Button>
-            <Button variant="outline" size="sm" onClick={() => setShowHistory(true)} className="gap-2">
-              <History className="w-4 h-4" />
-              History ({promptHistory.length})
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowHistory(true)}
+              className="gap-1.5 md:gap-2 text-xs md:text-sm"
+            >
+              <History className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              <span className="hidden sm:inline">History ({promptHistory.length})</span>
+              <span className="sm:hidden">({promptHistory.length})</span>
             </Button>
-            <Button variant="outline" size="sm" onClick={() => setShowSaveDialog(true)} className="gap-2">
-              <Save className="w-4 h-4" />
-              Save Config
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowSaveDialog(true)}
+              className="gap-1.5 md:gap-2 text-xs md:text-sm"
+            >
+              <Save className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              <span className="hidden sm:inline">Save Config</span>
+              <span className="sm:hidden">Save</span>
             </Button>
-            <Button variant="outline" size="sm" onClick={() => setShowKeyboardShortcuts(true)} className="gap-2">
-              <Keyboard className="w-4 h-4" />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowKeyboardShortcuts(true)}
+              className="gap-1.5 md:gap-2 text-xs md:text-sm hidden md:flex"
+            >
+              <Keyboard className="w-3.5 h-3.5 md:w-4 md:h-4" />
               Shortcuts
             </Button>
-            {/* New Button: Upload */}
-            <Button variant="outline" size="sm" className="gap-2 bg-transparent">
-              <Upload className="w-4 h-4" />
-              Upload
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => setShowImportExport(true)} className="gap-2">
-              <Upload className="w-4 h-4" />
-              Import/Export
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowImportExport(true)}
+              className="gap-1.5 md:gap-2 text-xs md:text-sm"
+            >
+              <Upload className="w-3.5 h-3.5 md:w-4 md:h-4" />
+              <span className="hidden sm:inline">Import/Export</span>
+              <span className="sm:hidden">I/E</span>
             </Button>
             <Link href="/compare">
-              <Button variant="outline" size="sm" className="gap-2 bg-transparent">
-                <GitCompare className="w-4 h-4" />
-                Compare
+              <Button variant="outline" size="sm" className="gap-1.5 md:gap-2 bg-transparent text-xs md:text-sm">
+                <GitCompare className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                <span className="hidden sm:inline">Compare</span>
               </Button>
             </Link>
           </div>
@@ -1549,13 +1576,13 @@ Begin the recursive refinement process now.`
           configurations work. Click "Use Template" for instant results or "Remix" to customize before generating.
         </InlineHelp>
 
-        <Card className="p-6 mb-6 bg-gradient-to-r from-accent/30 via-primary/10 to-secondary/20 border-primary/30 shadow-lg">
-          <div className="flex items-start gap-4">
+        <Card className="p-4 md:p-6 mb-6 bg-gradient-to-r from-accent/30 via-primary/10 to-secondary/20 border-primary/30 shadow-lg">
+          <div className="flex flex-col md:flex-row items-start gap-4">
             <Wand2 className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-            <div className="flex-1">
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="font-semibold text-lg">Quick Start Templates</h3>
-                <div className="flex gap-2">
+            <div className="flex-1 w-full">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-2">
+                <h3 className="font-semibold text-base md:text-lg">Quick Start Templates</h3>
+                <div className="flex flex-wrap gap-2">
                   {categories.map((cat) => (
                     <Button
                       key={cat}
@@ -1572,12 +1599,12 @@ Begin the recursive refinement process now.`
                   ))}
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground mb-4">
+              <p className="text-xs md:text-sm text-muted-foreground mb-4">
                 Pre-configured templates for developers, designers, artists, video creators, and automation experts •
                 Auto-rotating every 3 seconds
               </p>
               <div
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
               >
@@ -1681,10 +1708,10 @@ Begin the recursive refinement process now.`
           </Card>
         )}
 
-        <div className="grid lg:grid-cols-[1fr_1.2fr] gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-4 md:gap-6">
           {/* Left Panel - Configuration */}
-          <div className="space-y-6">
-            <Card className="p-6">
+          <div className="space-y-4 md:space-y-6">
+            <Card className="p-4 md:p-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -1718,7 +1745,7 @@ Begin the recursive refinement process now.`
               </div>
             </Card>
 
-            <Card className="p-6">
+            <Card className="p-4 md:p-6">
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <Label className="text-lg font-semibold flex items-center gap-2">
@@ -1763,7 +1790,7 @@ Begin the recursive refinement process now.`
               </div>
             </Card>
 
-            <Card className="p-6">
+            <Card className="p-4 md:p-6">
               <button
                 onClick={() => setShowAdvanced(!showAdvanced)}
                 className="w-full flex items-center justify-between text-lg font-semibold hover:text-primary transition-colors"
@@ -1775,7 +1802,7 @@ Begin the recursive refinement process now.`
               </button>
 
               {showAdvanced && (
-                <div id="advanced-settings" className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t">
+                <div id="advanced-settings" className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 pt-4 border-t">
                   <div>
                     <Label htmlFor="complexity" className="text-sm font-medium mb-2 block">
                       Complexity Level
@@ -1811,7 +1838,7 @@ Begin the recursive refinement process now.`
               )}
             </Card>
 
-            <Card className="p-6">
+            <Card className="p-4 md:p-6">
               <Tabs defaultValue="personas" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 mb-4">
                   <TabsTrigger value="personas" className="flex items-center gap-2">

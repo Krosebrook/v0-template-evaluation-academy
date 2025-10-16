@@ -1,7 +1,19 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { Search, AlertTriangle, CheckCircle, Zap, Shield, Code, FileText, Brain, TrendingUp } from "lucide-react"
+import {
+  Search,
+  AlertTriangle,
+  CheckCircle,
+  Zap,
+  Shield,
+  Code,
+  FileText,
+  Brain,
+  TrendingUp,
+  Menu,
+  X,
+} from "lucide-react"
 
 const FRAMEWORKS = {
   RISE: { name: "R-I-S-E", desc: "Role, Input, Stops, Expectation", use: "Task execution" },
@@ -315,6 +327,7 @@ function PromptGenerator() {
   const [customVars, setCustomVars] = useState({})
   const [generatedPrompt, setGeneratedPrompt] = useState("")
   const [activeTab, setActiveTab] = useState("builder")
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const categories = {
     codegen: { name: "Code Generation", icon: Code, color: "blue" },
@@ -386,21 +399,23 @@ function PromptGenerator() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
       {/* Header */}
       <div className="border-b border-slate-700 bg-slate-900/50 backdrop-blur">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Zap className="w-8 h-8 text-yellow-400" />
+            <div className="flex items-center gap-2 md:gap-3">
+              <Zap className="w-6 h-6 md:w-8 md:h-8 text-yellow-400" />
               <div>
-                <h1 className="text-2xl font-bold">Universal Prompt Generator Pro</h1>
-                <p className="text-slate-400 text-sm">Enterprise-grade prompt engineering with quality gates</p>
+                <h1 className="text-lg md:text-2xl font-bold">Universal Prompt Generator Pro</h1>
+                <p className="text-slate-400 text-xs md:text-sm hidden sm:block">
+                  Enterprise-grade prompt engineering with quality gates
+                </p>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="hidden lg:flex gap-2">
               {["builder", "frameworks", "healing", "governance"].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-2 rounded-lg font-medium transition ${
+                  className={`px-3 md:px-4 py-2 rounded-lg font-medium transition text-sm ${
                     activeTab === tab ? "bg-blue-600 text-white" : "bg-slate-700 text-slate-300 hover:bg-slate-600"
                   }`}
                 >
@@ -408,20 +423,44 @@ function PromptGenerator() {
                 </button>
               ))}
             </div>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2 rounded-lg bg-slate-700 hover:bg-slate-600"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
+          {mobileMenuOpen && (
+            <div className="lg:hidden mt-4 space-y-2">
+              {["builder", "frameworks", "healing", "governance"].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => {
+                    setActiveTab(tab)
+                    setMobileMenuOpen(false)
+                  }}
+                  className={`w-full px-4 py-2 rounded-lg font-medium transition text-sm ${
+                    activeTab === tab ? "bg-blue-600 text-white" : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                  }`}
+                >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-8">
         {/* Builder Tab */}
         {activeTab === "builder" && (
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
             {/* Left Panel - Selection */}
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               {/* Category Selection */}
-              <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                  <Search className="w-5 h-5" />
+              <div className="bg-slate-800 rounded-xl p-4 md:p-6 border border-slate-700">
+                <h3 className="text-base md:text-lg font-bold mb-3 md:mb-4 flex items-center gap-2">
+                  <Search className="w-4 h-4 md:w-5 md:h-5" />
                   Select Category
                 </h3>
                 <div className="space-y-2">
@@ -434,11 +473,11 @@ function PromptGenerator() {
                           setCategory(key)
                           setTemplate(null)
                         }}
-                        className={`w-full flex items-center gap-3 p-3 rounded-lg transition ${
+                        className={`w-full flex items-center gap-2 md:gap-3 p-2 md:p-3 rounded-lg transition text-sm md:text-base ${
                           category === key ? "bg-blue-600 text-white" : "bg-slate-700 hover:bg-slate-600"
                         }`}
                       >
-                        <Icon className="w-5 h-5" />
+                        <Icon className="w-4 h-4 md:w-5 md:h-5" />
                         <span className="font-medium">{cat.name}</span>
                       </button>
                     )
@@ -447,12 +486,12 @@ function PromptGenerator() {
               </div>
 
               {/* Framework Selection */}
-              <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                <h3 className="text-lg font-bold mb-4">Framework</h3>
+              <div className="bg-slate-800 rounded-xl p-4 md:p-6 border border-slate-700">
+                <h3 className="text-base md:text-lg font-bold mb-3 md:mb-4">Framework</h3>
                 <select
                   value={framework}
                   onChange={(e) => setFramework(e.target.value)}
-                  className="w-full bg-slate-700 border border-slate-600 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 md:px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm md:text-base"
                 >
                   {Object.entries(FRAMEWORKS).map(([key, fw]) => (
                     <option key={key} value={key}>
@@ -460,18 +499,18 @@ function PromptGenerator() {
                     </option>
                   ))}
                 </select>
-                <p className="text-sm text-slate-400 mt-2">{FRAMEWORKS[framework].desc}</p>
+                <p className="text-xs md:text-sm text-slate-400 mt-2">{FRAMEWORKS[framework].desc}</p>
               </div>
 
               {/* Quality Score */}
               {generatedPrompt && (
-                <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                  <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-400" />
+                <div className="bg-slate-800 rounded-xl p-4 md:p-6 border border-slate-700">
+                  <h3 className="text-base md:text-lg font-bold mb-3 md:mb-4 flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 md:w-5 md:h-5 text-green-400" />
                     Quality Score
                   </h3>
-                  <div className="flex items-center gap-4">
-                    <div className="text-4xl font-bold text-green-400">{qualityScore}%</div>
+                  <div className="flex items-center gap-3 md:gap-4">
+                    <div className="text-3xl md:text-4xl font-bold text-green-400">{qualityScore}%</div>
                     <div className="flex-1">
                       <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
                         <div
@@ -479,7 +518,7 @@ function PromptGenerator() {
                           style={{ width: `${qualityScore}%` }}
                         />
                       </div>
-                      <p className="text-sm text-slate-400 mt-2">
+                      <p className="text-xs md:text-sm text-slate-400 mt-2">
                         {qualityScore < 60 && "Needs improvement"}
                         {qualityScore >= 60 && qualityScore < 80 && "Good"}
                         {qualityScore >= 80 && "Excellent"}
@@ -491,9 +530,9 @@ function PromptGenerator() {
             </div>
 
             {/* Middle Panel - Templates */}
-            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <CategoryIcon className="w-5 h-5" />
+            <div className="bg-slate-800 rounded-xl p-4 md:p-6 border border-slate-700">
+              <h3 className="text-base md:text-lg font-bold mb-3 md:mb-4 flex items-center gap-2">
+                <CategoryIcon className="w-4 h-4 md:w-5 md:h-5" />
                 {categories[category].name} Templates
               </h3>
               <div className="space-y-3">
@@ -504,14 +543,14 @@ function PromptGenerator() {
                       setTemplate(t)
                       generatePrompt()
                     }}
-                    className={`w-full text-left p-4 rounded-lg border transition ${
+                    className={`w-full text-left p-3 md:p-4 rounded-lg border transition ${
                       template === t
                         ? "bg-blue-600 border-blue-500"
                         : "bg-slate-700 border-slate-600 hover:bg-slate-600"
                     }`}
                   >
-                    <div className="font-bold mb-1">{t.name}</div>
-                    <div className="text-sm text-slate-300">{t.desc}</div>
+                    <div className="font-bold mb-1 text-sm md:text-base">{t.name}</div>
+                    <div className="text-xs md:text-sm text-slate-300">{t.desc}</div>
                     {t.gaps.length > 0 && (
                       <div className="flex items-center gap-1 mt-2 text-xs text-yellow-400">
                         <AlertTriangle className="w-3 h-3" />
@@ -524,25 +563,27 @@ function PromptGenerator() {
             </div>
 
             {/* Right Panel - Output */}
-            <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
-              <h3 className="text-lg font-bold mb-4">Generated Prompt</h3>
+            <div className="bg-slate-800 rounded-xl p-4 md:p-6 border border-slate-700">
+              <h3 className="text-base md:text-lg font-bold mb-3 md:mb-4">Generated Prompt</h3>
               {!generatedPrompt ? (
-                <div className="text-center py-12 text-slate-400">
-                  <FileText className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                  <p>Select a template to generate a prompt</p>
+                <div className="text-center py-8 md:py-12 text-slate-400">
+                  <FileText className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 opacity-50" />
+                  <p className="text-sm md:text-base">Select a template to generate a prompt</p>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="bg-slate-900 rounded-lg p-4 max-h-[600px] overflow-y-auto border border-slate-700">
-                    <pre className="text-sm text-slate-200 whitespace-pre-wrap font-mono">{generatedPrompt}</pre>
+                  <div className="bg-slate-900 rounded-lg p-3 md:p-4 max-h-[400px] md:max-h-[600px] overflow-y-auto border border-slate-700">
+                    <pre className="text-xs md:text-sm text-slate-200 whitespace-pre-wrap font-mono">
+                      {generatedPrompt}
+                    </pre>
                   </div>
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(generatedPrompt)
                     }}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition flex items-center justify-center gap-2"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 md:py-3 rounded-lg transition flex items-center justify-center gap-2 text-sm md:text-base"
                   >
-                    <FileText className="w-5 h-5" />
+                    <FileText className="w-4 h-4 md:w-5 md:h-5" />
                     Copy to Clipboard
                   </button>
                 </div>
@@ -553,14 +594,14 @@ function PromptGenerator() {
 
         {/* Frameworks Tab */}
         {activeTab === "frameworks" && (
-          <div className="bg-slate-800 rounded-xl p-8 border border-slate-700">
-            <h2 className="text-2xl font-bold mb-6">Prompt Engineering Frameworks</h2>
-            <div className="grid grid-cols-2 gap-6">
+          <div className="bg-slate-800 rounded-xl p-4 md:p-8 border border-slate-700">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Prompt Engineering Frameworks</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               {Object.entries(FRAMEWORKS).map(([key, fw]) => (
-                <div key={key} className="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                  <h3 className="text-xl font-bold text-blue-400 mb-2">{fw.name}</h3>
-                  <p className="text-slate-300 mb-3">{fw.desc}</p>
-                  <div className="text-sm text-slate-400">
+                <div key={key} className="bg-slate-900 rounded-lg p-4 md:p-6 border border-slate-700">
+                  <h3 className="text-lg md:text-xl font-bold text-blue-400 mb-2">{fw.name}</h3>
+                  <p className="text-sm md:text-base text-slate-300 mb-3">{fw.desc}</p>
+                  <div className="text-xs md:text-sm text-slate-400">
                     <strong>Best for:</strong> {fw.use}
                   </div>
                 </div>
@@ -571,21 +612,21 @@ function PromptGenerator() {
 
         {/* Self-Healing Tab */}
         {activeTab === "healing" && (
-          <div className="bg-slate-800 rounded-xl p-8 border border-slate-700">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-              <Zap className="w-7 h-7 text-yellow-400" />
+          <div className="bg-slate-800 rounded-xl p-4 md:p-8 border border-slate-700">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 flex items-center gap-2 md:gap-3">
+              <Zap className="w-6 h-6 md:w-7 md:h-7 text-yellow-400" />
               Self-Healing Patterns
             </h2>
             <div className="space-y-4">
               {SELF_HEAL_PATTERNS.map((pattern, i) => (
-                <div key={i} className="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                  <div className="flex items-start gap-4">
-                    <AlertTriangle className="w-6 h-6 text-yellow-400 flex-shrink-0 mt-1" />
+                <div key={i} className="bg-slate-900 rounded-lg p-4 md:p-6 border border-slate-700">
+                  <div className="flex items-start gap-3 md:gap-4">
+                    <AlertTriangle className="w-5 h-5 md:w-6 md:h-6 text-yellow-400 flex-shrink-0 mt-1" />
                     <div className="flex-1">
-                      <h3 className="text-lg font-bold text-red-400 mb-2">Scenario: {pattern.scenario}</h3>
-                      <div className="bg-green-900/30 border border-green-700 rounded-lg p-4">
-                        <div className="font-bold text-green-400 mb-1">Fix:</div>
-                        <code className="text-sm text-green-300">{pattern.fix}</code>
+                      <h3 className="text-base md:text-lg font-bold text-red-400 mb-2">Scenario: {pattern.scenario}</h3>
+                      <div className="bg-green-900/30 border border-green-700 rounded-lg p-3 md:p-4">
+                        <div className="font-bold text-green-400 mb-1 text-sm md:text-base">Fix:</div>
+                        <code className="text-xs md:text-sm text-green-300 break-words">{pattern.fix}</code>
                       </div>
                     </div>
                   </div>
@@ -597,25 +638,25 @@ function PromptGenerator() {
 
         {/* Governance Tab */}
         {activeTab === "governance" && (
-          <div className="bg-slate-800 rounded-xl p-8 border border-slate-700">
-            <h2 className="text-2xl font-bold mb-6 flex items-center gap-3">
-              <Shield className="w-7 h-7 text-blue-400" />
+          <div className="bg-slate-800 rounded-xl p-4 md:p-8 border border-slate-700">
+            <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 flex items-center gap-2 md:gap-3">
+              <Shield className="w-6 h-6 md:w-7 md:h-7 text-blue-400" />
               Governance & Quality Rules
             </h2>
             <div className="space-y-4">
               {GOVERNANCE_RULES.map((rule, i) => (
-                <div key={i} className="bg-slate-900 rounded-lg p-6 border border-slate-700">
-                  <div className="flex items-start gap-4">
-                    <CheckCircle className="w-6 h-6 text-blue-400 flex-shrink-0 mt-1" />
+                <div key={i} className="bg-slate-900 rounded-lg p-4 md:p-6 border border-slate-700">
+                  <div className="flex items-start gap-3 md:gap-4">
+                    <CheckCircle className="w-5 h-5 md:w-6 md:h-6 text-blue-400 flex-shrink-0 mt-1" />
                     <div className="flex-1">
-                      <h3 className="text-lg font-bold mb-2">{rule.rule}</h3>
-                      <p className="text-slate-300 mb-3">
+                      <h3 className="text-base md:text-lg font-bold mb-2">{rule.rule}</h3>
+                      <p className="text-sm md:text-base text-slate-300 mb-3">
                         <strong className="text-blue-400">Why:</strong> {rule.rationale}
                       </p>
                       <div className="bg-blue-900/20 border border-blue-700 rounded-lg p-3">
-                        <div className="text-sm">
+                        <div className="text-xs md:text-sm">
                           <strong className="text-blue-300">Check:</strong>{" "}
-                          <code className="text-blue-200">{rule.check}</code>
+                          <code className="text-blue-200 break-words">{rule.check}</code>
                         </div>
                       </div>
                     </div>
