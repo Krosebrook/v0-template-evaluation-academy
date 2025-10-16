@@ -5,6 +5,16 @@ import { Badge } from "@/components/ui/badge"
 
 const tools = [
   {
+    id: "universal-generator",
+    title: "Universal Prompt Generator Pro",
+    description:
+      "Enterprise-grade prompt engineering with 8 frameworks, quality gates, self-healing patterns, and governance rules",
+    category: "Enterprise",
+    techniques: ["R-I-S-E", "R-O-S-E", "F-L-O-W", "CoT", "ToT", "RAG", "ReAct", "APE"],
+    icon: "⚡",
+    path: "/training/tools/prompt-generator",
+  },
+  {
     id: "chain-of-thought",
     title: "Chain-of-Thought Builder",
     description: "Transform basic prompts into step-by-step reasoning prompts that improve AI accuracy by 20-40%",
@@ -60,7 +70,7 @@ const tools = [
   },
 ]
 
-const categories = ["All", "Advanced", "Optimization", "Frameworks", "Analysis", "Roles"]
+const categories = ["All", "Enterprise", "Advanced", "Optimization", "Frameworks", "Analysis", "Roles"]
 
 export default function PromptToolsPage() {
   return (
