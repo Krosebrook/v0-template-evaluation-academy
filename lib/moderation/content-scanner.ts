@@ -45,8 +45,6 @@ export async function scanContent(content: string): Promise<{
     score -= 15
   }
 
-  console.log("[v0] Content scan result:", { safe: score >= 50, flags, score })
-
   return {
     safe: score >= 50,
     flags,

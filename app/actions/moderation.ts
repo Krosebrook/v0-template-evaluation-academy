@@ -29,11 +29,10 @@ export async function reportContent(
   })
 
   if (error) {
-    console.error("[v0] Report error:", error)
+    console.error("Report error:", error)
     return { success: false, error: error.message }
   }
 
-  console.log("[v0] Content reported:", { contentId, contentType, reason })
   return { success: true }
 }
 
@@ -55,11 +54,10 @@ export async function blockUser(userId: string, reason: string) {
   })
 
   if (error) {
-    console.error("[v0] Block user error:", error)
+    console.error("Block user error:", error)
     return { success: false, error: error.message }
   }
 
-  console.log("[v0] User blocked:", { userId, reason })
   revalidatePath("/")
   return { success: true }
 }
@@ -99,7 +97,7 @@ export async function moderateContent(reportId: string, action: "approve" | "rem
     .eq("id", reportId)
 
   if (updateError) {
-    console.error("[v0] Moderate error:", updateError)
+    console.error("Moderate error:", updateError)
     return { success: false, error: updateError.message }
   }
 
@@ -112,7 +110,6 @@ export async function moderateContent(reportId: string, action: "approve" | "rem
     }
   }
 
-  console.log("[v0] Content moderated:", { reportId, action })
   revalidatePath("/admin")
   return { success: true }
 }

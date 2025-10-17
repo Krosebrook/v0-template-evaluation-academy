@@ -29,15 +29,12 @@ export function useRealtimeTemplates() {
     const channel: RealtimeChannel = supabase
       .channel("templates-changes")
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "templates" }, (payload) => {
-        console.log("[v0] New template inserted:", payload.new)
         setTemplates((current) => [payload.new as any, ...current])
       })
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "templates" }, (payload) => {
-        console.log("[v0] Template updated:", payload.new)
         setTemplates((current) => current.map((t) => (t.id === payload.new.id ? (payload.new as any) : t)))
       })
       .on("postgres_changes", { event: "DELETE", schema: "public", table: "templates" }, (payload) => {
-        console.log("[v0] Template deleted:", payload.old)
         setTemplates((current) => current.filter((t) => t.id !== payload.old.id))
       })
       .subscribe()
@@ -84,7 +81,6 @@ export function useRealtimeGenerations(templateId: string) {
           filter: `template_id=eq.${templateId}`,
         },
         (payload) => {
-          console.log("[v0] New generation inserted:", payload.new)
           setGenerations((current) => [payload.new as any, ...current])
         },
       )
@@ -97,7 +93,6 @@ export function useRealtimeGenerations(templateId: string) {
           filter: `template_id=eq.${templateId}`,
         },
         (payload) => {
-          console.log("[v0] Generation updated:", payload.new)
           setGenerations((current) => current.map((g) => (g.id === payload.new.id ? (payload.new as any) : g)))
         },
       )
@@ -148,7 +143,6 @@ export function useRealtimeNotifications(userId: string) {
           filter: `user_id=eq.${userId}`,
         },
         (payload) => {
-          console.log("[v0] New notification:", payload.new)
           setNotifications((current) => [payload.new as any, ...current])
           setUnreadCount((count) => count + 1)
         },
@@ -162,7 +156,6 @@ export function useRealtimeNotifications(userId: string) {
           filter: `user_id=eq.${userId}`,
         },
         (payload) => {
-          console.log("[v0] Notification updated:", payload.new)
           setNotifications((current) => current.map((n) => (n.id === payload.new.id ? (payload.new as any) : n)))
           if ((payload.new as any).read) {
             setUnreadCount((count) => Math.max(0, count - 1))
@@ -205,7 +198,6 @@ export function useOnlineUsers() {
       .on("presence", { event: "sync" }, () => {
         const state = channel.presenceState()
         const users = Object.keys(state)
-        console.log("[v0] Online users:", users)
         setOnlineUsers(users)
       })
       .subscribe(async (status) => {

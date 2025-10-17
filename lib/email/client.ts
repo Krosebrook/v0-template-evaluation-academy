@@ -18,10 +18,9 @@ export async function sendEmail({
       subject,
       html,
     })
-    console.log("[v0] Email sent successfully:", data)
     return { success: true, data }
   } catch (error) {
-    console.error("[v0] Email send error:", error)
+    console.error("Email send error:", error)
     return { success: false, error }
   }
 }

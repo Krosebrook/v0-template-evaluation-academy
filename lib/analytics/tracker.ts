@@ -13,8 +13,6 @@ export async function trackEvent(event: string, properties?: Record<string, unkn
       timestamp: new Date().toISOString(),
     }
 
-    console.log("[v0] Analytics event:", eventData)
-
     // In production, send to analytics service
     if (typeof window !== "undefined" && process.env.NODE_ENV === "production") {
       // Send to Vercel Analytics
@@ -30,7 +28,7 @@ export async function trackEvent(event: string, properties?: Record<string, unkn
       body: JSON.stringify(eventData),
     })
   } catch (error) {
-    console.error("[v0] Analytics error:", error)
+    console.error("Analytics error:", error)
   }
 }
 

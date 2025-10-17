@@ -12,12 +12,11 @@ export async function getCachedData<T>(key: string): Promise<T | null> {
     // For now, use in-memory cache
     const cached = globalThis.__cache?.get(key)
     if (cached && cached.expires > Date.now()) {
-      console.log("[v0] Cache hit:", key)
       return cached.data as T
     }
     return null
   } catch (error) {
-    console.error("[v0] Cache get error:", error)
+    console.error("Cache get error:", error)
     return null
   }
 }
@@ -31,9 +30,8 @@ export async function setCachedData<T>(key: string, data: T, ttl: number): Promi
       data,
       expires: Date.now() + ttl * 1000,
     })
-    console.log("[v0] Cache set:", key)
   } catch (error) {
-    console.error("[v0] Cache set error:", error)
+    console.error("Cache set error:", error)
   }
 }
 
@@ -44,11 +42,10 @@ export async function invalidateCache(pattern: string): Promise<void> {
     keys.forEach((key) => {
       if (key.includes(pattern)) {
         globalThis.__cache.delete(key)
-        console.log("[v0] Cache invalidated:", key)
       }
     })
   } catch (error) {
-    console.error("[v0] Cache invalidate error:", error)
+    console.error("Cache invalidate error:", error)
   }
 }
 
