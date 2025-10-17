@@ -27,6 +27,12 @@ export default function SettingsPage() {
     evaluation_notifications: true,
     comment_notifications: true,
     weekly_digest: true,
+    generation_complete: true,
+    marketplace_sales: true,
+    team_invitations: true,
+    version_updates: true,
+    marketing_emails: false,
+    digest_frequency: "weekly" as "instant" | "daily" | "weekly" | "never",
   })
   const router = useRouter()
   const supabase = createClient()
@@ -61,9 +67,15 @@ export default function SettingsPage() {
 
       if (prefsData) {
         setEmailPreferences({
-          evaluation_notifications: prefsData.evaluation_notifications,
-          comment_notifications: prefsData.comment_notifications,
-          weekly_digest: prefsData.weekly_digest,
+          evaluation_notifications: prefsData.evaluation_notifications ?? true,
+          comment_notifications: prefsData.comment_notifications ?? true,
+          weekly_digest: prefsData.weekly_digest ?? true,
+          generation_complete: prefsData.generation_complete ?? true,
+          marketplace_sales: prefsData.marketplace_sales ?? true,
+          team_invitations: prefsData.team_invitations ?? true,
+          version_updates: prefsData.version_updates ?? true,
+          marketing_emails: prefsData.marketing_emails ?? false,
+          digest_frequency: prefsData.digest_frequency || "weekly",
         })
       } else {
         await supabase.from("email_preferences").insert({
@@ -71,6 +83,12 @@ export default function SettingsPage() {
           evaluation_notifications: true,
           comment_notifications: true,
           weekly_digest: true,
+          generation_complete: true,
+          marketplace_sales: true,
+          team_invitations: true,
+          version_updates: true,
+          marketing_emails: false,
+          digest_frequency: "weekly",
         })
       }
 
@@ -219,47 +237,161 @@ export default function SettingsPage() {
               </CardTitle>
               <CardDescription>Manage your email notification preferences</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="evaluation-notifications">Evaluation Notifications</Label>
-                  <p className="text-sm text-muted-foreground">Receive emails when your templates are evaluated</p>
+            <CardContent className="space-y-6">
+              {/* Activity Notifications */}
+              <div className="space-y-4">
+                <h3 className="font-semibold text-sm">Activity Notifications</h3>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="generation-complete">Generation Complete</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Receive emails when your template generation is complete
+                    </p>
+                  </div>
+                  <Switch
+                    id="generation-complete"
+                    checked={emailPreferences.generation_complete}
+                    onCheckedChange={(checked) =>
+                      setEmailPreferences({ ...emailPreferences, generation_complete: checked })
+                    }
+                  />
                 </div>
-                <Switch
-                  id="evaluation-notifications"
-                  checked={emailPreferences.evaluation_notifications}
-                  onCheckedChange={(checked) =>
-                    setEmailPreferences({ ...emailPreferences, evaluation_notifications: checked })
-                  }
-                />
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="evaluation-notifications">Evaluation Notifications</Label>
+                    <p className="text-sm text-muted-foreground">Receive emails when your templates are evaluated</p>
+                  </div>
+                  <Switch
+                    id="evaluation-notifications"
+                    checked={emailPreferences.evaluation_notifications}
+                    onCheckedChange={(checked) =>
+                      setEmailPreferences({ ...emailPreferences, evaluation_notifications: checked })
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="comment-notifications">Comment Notifications</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Receive emails when someone comments on your templates
+                    </p>
+                  </div>
+                  <Switch
+                    id="comment-notifications"
+                    checked={emailPreferences.comment_notifications}
+                    onCheckedChange={(checked) =>
+                      setEmailPreferences({ ...emailPreferences, comment_notifications: checked })
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="version-updates">Version Updates</Label>
+                    <p className="text-sm text-muted-foreground">Get notified when templates you follow are updated</p>
+                  </div>
+                  <Switch
+                    id="version-updates"
+                    checked={emailPreferences.version_updates}
+                    onCheckedChange={(checked) =>
+                      setEmailPreferences({ ...emailPreferences, version_updates: checked })
+                    }
+                  />
+                </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="comment-notifications">Comment Notifications</Label>
+              {/* Marketplace Notifications */}
+              <div className="space-y-4 pt-4 border-t">
+                <h3 className="font-semibold text-sm">Marketplace Notifications</h3>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="marketplace-sales">Marketplace Sales</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Receive emails when someone purchases your templates
+                    </p>
+                  </div>
+                  <Switch
+                    id="marketplace-sales"
+                    checked={emailPreferences.marketplace_sales}
+                    onCheckedChange={(checked) =>
+                      setEmailPreferences({ ...emailPreferences, marketplace_sales: checked })
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* Team Notifications */}
+              <div className="space-y-4 pt-4 border-t">
+                <h3 className="font-semibold text-sm">Team Notifications</h3>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="team-invitations">Team Invitations</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Receive emails when you're invited to join a workspace
+                    </p>
+                  </div>
+                  <Switch
+                    id="team-invitations"
+                    checked={emailPreferences.team_invitations}
+                    onCheckedChange={(checked) =>
+                      setEmailPreferences({ ...emailPreferences, team_invitations: checked })
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* Digest Settings */}
+              <div className="space-y-4 pt-4 border-t">
+                <h3 className="font-semibold text-sm">Digest Settings</h3>
+
+                <div className="space-y-2">
+                  <Label htmlFor="digest-frequency">Digest Frequency</Label>
+                  <Select
+                    value={emailPreferences.digest_frequency}
+                    onValueChange={(value: any) =>
+                      setEmailPreferences({ ...emailPreferences, digest_frequency: value })
+                    }
+                  >
+                    <SelectTrigger id="digest-frequency">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="instant">Instant (as they happen)</SelectItem>
+                      <SelectItem value="daily">Daily Digest</SelectItem>
+                      <SelectItem value="weekly">Weekly Digest</SelectItem>
+                      <SelectItem value="never">Never</SelectItem>
+                    </SelectContent>
+                  </Select>
                   <p className="text-sm text-muted-foreground">
-                    Receive emails when someone comments on your templates
+                    Choose how often you want to receive activity summaries
                   </p>
                 </div>
-                <Switch
-                  id="comment-notifications"
-                  checked={emailPreferences.comment_notifications}
-                  onCheckedChange={(checked) =>
-                    setEmailPreferences({ ...emailPreferences, comment_notifications: checked })
-                  }
-                />
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label htmlFor="weekly-digest">Weekly Digest</Label>
-                  <p className="text-sm text-muted-foreground">Receive a weekly summary of activity</p>
+              {/* Marketing */}
+              <div className="space-y-4 pt-4 border-t">
+                <h3 className="font-semibold text-sm">Marketing Communications</h3>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="marketing-emails">Marketing Emails</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Receive updates about new features, tips, and special offers
+                    </p>
+                  </div>
+                  <Switch
+                    id="marketing-emails"
+                    checked={emailPreferences.marketing_emails}
+                    onCheckedChange={(checked) =>
+                      setEmailPreferences({ ...emailPreferences, marketing_emails: checked })
+                    }
+                  />
                 </div>
-                <Switch
-                  id="weekly-digest"
-                  checked={emailPreferences.weekly_digest}
-                  onCheckedChange={(checked) => setEmailPreferences({ ...emailPreferences, weekly_digest: checked })}
-                />
               </div>
 
               <Button onClick={handleSaveEmailPreferences} disabled={saving} className="w-full">
