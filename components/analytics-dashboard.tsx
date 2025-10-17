@@ -5,12 +5,21 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { BarChart3, TrendingUp, Users, FileText, Star, MessageSquare, Award, Activity } from "lucide-react"
 import { useMemo } from "react"
+import type { Template, Generation, Profile } from "@/types/database"
+
+interface Comment {
+  id: string
+  user_id: string
+  template_id: string
+  content: string
+  created_at: string
+}
 
 interface AnalyticsDashboardProps {
-  templates: any[]
-  evaluations: any[]
-  users: any[]
-  comments: any[]
+  templates: Template[]
+  evaluations: Generation[]
+  users: Profile[]
+  comments: Comment[]
 }
 
 export function AnalyticsDashboard({ templates, evaluations, users, comments }: AnalyticsDashboardProps) {

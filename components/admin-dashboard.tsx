@@ -10,11 +10,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Users, FileText, Star, TrendingUp, Search, Shield, Trash2, BarChart3 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import Link from "next/link"
+import type { Profile, Template, Generation } from "@/types/database"
 
 interface AdminDashboardProps {
-  users: any[]
-  templates: any[]
-  evaluations: any[]
+  users: Profile[]
+  templates: Template[]
+  evaluations: Generation[]
   currentUserId: string
 }
 

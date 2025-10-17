@@ -18,6 +18,7 @@ import {
 import { ShareButton } from "@/components/share-button"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
+import type { Profile, Template, Generation } from "@/types/database"
 
 const TIERS = ["novice", "intermediate", "advanced"]
 
@@ -66,11 +67,17 @@ const BADGES = [
   },
 ]
 
+interface ProgressData {
+  completedModules: string[]
+  score: number
+  badges: string[]
+}
+
 export default function ProfilePage() {
-  const [progress, setProgress] = useState<any>(null)
-  const [user, setUser] = useState<any>(null)
-  const [userTemplates, setUserTemplates] = useState<any[]>([])
-  const [userGenerations, setUserGenerations] = useState<any[]>([])
+  const [progress, setProgress] = useState<ProgressData | null>(null)
+  const [user, setUser] = useState<Profile | null>(null)
+  const [userTemplates, setUserTemplates] = useState<Template[]>([])
+  const [userGenerations, setUserGenerations] = useState<Generation[]>([])
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   const supabase = createClient()
@@ -144,7 +151,7 @@ export default function ProfilePage() {
     loadUserData()
   }, [supabase, router])
 
-  const calculateStreak = (data: any) => {
+  const calculateStreak = (data: ProgressData): number => {
     // Simple streak calculation - in real app would use timestamps
     return data.completedModules.length > 0 ? Math.min(data.completedModules.length, 7) : 0
   }
@@ -322,7 +329,7 @@ export default function ProfilePage() {
                 Recent Activity
               </h3>
               <div className="space-y-2">
-                {progress.completedModules
+                {progress?.completedModules
                   .slice(-5)
                   .reverse()
                   .map((moduleId: string, idx: number) => {
@@ -350,7 +357,7 @@ export default function ProfilePage() {
                       </div>
                     )
                   })}
-                {progress.completedModules.length === 0 && (
+                {progress?.completedModules.length === 0 && (
                   <p className="text-sm text-gray-500 text-center py-4">No completed modules yet. Start learning!</p>
                 )}
               </div>
@@ -366,7 +373,7 @@ export default function ProfilePage() {
 
             <div className="space-y-3">
               {BADGES.map((badge) => {
-                const earned = progress.badges.includes(badge.id)
+                const earned = progress?.badges.includes(badge.id)
                 return (
                   <div
                     key={badge.id}
