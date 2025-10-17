@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import { requestPasswordReset } from "@/app/actions/password-reset"
 
 import { useState, useEffect } from "react"
 import { createClient } from "@/lib/supabase/client"
@@ -34,6 +35,7 @@ export default function SettingsPage() {
     marketing_emails: false,
     digest_frequency: "weekly" as "instant" | "daily" | "weekly" | "never",
   })
+  const [resetPasswordLoading, setResetPasswordLoading] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
@@ -141,6 +143,21 @@ export default function SettingsPage() {
     } finally {
       setSaving(false)
     }
+  }
+
+  const handlePasswordReset = async () => {
+    if (!user?.email) return
+
+    setResetPasswordLoading(true)
+    const response = await requestPasswordReset(user.email)
+
+    if (response.success) {
+      setMessage({ type: "success", text: response.message || "Password reset email sent!" })
+    } else {
+      setMessage({ type: "error", text: response.error || "Failed to send reset email" })
+    }
+
+    setResetPasswordLoading(false)
   }
 
   if (loading) {
@@ -438,10 +455,17 @@ export default function SettingsPage() {
               <CardDescription>Manage your account security</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button variant="outline" className="w-full bg-transparent" disabled>
-                Change Password
+              <Button
+                variant="outline"
+                className="w-full bg-transparent"
+                onClick={handlePasswordReset}
+                disabled={resetPasswordLoading}
+              >
+                {resetPasswordLoading ? "Sending..." : "Reset Password"}
               </Button>
-              <p className="text-xs text-gray-500 text-center">Password reset functionality coming soon</p>
+              <p className="text-xs text-gray-500 text-center">
+                We'll send you an email with instructions to reset your password
+              </p>
             </CardContent>
           </Card>
         </div>
