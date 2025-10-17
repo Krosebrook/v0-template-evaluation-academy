@@ -24,7 +24,7 @@ export default async function GenerateTemplatePage({ params }: { params: Promise
     .select(
       `
       *,
-      profiles:submitted_by (
+      profiles!templates_submitted_by_fkey (
         display_name,
         avatar_url
       )

@@ -14,6 +14,9 @@ export function SiteHeader() {
             <span className="font-bold text-sm md:text-base">Template Generation Academy</span>
           </Link>
           <nav className="hidden md:flex items-center space-x-4 lg:space-x-6 text-sm font-medium">
+            <Link href="/generator" className="transition-colors hover:text-foreground/80">
+              Generator
+            </Link>
             <Link href="/templates" className="transition-colors hover:text-foreground/80">
               Templates
             </Link>
@@ -40,6 +43,9 @@ export function SiteHeader() {
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <nav className="flex flex-col space-y-4 mt-8">
+                <Link href="/generator" className="text-lg font-medium transition-colors hover:text-foreground/80">
+                  Generator
+                </Link>
                 <Link href="/templates" className="text-lg font-medium transition-colors hover:text-foreground/80">
                   Templates
                 </Link>

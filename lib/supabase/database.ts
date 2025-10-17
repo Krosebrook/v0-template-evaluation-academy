@@ -15,7 +15,7 @@ export async function getTemplates(filters?: {
     .from("templates")
     .select(`
       *,
-      profiles:submitted_by (
+      profiles!templates_submitted_by_fkey (
         display_name,
         avatar_url
       ),
@@ -58,14 +58,14 @@ export async function getTemplateById(id: string) {
     .from("templates")
     .select(`
       *,
-      profiles:submitted_by (
+      profiles!templates_submitted_by_fkey (
         display_name,
         avatar_url,
         bio
       ),
       evaluations (
         *,
-        profiles:evaluator_id (
+        profiles!evaluations_evaluator_id_fkey (
           display_name,
           avatar_url
         )
@@ -158,7 +158,7 @@ export async function getGenerationsByTemplate(templateId: string) {
     .from("evaluations")
     .select(`
       *,
-      profiles:evaluator_id (
+      profiles!evaluations_evaluator_id_fkey (
         display_name,
         avatar_url
       )

@@ -7,13 +7,12 @@ import Link from "next/link"
 export default async function TemplatesPage() {
   const supabase = await createClient()
 
-  // Fetch templates from database
   const { data: templates, error } = await supabase
     .from("templates")
     .select(
       `
       *,
-      profiles:submitted_by (
+      profiles!templates_submitted_by_fkey (
         display_name,
         avatar_url
       ),

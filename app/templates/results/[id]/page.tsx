@@ -15,13 +15,13 @@ export default async function TemplateResultsPage({ params }: { params: Promise<
     .select(
       `
       *,
-      profiles:submitted_by (
+      profiles!templates_submitted_by_fkey (
         display_name,
         avatar_url
       ),
       evaluations (
         *,
-        profiles:evaluator_id (
+        profiles!evaluations_evaluator_id_fkey (
           display_name,
           avatar_url
         )
