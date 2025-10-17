@@ -11,7 +11,7 @@ export function SiteHeader() {
       <div className="container flex h-14 items-center px-4">
         <div className="mr-4 flex items-center">
           <Link href="/" className="mr-4 md:mr-6 flex items-center space-x-2">
-            <span className="font-bold text-sm md:text-base">Template Academy</span>
+            <span className="font-bold text-sm md:text-base">Template Generation Academy</span>
           </Link>
           <nav className="hidden md:flex items-center space-x-4 lg:space-x-6 text-sm font-medium">
             <Link href="/templates" className="transition-colors hover:text-foreground/80">

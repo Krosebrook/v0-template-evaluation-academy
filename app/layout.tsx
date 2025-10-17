@@ -8,8 +8,8 @@ import { SiteHeader } from "@/components/site-header"
 import { Suspense } from "react"
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
+  title: "Template Generation Academy",
+  description: "Master template generation with AI-powered tools and comprehensive training",
   generator: "v0.app",
 }
 

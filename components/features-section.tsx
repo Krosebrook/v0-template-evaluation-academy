@@ -4,12 +4,12 @@ const features = [
   {
     icon: Target,
     title: "Structured Learning",
-    description: "Follow a proven curriculum designed to build your evaluation skills systematically.",
+    description: "Follow a proven curriculum designed to build your generation skills systematically.",
   },
   {
     icon: CheckCircle2,
     title: "Hands-on Practice",
-    description: "Evaluate real templates with interactive exercises and instant feedback.",
+    description: "Generate real templates with interactive exercises and instant feedback.",
   },
   {
     icon: TrendingUp,
@@ -19,7 +19,7 @@ const features = [
   {
     icon: Award,
     title: "Earn Certificates",
-    description: "Showcase your expertise with certificates upon completing evaluation modules.",
+    description: "Showcase your expertise with certificates upon completing generation modules.",
   },
 ]
 
