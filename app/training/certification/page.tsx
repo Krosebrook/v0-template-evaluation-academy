@@ -50,7 +50,7 @@ export default async function CertificationPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-2">Evaluator Certification</h1>
+      <h1 className="text-4xl font-bold mb-2">Generator Certification</h1>
       <p className="text-muted-foreground mb-8">Complete training courses and earn certifications</p>
 
       {/* Current Status */}
@@ -108,7 +108,7 @@ export default async function CertificationPage() {
                     ) : (
                       <Lock className="h-4 w-4 text-muted-foreground" />
                     )}
-                    <span>{level.requirements_evaluations} Evaluations</span>
+                    <span>{level.requirements_evaluations} Generations</span>
                   </div>
                 </div>
               </Card>

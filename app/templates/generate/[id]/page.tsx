@@ -1,11 +1,11 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect, notFound } from "next/navigation"
-import { EvaluationInterface } from "@/components/evaluation-interface"
+import { GenerationInterface } from "@/components/generation-interface"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
-export default async function EvaluateTemplatePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function GenerateTemplatePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
 
@@ -15,7 +15,7 @@ export default async function EvaluateTemplatePage({ params }: { params: Promise
   } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect(`/auth/login?redirect=/templates/evaluate/${id}`)
+    redirect(`/auth/login?redirect=/templates/generate/${id}`)
   }
 
   // Fetch template details
@@ -58,7 +58,7 @@ export default async function EvaluateTemplatePage({ params }: { params: Promise
           </Button>
         </Link>
 
-        <EvaluationInterface
+        <GenerationInterface
           template={template}
           userId={user.id}
           userRole={profile?.role || "user"}

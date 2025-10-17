@@ -7,7 +7,7 @@ const trainingModules = [
   {
     id: "tools",
     title: "Prompt Engineering Tools",
-    description: "6 interactive tools for mastering prompt engineering and evaluation",
+    description: "6 interactive tools for mastering prompt engineering and generation",
     icon: Wrench,
     href: "/training/tools",
     count: "6 tools",
@@ -15,8 +15,8 @@ const trainingModules = [
   },
   {
     id: "courses",
-    title: "Evaluation Courses",
-    description: "Structured learning paths from beginner to expert evaluator",
+    title: "Generation Courses",
+    description: "Structured learning paths from beginner to expert generator",
     icon: BookOpen,
     href: "/training/courses",
     count: "Coming soon",
@@ -25,7 +25,7 @@ const trainingModules = [
   {
     id: "certification",
     title: "Certification Program",
-    description: "Earn credentials as a certified template evaluator",
+    description: "Earn credentials as a certified template generator",
     icon: Award,
     href: "/training/certification",
     count: "Coming soon",
@@ -34,7 +34,7 @@ const trainingModules = [
   {
     id: "videos",
     title: "Video Tutorials",
-    description: "Watch expert evaluators demonstrate best practices",
+    description: "Watch expert generators demonstrate best practices",
     icon: Video,
     href: "/training/videos",
     count: "Coming soon",
@@ -46,9 +46,9 @@ export default function TrainingPage() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2">Evaluator Training Academy</h1>
+        <h1 className="text-4xl font-bold mb-2">Generator Training Academy</h1>
         <p className="text-muted-foreground text-lg">
-          Comprehensive training resources to become an expert template evaluator
+          Comprehensive training resources to become an expert template generator
         </p>
       </div>
 
@@ -96,9 +96,9 @@ export default function TrainingPage() {
               2
             </div>
             <div>
-              <h3 className="font-semibold">Complete Evaluation Courses</h3>
+              <h3 className="font-semibold">Complete Generation Courses</h3>
               <p className="text-sm text-muted-foreground">
-                Take structured courses on template evaluation criteria and best practices
+                Take structured courses on template generation criteria and best practices
               </p>
             </div>
           </div>
@@ -109,7 +109,7 @@ export default function TrainingPage() {
             <div>
               <h3 className="font-semibold">Practice with Real Templates</h3>
               <p className="text-sm text-muted-foreground">
-                Apply your knowledge by evaluating templates and receiving feedback
+                Apply your knowledge by generating templates and receiving feedback
               </p>
             </div>
           </div>
@@ -120,7 +120,7 @@ export default function TrainingPage() {
             <div>
               <h3 className="font-semibold">Earn Your Certification</h3>
               <p className="text-sm text-muted-foreground">
-                Pass the certification exam to become a recognized expert evaluator
+                Pass the certification exam to become a recognized expert generator
               </p>
             </div>
           </div>

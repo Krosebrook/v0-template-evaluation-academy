@@ -13,11 +13,11 @@ export default function WhyJoinPage() {
           <div className="max-w-3xl mx-auto text-center space-y-6">
             <Badge variant="secondary" className="mb-4">
               <Sparkles className="h-3 w-3 mr-1" />
-              Join 10,000+ Template Evaluators
+              Join 10,000+ Template Generators
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">Why Create an Account?</h1>
             <p className="text-xl text-muted-foreground text-balance">
-              Unlock powerful features, earn reputation, and become part of the world's largest template evaluation
+              Unlock powerful features, earn reputation, and become part of the world's largest template generation
               community
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
@@ -40,14 +40,14 @@ export default function WhyJoinPage() {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <FeatureCard
             icon={Star}
-            title="Evaluate & Earn"
-            description="Provide detailed evaluations and earn reputation points for quality feedback"
-            benefits={["Earn reputation points", "Build trust score", "Unlock evaluator badges"]}
+            title="Generate & Earn"
+            description="Provide detailed generations and earn reputation points for quality feedback"
+            benefits={["Earn reputation points", "Build trust score", "Unlock generator badges"]}
           />
           <FeatureCard
             icon={MessageSquare}
             title="Join Discussions"
-            description="Engage with template creators and other evaluators in meaningful conversations"
+            description="Engage with template creators and other generators in meaningful conversations"
             benefits={["Comment on templates", "Reply to discussions", "Get notifications"]}
           />
           <FeatureCard
@@ -59,7 +59,7 @@ export default function WhyJoinPage() {
           <FeatureCard
             icon={Award}
             title="Get Certified"
-            description="Complete training courses and earn official evaluator certifications"
+            description="Complete training courses and earn official generator certifications"
             benefits={["Bronze to Platinum levels", "Interactive courses", "Official certificates"]}
           />
           <FeatureCard
@@ -71,7 +71,7 @@ export default function WhyJoinPage() {
           <FeatureCard
             icon={Shield}
             title="Build Reputation"
-            description="Establish yourself as a trusted evaluator with reputation scores"
+            description="Establish yourself as a trusted generator with reputation scores"
             benefits={["Trust score system", "Leaderboard rankings", "Achievement badges"]}
           />
         </div>
@@ -88,11 +88,11 @@ export default function WhyJoinPage() {
                   <div className="p-6 space-y-4">
                     <h3 className="text-xl font-semibold mb-4">Free (No Account)</h3>
                     <ComparisonItem included text="Browse templates" />
-                    <ComparisonItem included text="View evaluations" />
+                    <ComparisonItem included text="View generations" />
                     <ComparisonItem included text="Read comments" />
                     <ComparisonItem included text="See leaderboards" />
                     <ComparisonItem included={false} text="Submit templates" />
-                    <ComparisonItem included={false} text="Evaluate templates" />
+                    <ComparisonItem included={false} text="Generate templates" />
                     <ComparisonItem included={false} text="Comment & discuss" />
                     <ComparisonItem included={false} text="Vote & react" />
                     <ComparisonItem included={false} text="Create collections" />
@@ -104,11 +104,11 @@ export default function WhyJoinPage() {
                       <Badge>Free</Badge>
                     </h3>
                     <ComparisonItem included text="Browse templates" />
-                    <ComparisonItem included text="View evaluations" />
+                    <ComparisonItem included text="View generations" />
                     <ComparisonItem included text="Read comments" />
                     <ComparisonItem included text="See leaderboards" />
                     <ComparisonItem included text="Submit templates" />
-                    <ComparisonItem included text="Evaluate templates" />
+                    <ComparisonItem included text="Generate templates" />
                     <ComparisonItem included text="Comment & discuss" />
                     <ComparisonItem included text="Vote & react" />
                     <ComparisonItem included text="Create collections" />
@@ -127,7 +127,7 @@ export default function WhyJoinPage() {
           <CardHeader className="text-center space-y-4 pb-8">
             <CardTitle className="text-3xl">Ready to Get Started?</CardTitle>
             <CardDescription className="text-lg">
-              Join thousands of evaluators and start building your reputation today
+              Join thousands of generators and start building your reputation today
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -162,7 +162,7 @@ function FeatureCard({
     <Card className="relative overflow-hidden group hover:border-primary/50 transition-colors">
       <CardHeader>
         <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-          <Icon className="h-6 w-6 text-primary" />
+          <Icon className="h-6 w-6 text-primary shrink-0 mt-0.5" />
         </div>
         <CardTitle className="text-xl">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>

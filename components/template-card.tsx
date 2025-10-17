@@ -116,9 +116,9 @@ export function TemplateCard({ template }: { template: Template }) {
           </div>
         </div>
 
-        <Link href={`/templates/evaluate/${template.id}`} className="w-full">
+        <Link href={`/templates/generate/${template.id}`} className="w-full">
           <Button size="sm" className="w-full">
-            Evaluate Template
+            Generate Template
           </Button>
         </Link>
       </CardFooter>

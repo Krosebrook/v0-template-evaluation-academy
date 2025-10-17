@@ -44,11 +44,11 @@ const BADGES = [
     id: "security-conscious",
     name: "Security Conscious",
     icon: "🛡️",
-    description: "Master security evaluation",
+    description: "Master security generation",
   },
   {
-    id: "master-evaluator",
-    name: "Master Evaluator",
+    id: "master-generator",
+    name: "Master Generator",
     icon: "⚖️",
     description: "Complete all intermediate modules",
   },
@@ -70,7 +70,7 @@ export default function ProfilePage() {
   const [progress, setProgress] = useState<any>(null)
   const [user, setUser] = useState<any>(null)
   const [userTemplates, setUserTemplates] = useState<any[]>([])
-  const [userEvaluations, setUserEvaluations] = useState<any[]>([])
+  const [userGenerations, setUserGenerations] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const router = useRouter()
   const supabase = createClient()
@@ -112,7 +112,7 @@ export default function ProfilePage() {
         .eq("evaluator_id", authUser.id)
         .order("created_at", { ascending: false })
 
-      setUserEvaluations(evaluations || [])
+      setUserGenerations(evaluations || [])
 
       // Load localStorage progress for learning modules
       const saved = localStorage.getItem("template-academy-progress")
@@ -402,7 +402,7 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* User Templates and Evaluations */}
+        {/* User Templates and Generations */}
         <div className="grid md:grid-cols-2 gap-6 mt-6">
           {/* User Templates */}
           <div className="bg-white rounded-xl shadow-lg p-6">
@@ -436,33 +436,33 @@ export default function ProfilePage() {
             )}
           </div>
 
-          {/* User Evaluations */}
+          {/* User Generations */}
           <div className="bg-white rounded-xl shadow-lg p-6">
             <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
               <Star className="w-6 h-6 text-yellow-600" />
-              My Evaluations ({userEvaluations.length})
+              My Generations ({userGenerations.length})
             </h2>
             <div className="space-y-3">
-              {userEvaluations.slice(0, 5).map((evaluation) => (
+              {userGenerations.slice(0, 5).map((generation) => (
                 <Link
-                  key={evaluation.id}
-                  href={`/templates/results/${evaluation.template_id}`}
+                  key={generation.id}
+                  href={`/templates/results/${generation.template_id}`}
                   className="block p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                 >
-                  <div className="font-medium text-gray-800">{evaluation.templates?.title || "Template"}</div>
+                  <div className="font-medium text-gray-800">{generation.templates?.title || "Template"}</div>
                   <div className="flex items-center gap-2 mt-2">
                     <span className="text-sm text-gray-600">Overall:</span>
                     <span className="text-sm font-bold text-indigo-600">
-                      {typeof evaluation.overall_score === "number" ? evaluation.overall_score.toFixed(1) : "N/A"}/10
+                      {typeof generation.overall_score === "number" ? generation.overall_score.toFixed(1) : "N/A"}/10
                     </span>
                   </div>
                   <div className="text-xs text-gray-500 mt-1">
-                    {new Date(evaluation.created_at).toLocaleDateString()}
+                    {new Date(generation.created_at).toLocaleDateString()}
                   </div>
                 </Link>
               ))}
-              {userEvaluations.length === 0 && (
-                <p className="text-sm text-gray-500 text-center py-4">No evaluations submitted yet.</p>
+              {userGenerations.length === 0 && (
+                <p className="text-sm text-gray-500 text-center py-4">No generations submitted yet.</p>
               )}
             </div>
           </div>

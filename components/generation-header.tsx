@@ -4,7 +4,7 @@ import { SocialShare } from "@/components/social-share"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
-export function EvaluationHeader({ templateId }: { templateId: string }) {
+export function GenerationHeader({ templateId }: { templateId: string }) {
   return (
     <div className="border-b border-border">
       <div className="container mx-auto px-4 py-6">
@@ -21,11 +21,13 @@ export function EvaluationHeader({ templateId }: { templateId: string }) {
                 Beginner
               </Badge>
             </div>
-            <p className="mt-1 text-sm text-muted-foreground">Evaluate this template based on the criteria below</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Generate content for this template based on the criteria below
+            </p>
           </div>
           <div className="flex items-center gap-2">
-            <SocialShare title="Check out my template evaluation on Template Academy!" />
-            <Button>Submit Evaluation</Button>
+            <SocialShare title="Check out my template generation on Template Academy!" />
+            <Button>Submit Generation</Button>
           </div>
         </div>
       </div>

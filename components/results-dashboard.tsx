@@ -133,10 +133,10 @@ export function ResultsDashboard({ template }: { template: Template }) {
                 </Button>
               </a>
             )}
-            <Link href={`/templates/evaluate/${template.id}`}>
+            <Link href={`/templates/generate/${template.id}`}>
               <Button size="sm" className="gap-2">
                 <Star className="w-4 h-4" />
-                Evaluate
+                Generate
               </Button>
             </Link>
           </div>
@@ -407,10 +407,10 @@ export function ResultsDashboard({ template }: { template: Template }) {
           <div className="text-center py-12">
             <p className="text-lg text-muted-foreground mb-2">No evaluations yet</p>
             <p className="text-sm text-muted-foreground mb-4">Be the first to evaluate this template!</p>
-            <Link href={`/templates/evaluate/${template.id}`}>
+            <Link href={`/templates/generate/${template.id}`}>
               <Button>
                 <Star className="w-4 h-4 mr-2" />
-                Evaluate Now
+                Generate Now
               </Button>
             </Link>
           </div>

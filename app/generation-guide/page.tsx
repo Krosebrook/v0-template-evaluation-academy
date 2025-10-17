@@ -4,7 +4,7 @@ import { BookOpen, CheckCircle2, Code, FileText, Palette, Zap, Lightbulb, Target
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
-export default function EvaluationGuidePage() {
+export default function GenerationGuidePage() {
   const criteria = [
     {
       name: "Code Quality",
@@ -266,9 +266,9 @@ export default function EvaluationGuidePage() {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-6">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-3">Evaluation Guidelines</h1>
+          <h1 className="text-4xl font-bold mb-3">Generation Guidelines</h1>
           <p className="text-lg text-muted-foreground">
-            Comprehensive rubrics for evaluating templates consistently and fairly
+            Comprehensive rubrics for generating templates consistently and fairly
           </p>
         </div>
 
@@ -276,7 +276,7 @@ export default function EvaluationGuidePage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Target className="h-5 w-5" />
-              Evaluation Principles
+              Generation Principles
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -285,7 +285,7 @@ export default function EvaluationGuidePage() {
               <div>
                 <p className="font-medium">Be Objective</p>
                 <p className="text-sm text-muted-foreground">
-                  Base your evaluation on the criteria below, not personal preferences
+                  Base your generation on the criteria below, not personal preferences
                 </p>
               </div>
             </div>
@@ -303,7 +303,7 @@ export default function EvaluationGuidePage() {
               <div>
                 <p className="font-medium">Consider Context</p>
                 <p className="text-sm text-muted-foreground">
-                  Evaluate templates based on their intended purpose and target audience
+                  Generate templates based on their intended purpose and target audience
                 </p>
               </div>
             </div>
@@ -312,7 +312,7 @@ export default function EvaluationGuidePage() {
               <div>
                 <p className="font-medium">Be Consistent</p>
                 <p className="text-sm text-muted-foreground">
-                  Apply the same standards across all templates you evaluate
+                  Apply the same standards across all templates you generate
                 </p>
               </div>
             </div>
@@ -370,13 +370,13 @@ export default function EvaluationGuidePage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BookOpen className="h-5 w-5" />
-              Ready to Evaluate?
+              Ready to Generate?
             </CardTitle>
-            <CardDescription>Use these guidelines to provide fair and consistent evaluations</CardDescription>
+            <CardDescription>Use these guidelines to provide fair and consistent generations</CardDescription>
           </CardHeader>
           <CardContent>
             <Link href="/templates">
-              <Button>Browse Templates to Evaluate</Button>
+              <Button>Browse Templates to Generate</Button>
             </Link>
           </CardContent>
         </Card>

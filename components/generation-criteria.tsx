@@ -39,14 +39,14 @@ const criteria = [
   },
 ]
 
-export function EvaluationCriteria() {
+export function GenerationCriteria() {
   const [scores, setScores] = useState<Record<string, number>>({})
 
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Evaluation Criteria</CardTitle>
+          <CardTitle>Generation Criteria</CardTitle>
           <p className="text-sm text-muted-foreground">Rate each criterion from 1-10 based on your assessment</p>
         </CardHeader>
         <CardContent className="space-y-6">

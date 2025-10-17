@@ -71,7 +71,7 @@ const EVALUATION_CRITERIA = [
   },
 ]
 
-export function EvaluationInterface({
+export function GenerationInterface({
   template,
   userId,
   userRole,
@@ -157,9 +157,9 @@ export function EvaluationInterface({
         <div className="w-16 h-16 mx-auto mb-4 bg-green-500/10 rounded-full flex items-center justify-center">
           <Check className="w-8 h-8 text-green-500" />
         </div>
-        <h2 className="text-2xl font-bold mb-2">Evaluation Submitted!</h2>
+        <h2 className="text-2xl font-bold mb-2">Generation Submitted!</h2>
         <p className="text-muted-foreground mb-4">
-          Your evaluation has been successfully {existingEvaluation ? "updated" : "submitted"}.
+          Your generation has been successfully {existingEvaluation ? "updated" : "submitted"}.
         </p>
         <p className="text-sm text-muted-foreground">Redirecting to gallery...</p>
       </Card>
@@ -227,15 +227,15 @@ export function EvaluationInterface({
         </div>
       </Card>
 
-      {/* Evaluation Form */}
+      {/* Generation Form */}
       {!isEvaluator && (
         <Card className="p-6 bg-yellow-500/10 border-yellow-500/20">
           <div className="flex items-start gap-3">
             <Info className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="font-medium text-yellow-500">Evaluator Access Required</p>
+              <p className="font-medium text-yellow-500">Generator Access Required</p>
               <p className="text-sm text-yellow-500/80 mt-1">
-                You need evaluator permissions to submit evaluations. Contact an administrator to request access.
+                You need generator permissions to submit generations. Contact an administrator to request access.
               </p>
             </div>
           </div>
@@ -256,7 +256,7 @@ export function EvaluationInterface({
 
       <Card className="p-6">
         <h2 className="text-2xl font-bold mb-6">
-          {existingEvaluation ? "Update Your Evaluation" : "Evaluate This Template"}
+          {existingEvaluation ? "Update Your Generation" : "Generate This Template"}
         </h2>
 
         <div className="space-y-8">
@@ -320,9 +320,9 @@ export function EvaluationInterface({
                   Submitting...
                 </>
               ) : existingEvaluation ? (
-                "Update Evaluation"
+                "Update Generation"
               ) : (
-                "Submit Evaluation"
+                "Submit Generation"
               )}
             </Button>
           </div>
