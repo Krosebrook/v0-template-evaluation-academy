@@ -12,7 +12,7 @@ export default async function TemplatesPage() {
     .select(
       `
       *,
-      profiles!templates_submitted_by_fkey (
+      profiles (
         display_name,
         avatar_url
       ),

@@ -1,320 +1,240 @@
+import { createClient } from "@/lib/supabase/server"
+import { redirect } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
-import { Sparkles, Users, Shield, TrendingUp, Award, CheckCircle2, ArrowRight, Star, Layers } from "lucide-react"
-import type { Metadata } from "next"
+import {
+  Sparkles,
+  FileText,
+  Users,
+  TrendingUp,
+  Award,
+  Layers,
+  Clock,
+  ArrowRight,
+  BarChart3,
+  Settings,
+  BookOpen,
+} from "lucide-react"
 
-export const metadata: Metadata = {
-  title: "Template Generation Academy - Master AI-Powered Template Creation",
-  description:
-    "Transform your workflow with AI-powered template generation. Join 10,000+ creators mastering prompt engineering, template design, and AI automation. Start free today.",
-  keywords: [
-    "template generation",
-    "AI templates",
-    "prompt engineering",
-    "template academy",
-    "AI automation",
-    "template marketplace",
-  ],
-  openGraph: {
-    title: "Template Generation Academy - Master AI-Powered Template Creation",
-    description: "Join 10,000+ creators mastering AI-powered template generation",
-    type: "website",
-    url: "https://template-academy.vercel.app",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Template Generation Academy",
-    description: "Master AI-powered template creation with comprehensive training",
-  },
-}
+export default async function HomePage() {
+  const supabase = await createClient()
 
-export default function LandingPage() {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (!user) {
+    redirect("/auth/login")
+  }
+
+  const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single()
+
+  const { count: templatesCount } = await supabase.from("templates").select("*", { count: "exact", head: true })
+
+  const { count: evaluationsCount } = await supabase.from("evaluations").select("*", { count: "exact", head: true })
+
+  const { count: usersCount } = await supabase.from("profiles").select("*", { count: "exact", head: true })
+
+  const { data: userTemplates } = await supabase
+    .from("templates")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(5)
+
+  const { data: userEvaluations } = await supabase
+    .from("evaluations")
+    .select("*, templates(title)")
+    .eq("evaluator_id", user.id)
+    .order("created_at", { ascending: false })
+    .limit(5)
+
+  const { data: recentTemplates } = await supabase
+    .from("templates")
+    .select("*, profiles(display_name)")
+    .order("created_at", { ascending: false })
+    .limit(10)
+
+  const isAdmin = profile?.role === "admin"
+  const isEvaluator = profile?.role === "evaluator" || isAdmin
+
   return (
-    <div className="flex flex-col">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-50 via-white to-purple-50 px-6 py-24 sm:py-32 lg:px-8">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.indigo.100),white)] opacity-20" />
-        <div className="absolute inset-y-0 right-1/2 -z-10 mr-16 w-[200%] origin-bottom-left skew-x-[-30deg] bg-white shadow-xl shadow-indigo-600/10 ring-1 ring-indigo-50 sm:mr-28 lg:mr-0 xl:mr-16 xl:origin-center" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-slate-50">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+            Welcome back, {profile?.display_name || user.email?.split("@")[0]}
+          </h1>
+          <p className="text-lg text-gray-600">Template Generation Academy Internal Portal</p>
+        </div>
 
-        <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-2xl text-center">
-            <Badge className="mb-4 bg-indigo-100 text-indigo-700 hover:bg-indigo-200">
-              <Sparkles className="mr-1 h-3 w-3" />
-              Trusted by 10,000+ Creators
-            </Badge>
-            <h1 className="text-balance text-5xl font-bold tracking-tight text-gray-900 sm:text-7xl">
-              Master AI-Powered Template Generation
-            </h1>
-            <p className="mt-6 text-pretty text-lg leading-8 text-gray-600">
-              Transform your workflow with intelligent template creation. Learn prompt engineering, build reusable
-              templates, and join a thriving community of creators.
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Button asChild size="lg" className="bg-indigo-600 hover:bg-indigo-700">
-                <Link href="/auth/sign-up">
-                  Start Free Today
-                  <ArrowRight className="ml-2 h-4 w-4" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card className="p-6 bg-white border-slate-200">
+            <div className="flex items-center justify-between mb-4">
+              <FileText className="h-8 w-8 text-blue-600" />
+              <span className="text-3xl font-bold text-gray-900">{templatesCount || 0}</span>
+            </div>
+            <h3 className="text-sm font-medium text-gray-600">Total Templates</h3>
+            <p className="text-xs text-gray-500 mt-1">Across all categories</p>
+          </Card>
+
+          <Card className="p-6 bg-white border-slate-200">
+            <div className="flex items-center justify-between mb-4">
+              <Award className="h-8 w-8 text-yellow-600" />
+              <span className="text-3xl font-bold text-gray-900">{evaluationsCount || 0}</span>
+            </div>
+            <h3 className="text-sm font-medium text-gray-600">Total Evaluations</h3>
+            <p className="text-xs text-gray-500 mt-1">Quality assessments</p>
+          </Card>
+
+          <Card className="p-6 bg-white border-slate-200">
+            <div className="flex items-center justify-between mb-4">
+              <Users className="h-8 w-8 text-green-600" />
+              <span className="text-3xl font-bold text-gray-900">{usersCount || 0}</span>
+            </div>
+            <h3 className="text-sm font-medium text-gray-600">Team Members</h3>
+            <p className="text-xs text-gray-500 mt-1">Active users</p>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <Card className="p-6 bg-white border-slate-200">
+            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-indigo-600" />
+              Quick Actions
+            </h2>
+            <div className="grid grid-cols-2 gap-3">
+              <Button asChild className="h-auto py-4 flex-col gap-2">
+                <Link href="/generator">
+                  <Layers className="h-5 w-5" />
+                  <span className="text-sm">Generate Template</span>
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link href="/generator">Try Generator</Link>
+              <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2 bg-transparent">
+                <Link href="/templates">
+                  <FileText className="h-5 w-5" />
+                  <span className="text-sm">Browse Templates</span>
+                </Link>
+              </Button>
+              {isEvaluator && (
+                <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2 bg-transparent">
+                  <Link href="/templates?filter=pending">
+                    <Award className="h-5 w-5" />
+                    <span className="text-sm">Evaluate</span>
+                  </Link>
+                </Button>
+              )}
+              {isAdmin && (
+                <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2 bg-transparent">
+                  <Link href="/admin">
+                    <Settings className="h-5 w-5" />
+                    <span className="text-sm">Admin Panel</span>
+                  </Link>
+                </Button>
+              )}
+              <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2 bg-transparent">
+                <Link href="/analytics/overview">
+                  <BarChart3 className="h-5 w-5" />
+                  <span className="text-sm">Analytics</span>
+                </Link>
+              </Button>
+              <Button asChild variant="outline" className="h-auto py-4 flex-col gap-2 bg-transparent">
+                <Link href="/training">
+                  <BookOpen className="h-5 w-5" />
+                  <span className="text-sm">Training</span>
+                </Link>
               </Button>
             </div>
-            <p className="mt-4 text-sm text-gray-500">No credit card required • 100 free generations</p>
-          </div>
+          </Card>
 
-          {/* Stats */}
-          <div className="mx-auto mt-16 grid max-w-4xl grid-cols-1 gap-8 sm:grid-cols-3">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-indigo-600">10,000+</div>
-              <div className="mt-2 text-sm text-gray-600">Active Creators</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-indigo-600">500K+</div>
-              <div className="mt-2 text-sm text-gray-600">Templates Generated</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-indigo-600">98%</div>
-              <div className="mt-2 text-sm text-gray-600">Satisfaction Rate</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="bg-white px-6 py-24 sm:py-32 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-balance text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Everything you need to master template generation
+          <Card className="p-6 bg-white border-slate-200">
+            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <Clock className="h-5 w-5 text-indigo-600" />
+              Your Recent Activity
             </h2>
-            <p className="mt-6 text-pretty text-lg leading-8 text-gray-600">
-              Comprehensive tools and training to help you create, manage, and monetize professional templates.
-            </p>
-          </div>
-
-          <div className="mx-auto mt-16 grid max-w-5xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            <Card className="p-6">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-indigo-100">
-                <Sparkles className="h-6 w-6 text-indigo-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900">AI-Powered Generation</h3>
-              <p className="mt-2 text-sm text-gray-600">
-                Advanced AI models with 16 expert personas and 12 prompt layers for precise template creation.
-              </p>
-            </Card>
-
-            <Card className="p-6">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-                <Layers className="h-6 w-6 text-purple-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900">Version Control</h3>
-              <p className="mt-2 text-sm text-gray-600">
-                Track changes, compare versions, and rollback with full template versioning system.
-              </p>
-            </Card>
-
-            <Card className="p-6">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-                <Users className="h-6 w-6 text-green-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900">Team Collaboration</h3>
-              <p className="mt-2 text-sm text-gray-600">
-                Create workspaces, invite team members, and collaborate on templates in real-time.
-              </p>
-            </Card>
-
-            <Card className="p-6">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-orange-100">
-                <TrendingUp className="h-6 w-6 text-orange-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900">Analytics Dashboard</h3>
-              <p className="mt-2 text-sm text-gray-600">
-                Track performance, engagement, and revenue with comprehensive analytics and insights.
-              </p>
-            </Card>
-
-            <Card className="p-6">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-                <Shield className="h-6 w-6 text-blue-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900">Quality Scoring</h3>
-              <p className="mt-2 text-sm text-gray-600">
-                AI-powered quality assessment with actionable feedback to improve your templates.
-              </p>
-            </Card>
-
-            <Card className="p-6">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-pink-100">
-                <Award className="h-6 w-6 text-pink-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900">Marketplace</h3>
-              <p className="mt-2 text-sm text-gray-600">
-                Sell your templates with 70% revenue share and multiple licensing options.
-              </p>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="bg-gray-50 px-6 py-24 sm:py-32 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-balance text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Start generating in minutes
-            </h2>
-            <p className="mt-6 text-pretty text-lg leading-8 text-gray-600">
-              Simple three-step process to create professional templates
-            </p>
-          </div>
-
-          <div className="mx-auto mt-16 max-w-5xl">
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-              <div className="relative">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-600 text-lg font-bold text-white">
-                  1
-                </div>
-                <h3 className="mt-6 text-lg font-semibold text-gray-900">Choose Your Approach</h3>
-                <p className="mt-2 text-sm text-gray-600">
-                  Select from 16 expert personas and 12 prompt layers to match your specific needs.
-                </p>
-              </div>
-
-              <div className="relative">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-600 text-lg font-bold text-white">
-                  2
-                </div>
-                <h3 className="mt-6 text-lg font-semibold text-gray-900">Generate & Refine</h3>
-                <p className="mt-2 text-sm text-gray-600">
-                  AI creates your template with quality scoring and suggestions for improvement.
-                </p>
-              </div>
-
-              <div className="relative">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-600 text-lg font-bold text-white">
-                  3
-                </div>
-                <h3 className="mt-6 text-lg font-semibold text-gray-900">Share & Monetize</h3>
-                <p className="mt-2 text-sm text-gray-600">
-                  Publish to the marketplace or share with your team. Earn 70% revenue on sales.
-                </p>
-              </div>
+            <div className="space-y-3">
+              {userTemplates && userTemplates.length > 0 ? (
+                userTemplates.slice(0, 3).map((template) => (
+                  <Link
+                    key={template.id}
+                    href={`/templates/results/${template.id}`}
+                    className="block p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <p className="font-medium text-sm text-gray-900">{template.title}</p>
+                        <p className="text-xs text-gray-500 mt-1">{template.category}</p>
+                      </div>
+                      <FileText className="h-4 w-4 text-gray-400 flex-shrink-0 ml-2" />
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <p className="text-sm text-gray-500 text-center py-4">No templates yet. Create your first one!</p>
+              )}
+              {userTemplates && userTemplates.length > 3 && (
+                <Link
+                  href="/templates?filter=my-templates"
+                  className="block text-center text-sm text-indigo-600 hover:text-indigo-700 font-medium pt-2"
+                >
+                  View all your templates →
+                </Link>
+              )}
             </div>
-          </div>
+          </Card>
         </div>
-      </section>
 
-      {/* Social Proof */}
-      <section className="bg-white px-6 py-24 sm:py-32 lg:px-8">
-        <div className="mx-auto max-w-7xl">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-balance text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Trusted by leading creators
-            </h2>
-          </div>
-
-          <div className="mx-auto mt-16 grid max-w-5xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            <Card className="p-6">
-              <div className="mb-4 flex items-center gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="text-sm text-gray-600">
-                "This platform transformed how I create templates. The AI personas are incredibly accurate and save me
-                hours every week."
-              </p>
-              <div className="mt-4 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-indigo-100" />
-                <div>
-                  <div className="text-sm font-semibold text-gray-900">Sarah Chen</div>
-                  <div className="text-xs text-gray-500">Product Designer</div>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <div className="mb-4 flex items-center gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="text-sm text-gray-600">
-                "The marketplace feature is a game-changer. I've earned over $5,000 selling my templates in just 3
-                months."
-              </p>
-              <div className="mt-4 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-purple-100" />
-                <div>
-                  <div className="text-sm font-semibold text-gray-900">Marcus Rodriguez</div>
-                  <div className="text-xs text-gray-500">Content Creator</div>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <div className="mb-4 flex items-center gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="text-sm text-gray-600">
-                "Team collaboration features are excellent. Our entire design team uses this daily for template
-                creation."
-              </p>
-              <div className="mt-4 flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-green-100" />
-                <div>
-                  <div className="text-sm font-semibold text-gray-900">Emily Watson</div>
-                  <div className="text-xs text-gray-500">Design Lead</div>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="bg-indigo-600 px-6 py-24 sm:py-32 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Ready to transform your workflow?
+        <Card className="p-6 bg-white border-slate-200">
+          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-indigo-600" />
+            Recent Platform Activity
           </h2>
-          <p className="mx-auto mt-6 max-w-xl text-pretty text-lg leading-8 text-indigo-100">
-            Join thousands of creators who are already mastering AI-powered template generation. Start free today with
-            100 generations included.
-          </p>
-          <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Button asChild size="lg" className="bg-white text-indigo-600 hover:bg-gray-100">
-              <Link href="/auth/sign-up">
-                Get Started Free
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              size="lg"
-              className="border-white text-white hover:bg-indigo-700 bg-transparent"
-            >
-              <Link href="/pricing">View Pricing</Link>
-            </Button>
+          <div className="space-y-3">
+            {recentTemplates && recentTemplates.length > 0 ? (
+              recentTemplates.map((template) => (
+                <div key={template.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                  <div className="flex items-center gap-3 flex-1">
+                    <FileText className="h-4 w-4 text-blue-500 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm text-gray-900 truncate">{template.title}</p>
+                      <p className="text-xs text-gray-500">
+                        by {template.profiles?.display_name || "Unknown"} •{" "}
+                        {new Date(template.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                  <Link href={`/templates/results/${template.id}`}>
+                    <Button variant="ghost" size="sm">
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm text-gray-500 text-center py-4">No recent activity</p>
+            )}
           </div>
-          <div className="mt-6 flex items-center justify-center gap-x-6 text-sm text-indigo-100">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4" />
-              No credit card required
+        </Card>
+
+        {isAdmin && (
+          <Card className="mt-6 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
+            <h3 className="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+              <Settings className="h-5 w-5 text-indigo-600" />
+              Admin Tools
+            </h3>
+            <p className="text-sm text-gray-600 mb-4">Manage users, templates, and system settings</p>
+            <div className="flex gap-3">
+              <Button asChild size="sm">
+                <Link href="/admin">Open Admin Dashboard</Link>
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <Link href="/analytics">View Analytics</Link>
+              </Button>
             </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4" />
-              Cancel anytime
-            </div>
-          </div>
-        </div>
-      </section>
+          </Card>
+        )}
+      </div>
     </div>
   )
 }

@@ -9,13 +9,13 @@ export async function getTemplates(filters?: {
   limit?: number
   offset?: number
 }) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   let query = supabase
     .from("templates")
     .select(`
       *,
-      profiles!templates_submitted_by_fkey (
+      profiles (
         display_name,
         avatar_url
       ),
@@ -52,20 +52,20 @@ export async function getTemplates(filters?: {
 }
 
 export async function getTemplateById(id: string) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   const { data, error } = await supabase
     .from("templates")
     .select(`
       *,
-      profiles!templates_submitted_by_fkey (
+      profiles (
         display_name,
         avatar_url,
         bio
       ),
       evaluations (
         *,
-        profiles!evaluations_evaluator_id_fkey (
+        evaluator:profiles (
           display_name,
           avatar_url
         )
@@ -152,13 +152,13 @@ export async function createGeneration(generation: {
 }
 
 export async function getGenerationsByTemplate(templateId: string) {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
 
   const { data, error } = await supabase
     .from("evaluations")
     .select(`
       *,
-      profiles!evaluations_evaluator_id_fkey (
+      evaluator:profiles (
         display_name,
         avatar_url
       )

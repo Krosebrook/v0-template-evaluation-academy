@@ -18,13 +18,12 @@ export default async function GenerateTemplatePage({ params }: { params: Promise
     redirect(`/auth/login?redirect=/templates/generate/${id}`)
   }
 
-  // Fetch template details
   const { data: template, error: templateError } = await supabase
     .from("templates")
     .select(
       `
       *,
-      profiles!templates_submitted_by_fkey (
+      profiles (
         display_name,
         avatar_url
       )

@@ -14,7 +14,7 @@ export function useRealtimeTemplates() {
     const fetchTemplates = async () => {
       const { data } = await supabase
         .from("templates")
-        .select("*, profiles!templates_submitted_by_fkey(display_name, avatar_url)")
+        .select("*, profiles(display_name, avatar_url)")
         .order("created_at", { ascending: false })
 
       if (data) {
@@ -57,7 +57,7 @@ export function useRealtimeGenerations(templateId: string) {
     const fetchGenerations = async () => {
       const { data } = await supabase
         .from("evaluations")
-        .select("*, profiles!evaluations_evaluator_id_fkey(display_name, avatar_url)")
+        .select("*, evaluator:profiles!evaluations_evaluator_id_fkey(display_name, avatar_url)")
         .eq("template_id", templateId)
         .order("created_at", { ascending: false })
 

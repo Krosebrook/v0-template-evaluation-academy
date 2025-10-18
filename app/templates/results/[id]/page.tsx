@@ -9,19 +9,18 @@ export default async function TemplateResultsPage({ params }: { params: Promise<
   const { id } = await params
   const supabase = await createClient()
 
-  // Fetch template with all evaluations
   const { data: template, error: templateError } = await supabase
     .from("templates")
     .select(
       `
       *,
-      profiles!templates_submitted_by_fkey (
+      profiles (
         display_name,
         avatar_url
       ),
       evaluations (
         *,
-        profiles!evaluations_evaluator_id_fkey (
+        evaluator:profiles!evaluations_evaluator_id_fkey (
           display_name,
           avatar_url
         )
