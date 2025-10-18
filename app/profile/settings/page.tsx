@@ -14,17 +14,35 @@ import { Switch } from "@/components/ui/switch"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, Save, User, Mail, Shield, Bell } from "lucide-react"
 import Link from "next/link"
+import type { User as SupabaseUser } from "@supabase/supabase-js"
+
+interface Profile {
+  display_name: string
+  role: "user" | "evaluator" | "admin"
+}
+
+interface EmailPreferences {
+  evaluation_notifications: boolean
+  comment_notifications: boolean
+  weekly_digest: boolean
+  generation_complete: boolean
+  marketplace_sales: boolean
+  team_invitations: boolean
+  version_updates: boolean
+  marketing_emails: boolean
+  digest_frequency: "instant" | "daily" | "weekly" | "never"
+}
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
-  const [user, setUser] = useState<any>(null)
-  const [profile, setProfile] = useState({
+  const [user, setUser] = useState<SupabaseUser | null>(null)
+  const [profile, setProfile] = useState<Profile>({
     display_name: "",
     role: "user",
   })
-  const [emailPreferences, setEmailPreferences] = useState({
+  const [emailPreferences, setEmailPreferences] = useState<EmailPreferences>({
     evaluation_notifications: true,
     comment_notifications: true,
     weekly_digest: true,
@@ -33,7 +51,7 @@ export default function SettingsPage() {
     team_invitations: true,
     version_updates: true,
     marketing_emails: false,
-    digest_frequency: "weekly" as "instant" | "daily" | "weekly" | "never",
+    digest_frequency: "weekly",
   })
   const [resetPasswordLoading, setResetPasswordLoading] = useState(false)
   const router = useRouter()
@@ -112,7 +130,7 @@ export default function SettingsPage() {
           display_name: profile.display_name,
           updated_at: new Date().toISOString(),
         })
-        .eq("id", user.id)
+        .eq("id", user!.id)
 
       if (error) throw error
 
@@ -130,7 +148,7 @@ export default function SettingsPage() {
 
     try {
       const { error } = await supabase.from("email_preferences").upsert({
-        user_id: user.id,
+        user_id: user!.id,
         ...emailPreferences,
         updated_at: new Date().toISOString(),
       })
@@ -370,7 +388,7 @@ export default function SettingsPage() {
                   <Label htmlFor="digest-frequency">Digest Frequency</Label>
                   <Select
                     value={emailPreferences.digest_frequency}
-                    onValueChange={(value: any) =>
+                    onValueChange={(value: "instant" | "daily" | "weekly" | "never") =>
                       setEmailPreferences({ ...emailPreferences, digest_frequency: value })
                     }
                   >

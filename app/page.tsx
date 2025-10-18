@@ -39,7 +39,7 @@ export default async function HomePage() {
   const { data: userTemplates } = await supabase
     .from("templates")
     .select("*")
-    .eq("user_id", user.id)
+    .eq("submitted_by", user.id)
     .order("created_at", { ascending: false })
     .limit(5)
 
@@ -52,9 +52,20 @@ export default async function HomePage() {
 
   const { data: recentTemplates } = await supabase
     .from("templates")
-    .select("*, profiles(display_name)")
+    .select("*")
     .order("created_at", { ascending: false })
     .limit(10)
+
+  // Fetch profiles for recent templates
+  const submitterIds = recentTemplates ? [...new Set(recentTemplates.map((t) => t.submitted_by))] : []
+  const { data: profiles } = await supabase.from("profiles").select("id, display_name").in("id", submitterIds)
+
+  // Create profile map and join data
+  const profileMap = new Map(profiles?.map((p) => [p.id, p]) || [])
+  const recentTemplatesWithProfiles = recentTemplates?.map((template) => ({
+    ...template,
+    profiles: profileMap.get(template.submitted_by) || null,
+  }))
 
   const isAdmin = profile?.role === "admin"
   const isEvaluator = profile?.role === "evaluator" || isAdmin
@@ -191,8 +202,8 @@ export default async function HomePage() {
             Recent Platform Activity
           </h2>
           <div className="space-y-3">
-            {recentTemplates && recentTemplates.length > 0 ? (
-              recentTemplates.map((template) => (
+            {recentTemplatesWithProfiles && recentTemplatesWithProfiles.length > 0 ? (
+              recentTemplatesWithProfiles.map((template) => (
                 <div key={template.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
                   <div className="flex items-center gap-3 flex-1">
                     <FileText className="h-4 w-4 text-blue-500 flex-shrink-0" />

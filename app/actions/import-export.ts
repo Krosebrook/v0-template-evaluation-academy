@@ -3,8 +3,29 @@
 import { createClient } from "@/lib/supabase/server"
 import { parseCSV, parseJSON, generateJSON } from "@/lib/import-export/parser"
 import { revalidatePath } from "next/cache"
+import type { Template } from "@/types/database"
 
-export async function importTemplates(formData: FormData) {
+interface ImportError {
+  template: string
+  error: string
+}
+
+interface ImportResult {
+  success: boolean
+  imported?: number
+  failed?: number
+  errors?: ImportError[]
+  error?: string
+}
+
+interface ExportResult {
+  success: boolean
+  data?: string
+  count?: number
+  error?: string
+}
+
+export async function importTemplates(formData: FormData): Promise<ImportResult> {
   const supabase = await createClient()
 
   const {
@@ -20,7 +41,7 @@ export async function importTemplates(formData: FormData) {
   }
 
   try {
-    let templates
+    let templates: Template[]
     const fileType = file.name.split(".").pop()?.toLowerCase()
 
     if (fileType === "csv") {
@@ -47,7 +68,7 @@ export async function importTemplates(formData: FormData) {
 
     let successful = 0
     let failed = 0
-    const errors: any[] = []
+    const errors: ImportError[] = []
 
     for (const template of templates) {
       const { error } = await supabase.from("templates").insert({
@@ -58,7 +79,7 @@ export async function importTemplates(formData: FormData) {
 
       if (error) {
         failed++
-        errors.push({ template: template.name, error: error.message })
+        errors.push({ template: template.title, error: error.message })
       } else {
         successful++
       }
@@ -84,12 +105,13 @@ export async function importTemplates(formData: FormData) {
       failed,
       errors: errors.length > 0 ? errors : undefined,
     }
-  } catch (error: any) {
-    return { success: false, error: error.message }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"
+    return { success: false, error: errorMessage }
   }
 }
 
-export async function exportTemplates(templateIds?: string[]) {
+export async function exportTemplates(templateIds?: string[]): Promise<ExportResult> {
   const supabase = await createClient()
 
   const {
@@ -117,12 +139,13 @@ export async function exportTemplates(templateIds?: string[]) {
       data: json,
       count: templates?.length || 0,
     }
-  } catch (error: any) {
-    return { success: false, error: error.message }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"
+    return { success: false, error: errorMessage }
   }
 }
 
-export async function createBackup() {
+export async function createBackup(): Promise<ExportResult> {
   const supabase = await createClient()
 
   const {
@@ -157,7 +180,8 @@ export async function createBackup() {
       data: json,
       count: templates?.length || 0,
     }
-  } catch (error: any) {
-    return { success: false, error: error.message }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"
+    return { success: false, error: errorMessage }
   }
 }

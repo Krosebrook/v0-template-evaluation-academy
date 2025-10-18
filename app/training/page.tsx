@@ -19,7 +19,7 @@ const trainingModules = [
     description: "Structured learning paths from beginner to expert generator",
     icon: BookOpen,
     href: "/training/courses",
-    count: "Coming soon",
+    count: "12 courses",
     color: "text-green-500",
   },
   {
@@ -28,7 +28,7 @@ const trainingModules = [
     description: "Earn credentials as a certified template generator",
     icon: Award,
     href: "/training/certification",
-    count: "Coming soon",
+    count: "3 levels",
     color: "text-purple-500",
   },
   {
@@ -37,7 +37,7 @@ const trainingModules = [
     description: "Watch expert generators demonstrate best practices",
     icon: Video,
     href: "/training/videos",
-    count: "Coming soon",
+    count: "24 videos",
     color: "text-red-500",
   },
 ]
@@ -67,9 +67,7 @@ export default function TrainingPage() {
               </CardHeader>
               <CardContent>
                 <Link href={module.href}>
-                  <Button className="w-full" variant={module.count === "Coming soon" ? "outline" : "default"}>
-                    {module.count === "Coming soon" ? "Coming Soon" : "Explore"}
-                  </Button>
+                  <Button className="w-full">Explore</Button>
                 </Link>
               </CardContent>
             </Card>

@@ -7,28 +7,34 @@ import Link from "next/link"
 export default async function TemplatesPage() {
   const supabase = await createClient()
 
+  // Fetch templates with evaluations
   const { data: templates, error } = await supabase
     .from("templates")
-    .select(
-      `
-      *,
-      profiles (
-        display_name,
-        avatar_url
-      ),
-      evaluations (
-        overall_score
-      )
-    `,
-    )
+    .select("*, evaluations(overall_score)")
     .order("created_at", { ascending: false })
 
   if (error) {
     console.error("[v0] Error fetching templates:", error)
   }
 
+  // Fetch profiles for all unique submitted_by IDs
+  const submitterIds = templates ? [...new Set(templates.map((t) => t.submitted_by))] : []
+  const { data: profiles } = await supabase
+    .from("profiles")
+    .select("id, display_name, avatar_url")
+    .in("id", submitterIds)
+
+  // Create a map of profiles for quick lookup
+  const profileMap = new Map(profiles?.map((p) => [p.id, p]) || [])
+
+  // Join templates with their submitter profiles
+  const templatesWithProfiles = templates?.map((template) => ({
+    ...template,
+    profiles: profileMap.get(template.submitted_by) || null,
+  }))
+
   // Calculate average scores for each template
-  const templatesWithScores = templates?.map((template) => ({
+  const templatesWithScores = templatesWithProfiles?.map((template) => ({
     ...template,
     averageScore:
       template.evaluations && template.evaluations.length > 0

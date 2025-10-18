@@ -7,6 +7,16 @@ import { Card } from "@/components/ui/card"
 import { Plus, Lock, Globe, Eye, Heart } from "lucide-react"
 import Link from "next/link"
 
+interface Collection {
+  id: string
+  name: string
+  description: string | null
+  is_public: boolean
+  view_count: number
+  collection_templates: Array<{ count: number }>
+  collection_followers: Array<{ count: number }>
+}
+
 export default async function CollectionsPage() {
   const supabase = await createServerClient()
   const {
@@ -45,7 +55,7 @@ export default async function CollectionsPage() {
 
       {collections && collections.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {collections.map((collection: any) => (
+          {collections.map((collection: Collection) => (
             <Link key={collection.id} href={`/collections/${collection.id}`}>
               <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
                 <div className="flex items-start justify-between mb-4">

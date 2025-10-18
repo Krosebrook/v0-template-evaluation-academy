@@ -5,8 +5,14 @@ import Link from "next/link"
 import { Award, Download, CheckCircle, Trophy, ArrowLeft } from "lucide-react"
 import { ShareButton } from "@/components/share-button"
 
+interface AcademyProgress {
+  completedModules: string[]
+  score: number
+  badges: string[]
+}
+
 export default function CertificatePage() {
-  const [progress, setProgress] = useState<any>(null)
+  const [progress, setProgress] = useState<AcademyProgress | null>(null)
   const [userName, setUserName] = useState("")
   const [showNameInput, setShowNameInput] = useState(false)
   const certificateRef = useRef<HTMLDivElement>(null)
@@ -15,7 +21,7 @@ export default function CertificatePage() {
     const saved = localStorage.getItem("template-academy-progress")
     if (saved) {
       try {
-        const data = JSON.parse(saved)
+        const data = JSON.parse(saved) as AcademyProgress
         setProgress(data)
       } catch (e) {
         console.error("Failed to load progress")
