@@ -5,78 +5,79 @@
 
 :root {
   /* Professional light theme with refined neutrals */
-  --background: oklch(0.99 0 0);
-  --foreground: oklch(0.09 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.09 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.09 0 0);
-  --primary: oklch(0.45 0.22 264);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.96 0.01 264);
-  --secondary-foreground: oklch(0.09 0 0);
-  --muted: oklch(0.96 0.01 264);
-  --muted-foreground: oklch(0.5 0.01 264);
-  --accent: oklch(0.55 0.25 295);
-  --accent-foreground: oklch(0.99 0 0);
-  --destructive: oklch(0.55 0.25 25);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.92 0.01 264);
-  --input: oklch(0.92 0.01 264);
-  --ring: oklch(0.45 0.22 264);
-  --chart-1: oklch(0.55 0.25 264);
-  --chart-2: oklch(0.6 0.22 195);
-  --chart-3: oklch(0.58 0.24 295);
-  --chart-4: oklch(0.65 0.2 145);
-  --chart-5: oklch(0.6 0.25 25);
+  --background: 252 252 252;
+  --foreground: 23 23 23;
+  --card: 255 255 255;
+  --card-foreground: 23 23 23;
+  --popover: 255 255 255;
+  --popover-foreground: 23 23 23;
+  --primary: 59 130 246;
+  --primary-foreground: 252 252 252;
+  --secondary: 241 245 249;
+  --secondary-foreground: 23 23 23;
+  --muted: 241 245 249;
+  --muted-foreground: 100 116 139;
+  --accent: 139 92 246;
+  --accent-foreground: 252 252 252;
+  --destructive: 239 68 68;
+  --destructive-foreground: 252 252 252;
+  --border: 226 232 240;
+  --input: 226 232 240;
+  --ring: 59 130 246;
+  --chart-1: 59 130 246;
+  --chart-2: 6 182 212;
+  --chart-3: 139 92 246;
+  --chart-4: 34 197 94;
+  --chart-5: 239 68 68;
   --radius: 0.75rem;
-  --sidebar: oklch(0.99 0 0);
-  --sidebar-foreground: oklch(0.09 0 0);
-  --sidebar-primary: oklch(0.45 0.22 264);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.96 0.01 264);
-  --sidebar-accent-foreground: oklch(0.09 0 0);
-  --sidebar-border: oklch(0.92 0.01 264);
-  --sidebar-ring: oklch(0.45 0.22 264);
+  --sidebar: 252 252 252;
+  --sidebar-foreground: 23 23 23;
+  --sidebar-primary: 59 130 246;
+  --sidebar-primary-foreground: 252 252 252;
+  --sidebar-accent: 241 245 249;
+  --sidebar-accent-foreground: 23 23 23;
+  --sidebar-border: 226 232 240;
+  --sidebar-ring: 59 130 246;
 }
 
 .dark {
   /* Studio-grade dark theme with vibrant electric blue and purple accents */
-  --background: oklch(0.08 0.01 264);
-  --foreground: oklch(0.98 0.005 264);
-  --card: oklch(0.11 0.015 264);
-  --card-foreground: oklch(0.98 0.005 264);
-  --popover: oklch(0.11 0.015 264);
-  --popover-foreground: oklch(0.98 0.005 264);
-  --primary: oklch(0.65 0.28 264);
-  --primary-foreground: oklch(0.08 0.01 264);
-  --secondary: oklch(0.58 0.26 295);
-  --secondary-foreground: oklch(0.98 0.005 264);
-  --muted: oklch(0.18 0.02 264);
-  --muted-foreground: oklch(0.6 0.02 264);
-  --accent: oklch(0.62 0.24 195);
-  --accent-foreground: oklch(0.08 0.01 264);
-  --destructive: oklch(0.58 0.28 25);
-  --destructive-foreground: oklch(0.98 0.005 264);
-  --border: oklch(0.2 0.025 264);
-  --input: oklch(0.2 0.025 264);
-  --ring: oklch(0.65 0.28 264);
-  --chart-1: oklch(0.65 0.28 264);
-  --chart-2: oklch(0.62 0.24 195);
-  --chart-3: oklch(0.58 0.26 295);
-  --chart-4: oklch(0.68 0.22 145);
-  --chart-5: oklch(0.58 0.28 25);
-  --sidebar: oklch(0.09 0.012 264);
-  --sidebar-foreground: oklch(0.98 0.005 264);
-  --sidebar-primary: oklch(0.65 0.28 264);
-  --sidebar-primary-foreground: oklch(0.08 0.01 264);
-  --sidebar-accent: oklch(0.18 0.02 264);
-  --sidebar-accent-foreground: oklch(0.98 0.005 264);
-  --sidebar-border: oklch(0.2 0.025 264);
-  --sidebar-ring: oklch(0.65 0.28 264);
+  --background: 10 10 15;
+  --foreground: 250 250 250;
+  --card: 20 20 28;
+  --card-foreground: 250 250 250;
+  --popover: 20 20 28;
+  --popover-foreground: 250 250 250;
+  --primary: 96 165 250;
+  --primary-foreground: 10 10 15;
+  --secondary: 168 85 247;
+  --secondary-foreground: 250 250 250;
+  --muted: 39 39 52;
+  --muted-foreground: 148 163 184;
+  --accent: 34 211 238;
+  --accent-foreground: 10 10 15;
+  --destructive: 248 113 113;
+  --destructive-foreground: 250 250 250;
+  --border: 39 39 52;
+  --input: 39 39 52;
+  --ring: 96 165 250;
+  --chart-1: 96 165 250;
+  --chart-2: 34 211 238;
+  --chart-3: 168 85 247;
+  --chart-4: 74 222 128;
+  --chart-5: 248 113 113;
+  --sidebar: 15 15 20;
+  --sidebar-foreground: 250 250 250;
+  --sidebar-primary: 96 165 250;
+  --sidebar-primary-foreground: 10 10 15;
+  --sidebar-accent: 39 39 52;
+  --sidebar-accent-foreground: 250 250 250;
+  --sidebar-border: 39 39 52;
+  --sidebar-ring: 96 165 250;
 }
 
 @theme inline {
+  /* optional: --font-sans, --font-serif, --font-mono if they are applied in the layout.tsx */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -119,8 +120,9 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground;
   }
 
   /* Professional typography scale */
@@ -175,33 +177,22 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: oklch(0.35 0.15 264);
-    border-radius: 4px;
+    @apply bg-primary/30 rounded;
     transition: background 0.2s;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.5 0.22 264);
-  }
-
-  .dark ::-webkit-scrollbar-thumb {
-    background: oklch(0.25 0.1 264);
-  }
-
-  .dark ::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.4 0.18 264);
+    @apply bg-primary/50;
   }
 
   /* Glassmorphism effect for cards */
   .glass-card {
-    background: oklch(0.11 0.015 264 / 0.6);
-    backdrop-filter: blur(12px);
-    border: 1px solid oklch(0.2 0.025 264 / 0.5);
+    @apply bg-card/60 backdrop-blur-xl border border-border/50;
   }
 
   /* Gradient text effect */
   .gradient-text {
-    background: linear-gradient(135deg, oklch(0.65 0.28 264), oklch(0.62 0.24 195));
+    background: linear-gradient(135deg, rgb(96 165 250), rgb(34 211 238));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -209,11 +200,11 @@
 
   /* Glow effect for interactive elements */
   .glow-effect {
-    box-shadow: 0 0 20px oklch(0.65 0.28 264 / 0.3);
+    box-shadow: 0 0 20px rgb(96 165 250 / 0.3);
     transition: box-shadow 0.3s ease;
   }
 
   .glow-effect:hover {
-    box-shadow: 0 0 30px oklch(0.65 0.28 264 / 0.5);
+    box-shadow: 0 0 30px rgb(96 165 250 / 0.5);
   }
 }
