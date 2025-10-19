@@ -21,6 +21,7 @@ export function NotificationsDropdown() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const supabase = createBrowserClient()
 
   useEffect(() => {
@@ -61,12 +62,21 @@ export function NotificationsDropdown() {
         .order("created_at", { ascending: false })
         .limit(10)
 
-      if (error) throw error
+      if (error) {
+        if (error.code === "PGRST205") {
+          setError("Notifications table not yet created. Please run the SQL script.")
+        } else {
+          throw error
+        }
+        return
+      }
 
       setNotifications(data || [])
       setUnreadCount(data?.filter((n) => !n.read).length || 0)
+      setError(null)
     } catch (error) {
       console.error("Error fetching notifications:", error)
+      setError("Failed to load notifications")
     } finally {
       setLoading(false)
     }
@@ -142,6 +152,11 @@ export function NotificationsDropdown() {
         <div className="max-h-96 overflow-y-auto">
           {loading ? (
             <div className="p-4 text-center text-sm text-muted-foreground">Loading...</div>
+          ) : error ? (
+            <div className="p-4 text-center text-sm text-muted-foreground">
+              <p>{error}</p>
+              <p className="mt-2 text-xs">Run script: scripts/034_create_notifications_v2.sql</p>
+            </div>
           ) : notifications.length === 0 ? (
             <div className="p-4 text-center text-sm text-muted-foreground">No notifications</div>
           ) : (

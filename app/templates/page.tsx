@@ -17,12 +17,15 @@ export default async function TemplatesPage() {
     console.error("[v0] Error fetching templates:", error)
   }
 
-  // Fetch profiles for all unique submitted_by IDs
-  const submitterIds = templates ? [...new Set(templates.map((t) => t.submitted_by))] : []
-  const { data: profiles } = await supabase
-    .from("profiles")
-    .select("id, display_name, avatar_url")
-    .in("id", submitterIds)
+  const submitterIds = templates
+    ? [...new Set(templates.map((t) => t.submitted_by).filter((id): id is string => id !== null))]
+    : []
+
+  // Only fetch profiles if we have valid IDs
+  const { data: profiles } =
+    submitterIds.length > 0
+      ? await supabase.from("profiles").select("id, display_name, avatar_url").in("id", submitterIds)
+      : { data: [] }
 
   // Create a map of profiles for quick lookup
   const profileMap = new Map(profiles?.map((p) => [p.id, p]) || [])
