@@ -1,6 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter, JetBrains_Mono } from "next/font/google"
+
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { SiteHeader } from "@/components/site-header"
@@ -8,6 +8,11 @@ import { Suspense } from "react"
 import { MobileNav } from "@/components/mobile-nav"
 import { InstallPrompt } from "@/components/install-prompt"
 import { PWAInit } from "@/components/pwa-init"
+import { Inter, JetBrains_Mono, Libre_Franklin as V0_Font_Libre_Franklin } from 'next/font/google'
+
+// Initialize fonts
+const _libreFranklin = V0_Font_Libre_Franklin({ subsets: ['latin'], weight: ["100","200","300","400","500","600","700","800","900"], variable: '--v0-font-libre-franklin' })
+const _v0_fontVariables = `${_libreFranklin.variable}`
 
 const inter = Inter({
   subsets: ["latin"],
@@ -17,7 +22,7 @@ const inter = Inter({
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-sans",
   display: "swap",
 })
 
@@ -47,7 +52,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}>
-      <body>
+      <body className={_v0_fontVariables}>
         <Suspense fallback={<div>Loading...</div>}>
           <SiteHeader />
           <main className="pb-16 md:pb-0">{children}</main>
