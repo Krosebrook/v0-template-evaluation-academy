@@ -17,7 +17,6 @@ export default async function HomePage() {
 
   const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single()
 
-  // Fetch dashboard data in parallel
   const [
     { count: templatesCount },
     { count: evaluationsCount },
@@ -25,7 +24,6 @@ export default async function HomePage() {
     { data: userTemplates },
     { data: userEvaluations },
     { data: recentTemplates },
-    { data: notifications },
   ] = await Promise.all([
     supabase.from("templates").select("*", { count: "exact", head: true }),
     supabase.from("evaluations").select("*", { count: "exact", head: true }),
@@ -43,13 +41,6 @@ export default async function HomePage() {
       .order("created_at", { ascending: false })
       .limit(5),
     supabase.from("templates").select("*").order("created_at", { ascending: false }).limit(10),
-    supabase
-      .from("notifications")
-      .select("*")
-      .eq("user_id", user.id)
-      .eq("read", false)
-      .order("created_at", { ascending: false })
-      .limit(5),
   ])
 
   // Fetch profiles for recent templates
@@ -77,7 +68,7 @@ export default async function HomePage() {
     userTemplates: userTemplates || [],
     userEvaluations: userEvaluations || [],
     recentTemplates: recentTemplatesWithProfiles || [],
-    notifications: notifications || [],
+    notifications: [], // Empty array since notifications table doesn't exist yet
   }
 
   return (

@@ -22,10 +22,11 @@ export function SiteHeader() {
           <nav className="hidden md:flex items-center space-x-1 text-sm font-medium">
             {[
               { href: "/generator", label: "Generator" },
+              { href: "/gpt-generator", label: "GPT Builder" },
+              { href: "/claude-skill-generator", label: "Claude Skills" },
               { href: "/templates", label: "Templates" },
               { href: "/marketplace", label: "Marketplace" },
               { href: "/knowledge", label: "Knowledge" },
-              { href: "/tutorials", label: "Tutorials" },
             ].map((item) => (
               <Link
                 key={item.href}
@@ -53,6 +54,8 @@ export function SiteHeader() {
               <nav className="flex flex-col space-y-1 mt-8">
                 {[
                   { href: "/generator", label: "Generator" },
+                  { href: "/gpt-generator", label: "GPT Builder" },
+                  { href: "/claude-skill-generator", label: "Claude Skills" },
                   { href: "/templates", label: "Templates" },
                   { href: "/marketplace", label: "Marketplace" },
                   { href: "/knowledge", label: "Knowledge" },

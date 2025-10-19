@@ -3,7 +3,7 @@
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { Sparkles, FileText, Award, Settings, BarChart3, BookOpen, Layers } from "lucide-react"
+import { Sparkles, FileText, Award, Settings, BarChart3, BookOpen, Layers, Bot, Zap } from "lucide-react"
 
 interface QuickActionsWidgetProps {
   data: {
@@ -17,6 +17,8 @@ export function QuickActionsWidget({ data }: QuickActionsWidgetProps) {
 
   const actions = [
     { label: "Generate Template", href: "/generator", icon: Layers, variant: "default" as const },
+    { label: "GPT Builder", href: "/gpt-generator", icon: Bot, variant: "outline" as const },
+    { label: "Claude Skills", href: "/claude-skill-generator", icon: Zap, variant: "outline" as const },
     { label: "Browse Templates", href: "/templates", icon: FileText, variant: "outline" as const },
     ...(isEvaluator
       ? [{ label: "Evaluate", href: "/templates?filter=pending", icon: Award, variant: "outline" as const }]
