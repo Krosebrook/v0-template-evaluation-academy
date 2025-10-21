@@ -1,6 +1,6 @@
 import { Resend } from "resend"
 
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function sendEmail({
   to,
@@ -11,11 +11,6 @@ export async function sendEmail({
   subject: string
   html: string
 }) {
-  if (!resend) {
-    console.log("[Email] Skipping email send (RESEND_API_KEY not configured):", { to, subject })
-    return { success: true, data: null, skipped: true }
-  }
-
   try {
     const data = await resend.emails.send({
       from: "Template Generation Academy <notifications@templategen.academy>",

@@ -55,7 +55,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} ${_v0_fontVariables}`}>
+      <body className={_v0_fontVariables}>
         <Suspense fallback={<div>Loading...</div>}>
           <SiteHeader />
           <main className="pb-16 md:pb-0">{children}</main>

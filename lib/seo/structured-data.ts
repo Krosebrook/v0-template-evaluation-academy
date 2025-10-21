@@ -1,5 +1,3 @@
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://templategen.academy"
-
 export function generateTemplateStructuredData(template: {
   id: string
   name: string
@@ -38,8 +36,8 @@ export function generateOrganizationStructuredData() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "Template Generation Academy",
-    url: baseUrl,
-    logo: `${baseUrl}/logo.png`,
+    url: process.env.NEXT_PUBLIC_APP_URL,
+    logo: `${process.env.NEXT_PUBLIC_APP_URL}/logo.png`,
     description: "The premier platform for template generation, evaluation, and community collaboration",
     sameAs: [
       "https://twitter.com/templategen",

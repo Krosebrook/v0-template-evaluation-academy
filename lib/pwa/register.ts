@@ -37,11 +37,6 @@ export async function subscribeToPushNotifications() {
     return null
   }
 
-  if (!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
-    console.log("[PWA] Push notifications not configured (NEXT_PUBLIC_VAPID_PUBLIC_KEY missing)")
-    return null
-  }
-
   try {
     const registration = await navigator.serviceWorker.ready
     const subscription = await registration.pushManager.subscribe({
