@@ -28,6 +28,12 @@ const nextConfig = {
   },
   experimental: {
     optimizePackageImports: ["lucide-react", "@radix-ui/react-icons"],
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
+  },
+  serverRuntimeConfig: {
+    maxDuration: 10,
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,
