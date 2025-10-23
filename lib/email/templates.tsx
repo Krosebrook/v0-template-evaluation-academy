@@ -1,5 +1,3 @@
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL || "https://templategen.academy"
-
 export function welcomeEmail(userName: string) {
   return `
     <!DOCTYPE html>
@@ -35,9 +33,9 @@ export function welcomeEmail(userName: string) {
               <div class="checklist-item">✓ Earn your first certification</div>
             </div>
 
-            <a href="${APP_URL}/training" class="button">Start Training</a>
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/training" class="button">Start Training</a>
 
-            <p>Need help? Check out our <a href="${APP_URL}/help">Help Center</a> or reply to this email.</p>
+            <p>Need help? Check out our <a href="${process.env.NEXT_PUBLIC_APP_URL}/help">Help Center</a> or reply to this email.</p>
           </div>
           <div class="footer">
             <p>Template Generation Academy</p>
@@ -68,7 +66,7 @@ export function generationCompleteEmail(userName: string, templateName: string, 
       <body>
         <div class="container">
           <div class="header">
-            <h1>Generation Complete!</h1>
+            <h1>Generation Complete! 🎉</h1>
           </div>
           <div class="content">
             <p>Hi ${userName},</p>
@@ -77,7 +75,7 @@ export function generationCompleteEmail(userName: string, templateName: string, 
             <div class="score">${score}/10</div>
             <p style="text-align: center; color: #6b7280;">Overall Score</p>
 
-            <a href="${APP_URL}/templates/${templateId}" class="button">View Results</a>
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/templates/${templateId}" class="button">View Results</a>
 
             <p>Keep up the great work! Your contributions help make our community stronger.</p>
           </div>
@@ -125,11 +123,11 @@ export function commentReplyEmail(
               ${commentText}
             </div>
 
-            <a href="${APP_URL}/templates/${templateId}#comments" class="button">View & Reply</a>
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/templates/${templateId}#comments" class="button">View & Reply</a>
           </div>
           <div class="footer">
             <p>Template Generation Academy</p>
-            <p><a href="${APP_URL}/profile/settings">Manage notification preferences</a></p>
+            <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/profile/settings">Manage notification preferences</a></p>
           </div>
         </div>
       </body>
@@ -157,7 +155,7 @@ export function certificationEarnedEmail(userName: string, certificationLevel: s
       <body>
         <div class="container">
           <div class="header">
-            <h1>Congratulations!</h1>
+            <h1>Congratulations! 🏆</h1>
           </div>
           <div class="content">
             <p>Hi ${userName},</p>
@@ -170,7 +168,7 @@ export function certificationEarnedEmail(userName: string, certificationLevel: s
 
             <p>This achievement recognizes your expertise and dedication to quality template generation. Your certification badge is now displayed on your profile.</p>
 
-            <a href="${APP_URL}/certificate" class="button">View Certificate</a>
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/certificate" class="button">View Certificate</a>
 
             <p>Share your achievement with the community and keep pushing the boundaries of what's possible!</p>
           </div>
@@ -189,7 +187,10 @@ export function weeklyDigestEmail(
   topGenerators: Array<{ name: string; count: number }>,
 ) {
   const templatesList = newTemplates
-    .map((t) => `<li><a href="${APP_URL}/templates/${t.id}">${t.name}</a> - Score: ${t.score}/10</li>`)
+    .map(
+      (t) =>
+        `<li><a href="${process.env.NEXT_PUBLIC_APP_URL}/templates/${t.id}">${t.name}</a> - Score: ${t.score}/10</li>`,
+    )
     .join("")
 
   const generatorsList = topGenerators.map((g) => `<li>${g.name} - ${g.count} generations</li>`).join("")
@@ -221,20 +222,20 @@ export function weeklyDigestEmail(
             <p>Here's what happened this week in the Template Generation Academy:</p>
             
             <div class="section">
-              <h3>New Templates</h3>
+              <h3>🆕 New Templates</h3>
               <ul>${templatesList}</ul>
             </div>
 
             <div class="section">
-              <h3>Top Generators</h3>
+              <h3>⭐ Top Generators</h3>
               <ul>${generatorsList}</ul>
             </div>
 
-            <a href="${APP_URL}/browse" class="button">Explore Templates</a>
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/browse" class="button">Explore Templates</a>
           </div>
           <div class="footer">
             <p>Template Generation Academy</p>
-            <p><a href="${APP_URL}/profile/settings">Unsubscribe from weekly digest</a></p>
+            <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/profile/settings">Unsubscribe from weekly digest</a></p>
           </div>
         </div>
       </body>
