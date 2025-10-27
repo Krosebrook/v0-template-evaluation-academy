@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { AdminDashboard } from "@/components/admin-dashboard"
-import { withTimeout } from "@/lib/utils/timeout"
+import { withTimeout } from "@/lib/utils"
 
 export default async function AdminPage() {
   try {
