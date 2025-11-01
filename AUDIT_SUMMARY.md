@@ -4,6 +4,8 @@
 **Date:** November 1, 2025  
 **Status:** ✅ Audit Complete
 
+> **Note:** This is an audit document that identifies issues and provides recommendations. The commands shown are **action items for implementation**, not changes already made. See [ACTION_PLAN.md](./ACTION_PLAN.md) for step-by-step implementation.
+
 ---
 
 ## 📋 Executive Summary

@@ -7,6 +7,8 @@
 **Version:** 1.0  
 **Status:** 🟢 Complete & Actionable
 
+> **Important:** This document is an **audit and assessment**. It identifies the current state, critical issues, and provides recommendations for improvement. Issues documented here are **findings**, not fixes. For implementation steps, see [ACTION_PLAN.md](./ACTION_PLAN.md).
+
 ---
 
 ## Executive Summary
