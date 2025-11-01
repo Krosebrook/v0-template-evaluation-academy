@@ -7,6 +7,8 @@
 
 A comprehensive full-stack platform for template generation, evaluation, certification, and marketplace. Built with modern web technologies and best practices.
 
+> 📖 **[Complete Documentation Index](./DOCUMENTATION_INDEX.md)** | 🔍 **[Comprehensive Audit](./AUDIT_OVERVIEW.md)** | 📋 **[Quick Summary](./AUDIT_SUMMARY.md)**
+
 ---
 
 ## 🚀 Quick Start
