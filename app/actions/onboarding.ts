@@ -1,7 +1,7 @@
 "use server"
 
-import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
+import { getAuthenticatedUser } from "@/lib/auth/server-auth"
 
 export async function completeOnboarding(data: {
   role: string
@@ -9,14 +9,10 @@ export async function completeOnboarding(data: {
   bio?: string
   experienceLevel: string
 }) {
-  const supabase = await createClient()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    return { error: "Not authenticated" }
+  if (error || !user) {
+    return { error: error || "Not authenticated" }
   }
 
   try {
@@ -49,14 +45,10 @@ export async function completeOnboarding(data: {
 }
 
 export async function skipOnboarding() {
-  const supabase = await createClient()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    return { error: "Not authenticated" }
+  if (error || !user) {
+    return { error: error || "Not authenticated" }
   }
 
   try {

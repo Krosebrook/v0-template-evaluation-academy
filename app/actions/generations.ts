@@ -1,19 +1,14 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
-import { createServerClient } from "@/lib/supabase/server"
 import { createGeneration } from "@/lib/supabase/database"
+import { getAuthenticatedUser } from "@/lib/auth/server-auth"
 
 export async function submitGeneration(formData: FormData) {
-  const supabase = createServerClient()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser()
-
-  if (authError || !user) {
-    return { error: "You must be logged in to generate" }
+  if (error || !user) {
+    return { error: error || "You must be logged in to generate" }
   }
 
   // Check if user has generator role

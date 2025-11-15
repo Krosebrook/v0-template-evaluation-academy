@@ -1,9 +1,9 @@
 "use server"
 
-import { createClient } from "@/lib/supabase/server"
 import { parseCSV, parseJSON, generateJSON } from "@/lib/import-export/parser"
 import { revalidatePath } from "next/cache"
 import type { Template } from "@/types/database"
+import { getAuthenticatedUser } from "@/lib/auth/server-auth"
 
 interface ImportError {
   template: string
@@ -26,13 +26,9 @@ interface ExportResult {
 }
 
 export async function importTemplates(formData: FormData): Promise<ImportResult> {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) {
-    return { success: false, error: "Not authenticated" }
+  const { supabase, user, error } = await getAuthenticatedUser()
+  if (error || !user) {
+    return { success: false, error: error || "Not authenticated" }
   }
 
   const file = formData.get("file") as File
@@ -112,13 +108,9 @@ export async function importTemplates(formData: FormData): Promise<ImportResult>
 }
 
 export async function exportTemplates(templateIds?: string[]): Promise<ExportResult> {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) {
-    return { success: false, error: "Not authenticated" }
+  const { supabase, user, error } = await getAuthenticatedUser()
+  if (error || !user) {
+    return { success: false, error: error || "Not authenticated" }
   }
 
   try {
@@ -146,13 +138,9 @@ export async function exportTemplates(templateIds?: string[]): Promise<ExportRes
 }
 
 export async function createBackup(): Promise<ExportResult> {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) {
-    return { success: false, error: "Not authenticated" }
+  const { supabase, user, error } = await getAuthenticatedUser()
+  if (error || !user) {
+    return { success: false, error: error || "Not authenticated" }
   }
 
   try {

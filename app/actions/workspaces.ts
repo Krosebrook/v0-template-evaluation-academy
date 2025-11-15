@@ -1,17 +1,13 @@
 "use server"
 
-import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
+import { getAuthenticatedUser } from "@/lib/auth/server-auth"
 
 export async function createWorkspace(data: { name: string; description?: string }) {
-  const supabase = await createClient()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    return { error: "Not authenticated" }
+  if (error || !user) {
+    return { error: error || "Not authenticated" }
   }
 
   try {
@@ -53,14 +49,10 @@ export async function createWorkspace(data: { name: string; description?: string
 }
 
 export async function inviteToWorkspace(data: { workspaceId: string; email: string; role: string }) {
-  const supabase = await createClient()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    return { error: "Not authenticated" }
+  if (error || !user) {
+    return { error: error || "Not authenticated" }
   }
 
   try {
@@ -102,14 +94,10 @@ export async function inviteToWorkspace(data: { workspaceId: string; email: stri
 }
 
 export async function removeFromWorkspace(data: { workspaceId: string; userId: string }) {
-  const supabase = await createClient()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    return { error: "Not authenticated" }
+  if (error || !user) {
+    return { error: error || "Not authenticated" }
   }
 
   try {

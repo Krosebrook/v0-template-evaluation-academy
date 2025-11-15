@@ -13,27 +13,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { Loader2, X, Plus, Check, AlertCircle } from "lucide-react"
-
-const CATEGORIES = ["E-commerce", "SaaS", "Blog", "Portfolio", "AI", "Marketing", "Dashboard", "Other"]
-
-const DIFFICULTIES = ["Beginner", "Intermediate", "Advanced"]
-
-const COMMON_TAGS = [
-  "Next.js",
-  "React",
-  "TypeScript",
-  "Tailwind CSS",
-  "Supabase",
-  "Stripe",
-  "Auth",
-  "Database",
-  "API",
-  "MDX",
-  "AI",
-  "OpenAI",
-  "Vercel",
-  "shadcn/ui",
-]
+import { CATEGORIES, DIFFICULTIES, COMMON_TAGS } from "@/lib/constants/templates"
+import { addTag, removeTag } from "@/lib/utils/tags"
 
 export function TemplateSubmissionForm({ userId }: { userId: string }) {
   const router = useRouter()
@@ -53,18 +34,17 @@ export function TemplateSubmissionForm({ userId }: { userId: string }) {
   const [demoUrl, setDemoUrl] = useState("")
 
   const handleAddTag = (tag: string) => {
-    if (!tags.includes(tag) && tags.length < 10) {
-      setTags([...tags, tag])
-    }
+    setTags(addTag(tags, tag))
   }
 
   const handleRemoveTag = (tag: string) => {
-    setTags(tags.filter((t) => t !== tag))
+    setTags(removeTag(tags, tag))
   }
 
   const handleAddCustomTag = () => {
-    if (customTag.trim() && !tags.includes(customTag.trim()) && tags.length < 10) {
-      setTags([...tags, customTag.trim()])
+    const newTags = addTag(tags, customTag)
+    if (newTags.length > tags.length) {
+      setTags(newTags)
       setCustomTag("")
     }
   }

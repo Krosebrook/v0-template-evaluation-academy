@@ -1,18 +1,15 @@
 "use server"
 
-import { createClient } from "@/lib/supabase/server"
 import { stripe } from "@/lib/stripe/client"
 import { revalidatePath } from "next/cache"
 import { randomBytes } from "crypto"
+import { getAuthenticatedUser } from "@/lib/auth/server-auth"
 
 export async function createMarketplaceListing(formData: FormData) {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  if (!user) {
-    throw new Error("User not authenticated")
+  if (error || !user) {
+    throw new Error(error || "User not authenticated")
   }
 
   const templateId = formData.get("templateId") as string
@@ -53,13 +50,10 @@ export async function createMarketplaceListing(formData: FormData) {
 }
 
 export async function purchaseTemplate(listingId: string) {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  if (!user) {
-    throw new Error("User not authenticated")
+  if (error || !user) {
+    throw new Error(error || "User not authenticated")
   }
 
   // Get listing details
@@ -145,13 +139,10 @@ export async function purchaseTemplate(listingId: string) {
 }
 
 export async function toggleListingStatus(listingId: string) {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  if (!user) {
-    throw new Error("User not authenticated")
+  if (error || !user) {
+    throw new Error(error || "User not authenticated")
   }
 
   const { data: listing } = await supabase

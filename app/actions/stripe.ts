@@ -2,17 +2,14 @@
 
 import { stripe } from "@/lib/stripe/client"
 import { SUBSCRIPTION_PLANS, CREDIT_PACKAGES } from "@/lib/stripe/products"
-import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
+import { getAuthenticatedUser } from "@/lib/auth/server-auth"
 
 export async function startSubscriptionCheckout(planId: string) {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  if (!user) {
-    throw new Error("User not authenticated")
+  if (error || !user) {
+    throw new Error(error || "User not authenticated")
   }
 
   const plan = SUBSCRIPTION_PLANS.find((p) => p.id === planId)
@@ -51,13 +48,10 @@ export async function startSubscriptionCheckout(planId: string) {
 }
 
 export async function startCreditsCheckout(packageId: string) {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  if (!user) {
-    throw new Error("User not authenticated")
+  if (error || !user) {
+    throw new Error(error || "User not authenticated")
   }
 
   const creditPackage = CREDIT_PACKAGES.find((p) => p.id === packageId)
@@ -96,13 +90,10 @@ export async function startCreditsCheckout(packageId: string) {
 }
 
 export async function cancelSubscription(subscriptionId: string) {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  if (!user) {
-    throw new Error("User not authenticated")
+  if (error || !user) {
+    throw new Error(error || "User not authenticated")
   }
 
   const { data: subscription } = await supabase
