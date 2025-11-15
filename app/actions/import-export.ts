@@ -70,18 +70,39 @@ export async function importTemplates(formData: FormData): Promise<ImportResult>
     let failed = 0
     const errors: ImportError[] = []
 
-    for (const template of templates) {
-      const { error } = await supabase.from("templates").insert({
+    // Optimized: Batch insert templates for better performance
+    // Note: Supabase batch insert doesn't provide per-row error details,
+    // so we still need individual inserts for error tracking
+    // However, we can batch them in chunks of 100 for better performance
+    const BATCH_SIZE = 100
+    for (let i = 0; i < templates.length; i += BATCH_SIZE) {
+      const batch = templates.slice(i, i + BATCH_SIZE)
+      const templatesWithMetadata = batch.map((template) => ({
         ...template,
         author_id: user.id,
         status: "draft",
-      })
+      }))
+
+      const { data, error } = await supabase.from("templates").insert(templatesWithMetadata).select()
 
       if (error) {
-        failed++
-        errors.push({ template: template.title, error: error.message })
+        // If batch fails, fall back to individual inserts for this batch to track errors
+        for (const template of batch) {
+          const { error: individualError } = await supabase.from("templates").insert({
+            ...template,
+            author_id: user.id,
+            status: "draft",
+          })
+
+          if (individualError) {
+            failed++
+            errors.push({ template: template.name, error: individualError.message })
+          } else {
+            successful++
+          }
+        }
       } else {
-        successful++
+        successful += data?.length || batch.length
       }
     }
 
