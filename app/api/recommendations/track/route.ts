@@ -16,43 +16,47 @@ export async function POST(request: Request) {
 
     const { templateId, interactionType } = await request.json()
 
-    // Track user interaction
-    await supabase.from("user_interactions").insert({
-      user_id: user.id,
-      template_id: templateId,
-      interaction_type: interactionType,
-    })
+    // Optimized: Batch operations - fetch template and preferences in parallel
+    const [interactionResult, templateResult, preferencesResult] = await Promise.allSettled([
+      supabase.from("user_interactions").insert({
+        user_id: user.id,
+        template_id: templateId,
+        interaction_type: interactionType,
+      }),
+      supabase.from("templates").select("category, difficulty").eq("id", templateId).single(),
+      supabase.from("user_preferences").select("*").eq("user_id", user.id).single(),
+    ])
 
-    // Update user preferences based on template
-    const { data: template } = await supabase
-      .from("templates")
-      .select("category, difficulty")
-      .eq("id", templateId)
-      .single()
-
-    if (template) {
-      const { data: preferences } = await supabase.from("user_preferences").select("*").eq("user_id", user.id).single()
+    // Handle template and preferences updates if template fetch succeeded
+    if (templateResult.status === "fulfilled" && templateResult.value.data) {
+      const template = templateResult.value.data
+      const preferences = preferencesResult.status === "fulfilled" ? preferencesResult.value.data : null
 
       if (preferences) {
-        // Update existing preferences
+        // Update existing preferences only if needed
         const categories = preferences.preferred_categories || []
         const difficulties = preferences.preferred_difficulties || []
 
-        if (!categories.includes(template.category)) {
-          categories.push(template.category)
-        }
-        if (!difficulties.includes(template.difficulty)) {
-          difficulties.push(template.difficulty)
-        }
+        const needsUpdate =
+          !categories.includes(template.category) || !difficulties.includes(template.difficulty)
 
-        await supabase
-          .from("user_preferences")
-          .update({
-            preferred_categories: categories,
-            preferred_difficulties: difficulties,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("user_id", user.id)
+        if (needsUpdate) {
+          if (!categories.includes(template.category)) {
+            categories.push(template.category)
+          }
+          if (!difficulties.includes(template.difficulty)) {
+            difficulties.push(template.difficulty)
+          }
+
+          await supabase
+            .from("user_preferences")
+            .update({
+              preferred_categories: categories,
+              preferred_difficulties: difficulties,
+              updated_at: new Date().toISOString(),
+            })
+            .eq("user_id", user.id)
+        }
       } else {
         // Create new preferences
         await supabase.from("user_preferences").insert({

@@ -1,13 +1,14 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useMemo } from "react"
 import { createBrowserClient } from "./client"
 import type { RealtimeChannel } from "@supabase/supabase-js"
 
 export function useRealtimeTemplates() {
   const [templates, setTemplates] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const supabase = createBrowserClient()
+  // Memoize Supabase client to prevent recreation on every render
+  const supabase = useMemo(() => createBrowserClient(), [])
 
   useEffect(() => {
     // Initial fetch
@@ -32,7 +33,14 @@ export function useRealtimeTemplates() {
         setTemplates((current) => [payload.new as any, ...current])
       })
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "templates" }, (payload) => {
-        setTemplates((current) => current.map((t) => (t.id === payload.new.id ? (payload.new as any) : t)))
+        // Optimized: Use findIndex for single operation instead of map
+        setTemplates((current) => {
+          const index = current.findIndex((t) => t.id === payload.new.id)
+          if (index === -1) return current
+          const updated = [...current]
+          updated[index] = payload.new as any
+          return updated
+        })
       })
       .on("postgres_changes", { event: "DELETE", schema: "public", table: "templates" }, (payload) => {
         setTemplates((current) => current.filter((t) => t.id !== payload.old.id))
@@ -40,6 +48,7 @@ export function useRealtimeTemplates() {
       .subscribe()
 
     return () => {
+      channel.unsubscribe()
       supabase.removeChannel(channel)
     }
   }, [supabase])
@@ -50,7 +59,8 @@ export function useRealtimeTemplates() {
 export function useRealtimeGenerations(templateId: string) {
   const [generations, setGenerations] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const supabase = createBrowserClient()
+  // Memoize Supabase client to prevent recreation on every render
+  const supabase = useMemo(() => createBrowserClient(), [])
 
   useEffect(() => {
     // Initial fetch
@@ -93,12 +103,20 @@ export function useRealtimeGenerations(templateId: string) {
           filter: `template_id=eq.${templateId}`,
         },
         (payload) => {
-          setGenerations((current) => current.map((g) => (g.id === payload.new.id ? (payload.new as any) : g)))
+          // Optimized: Use findIndex for single operation instead of map
+          setGenerations((current) => {
+            const index = current.findIndex((g) => g.id === payload.new.id)
+            if (index === -1) return current
+            const updated = [...current]
+            updated[index] = payload.new as any
+            return updated
+          })
         },
       )
       .subscribe()
 
     return () => {
+      channel.unsubscribe()
       supabase.removeChannel(channel)
     }
   }, [templateId, supabase])
@@ -109,7 +127,8 @@ export function useRealtimeGenerations(templateId: string) {
 export function useRealtimeNotifications(userId: string) {
   const [notifications, setNotifications] = useState<any[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
-  const supabase = createBrowserClient()
+  // Memoize Supabase client to prevent recreation on every render
+  const supabase = useMemo(() => createBrowserClient(), [])
 
   useEffect(() => {
     if (!userId) return
@@ -156,7 +175,14 @@ export function useRealtimeNotifications(userId: string) {
           filter: `user_id=eq.${userId}`,
         },
         (payload) => {
-          setNotifications((current) => current.map((n) => (n.id === payload.new.id ? (payload.new as any) : n)))
+          // Optimized: Use findIndex for single operation instead of map
+          setNotifications((current) => {
+            const index = current.findIndex((n) => n.id === payload.new.id)
+            if (index === -1) return current
+            const updated = [...current]
+            updated[index] = payload.new as any
+            return updated
+          })
           if ((payload.new as any).read) {
             setUnreadCount((count) => Math.max(0, count - 1))
           }
@@ -165,6 +191,7 @@ export function useRealtimeNotifications(userId: string) {
       .subscribe()
 
     return () => {
+      channel.unsubscribe()
       supabase.removeChannel(channel)
     }
   }, [userId, supabase])
@@ -183,7 +210,8 @@ export function useRealtimeNotifications(userId: string) {
 
 export function useOnlineUsers() {
   const [onlineUsers, setOnlineUsers] = useState<string[]>([])
-  const supabase = createBrowserClient()
+  // Memoize Supabase client to prevent recreation on every render
+  const supabase = useMemo(() => createBrowserClient(), [])
 
   useEffect(() => {
     const channel: RealtimeChannel = supabase.channel("online-users", {
@@ -212,6 +240,7 @@ export function useOnlineUsers() {
       })
 
     return () => {
+      channel.unsubscribe()
       supabase.removeChannel(channel)
     }
   }, [supabase])

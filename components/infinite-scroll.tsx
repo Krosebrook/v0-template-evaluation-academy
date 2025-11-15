@@ -26,23 +26,42 @@ export function InfiniteScroll<T>({
   const [loading, setLoading] = useState(false)
   const [hasMoreItems, setHasMoreItems] = useState(hasMore)
   const observerTarget = useRef<HTMLDivElement>(null)
+  const observerRef = useRef<IntersectionObserver | null>(null)
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMoreItems && !loading) {
-          loadMoreItems()
-        }
-      },
-      { threshold: 0.1 },
-    )
-
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current)
+    // Reuse observer instance instead of recreating it
+    if (!observerRef.current) {
+      observerRef.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && hasMoreItems && !loading) {
+            loadMoreItems()
+          }
+        },
+        { threshold: 0.1 },
+      )
     }
 
-    return () => observer.disconnect()
+    const currentTarget = observerTarget.current
+    if (currentTarget && observerRef.current) {
+      observerRef.current.observe(currentTarget)
+    }
+
+    return () => {
+      if (currentTarget && observerRef.current) {
+        observerRef.current.unobserve(currentTarget)
+      }
+    }
   }, [hasMoreItems, loading, page])
+
+  // Cleanup observer on unmount
+  useEffect(() => {
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+        observerRef.current = null
+      }
+    }
+  }, [])
 
   const loadMoreItems = async () => {
     setLoading(true)
