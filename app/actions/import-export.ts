@@ -67,15 +67,15 @@ export async function importTemplates(formData: FormData): Promise<ImportResult>
     const errors: ImportError[] = []
 
     for (const template of templates) {
-      const { error } = await supabase.from("templates").insert({
+      const { error: insertError } = await supabase.from("templates").insert({
         ...template,
         author_id: user.id,
         status: "draft",
       })
 
-      if (error) {
+      if (insertError) {
         failed++
-        errors.push({ template: template.title, error: error.message })
+        errors.push({ template: template.title, error: insertError.message })
       } else {
         successful++
       }

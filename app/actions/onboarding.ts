@@ -52,13 +52,13 @@ export async function skipOnboarding() {
   }
 
   try {
-    const { error } = await supabase.from("profiles").update({ onboarding_completed: true }).eq("id", user.id)
+    const { error: updateError } = await supabase.from("profiles").update({ onboarding_completed: true }).eq("id", user.id)
 
-    if (error) throw error
+    if (updateError) throw updateError
 
     revalidatePath("/profile")
     return { success: true }
-  } catch (error) {
-    return { error: error instanceof Error ? error.message : "Failed to skip onboarding" }
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Failed to skip onboarding" }
   }
 }

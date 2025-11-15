@@ -6,10 +6,10 @@ import { randomBytes } from "crypto"
 import { getAuthenticatedUser } from "@/lib/auth/server-auth"
 
 export async function createMarketplaceListing(formData: FormData) {
-  const { supabase, user, error } = await getAuthenticatedUser()
+  const { supabase, user, error: authError } = await getAuthenticatedUser()
 
-  if (error || !user) {
-    throw new Error(error || "User not authenticated")
+  if (authError || !user) {
+    throw new Error(authError || "User not authenticated")
   }
 
   const templateId = formData.get("templateId") as string
@@ -50,10 +50,10 @@ export async function createMarketplaceListing(formData: FormData) {
 }
 
 export async function purchaseTemplate(listingId: string) {
-  const { supabase, user, error } = await getAuthenticatedUser()
+  const { supabase, user, error: authError } = await getAuthenticatedUser()
 
-  if (error || !user) {
-    throw new Error(error || "User not authenticated")
+  if (authError || !user) {
+    throw new Error(authError || "User not authenticated")
   }
 
   // Get listing details
@@ -139,10 +139,10 @@ export async function purchaseTemplate(listingId: string) {
 }
 
 export async function toggleListingStatus(listingId: string) {
-  const { supabase, user, error } = await getAuthenticatedUser()
+  const { supabase, user, error: authError } = await getAuthenticatedUser()
 
-  if (error || !user) {
-    throw new Error(error || "User not authenticated")
+  if (authError || !user) {
+    throw new Error(authError || "User not authenticated")
   }
 
   const { data: listing } = await supabase

@@ -9,9 +9,9 @@ export async function reportContent(
   reason: string,
   description?: string,
 ) {
-  const { supabase, user, error } = await getAuthenticatedUser()
-  if (error || !user) {
-    return { success: false, error: error || "Not authenticated" }
+  const { supabase, user, error: authError } = await getAuthenticatedUser()
+  if (authError || !user) {
+    return { success: false, error: authError || "Not authenticated" }
   }
 
   const { error } = await supabase.from("reports").insert({
@@ -33,9 +33,9 @@ export async function reportContent(
 }
 
 export async function blockUser(userId: string, reason: string) {
-  const { supabase, user, error } = await getAuthenticatedUser()
-  if (error || !user) {
-    return { success: false, error: error || "Not authenticated" }
+  const { supabase, user, error: authError } = await getAuthenticatedUser()
+  if (authError || !user) {
+    return { success: false, error: authError || "Not authenticated" }
   }
 
   const { error } = await supabase.from("blocked_users").insert({
@@ -55,9 +55,9 @@ export async function blockUser(userId: string, reason: string) {
 }
 
 export async function moderateContent(reportId: string, action: "approve" | "remove" | "warn", notes?: string) {
-  const { supabase, user, error } = await getAuthenticatedUser()
-  if (error || !user) {
-    return { success: false, error: error || "Not authenticated" }
+  const { supabase, user, error: authError } = await getAuthenticatedUser()
+  if (authError || !user) {
+    return { success: false, error: authError || "Not authenticated" }
   }
 
   // Check if user is admin
