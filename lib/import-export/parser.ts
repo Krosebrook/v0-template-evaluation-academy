@@ -12,6 +12,39 @@ const TemplateImportSchema = z.object({
 
 export type TemplateImport = z.infer<typeof TemplateImportSchema>
 
+/**
+ * Parse a CSV line respecting RFC 4180 - handles quoted fields with commas
+ */
+function parseCSVLine(line: string): string[] {
+  const result: string[] = []
+  let current = ""
+  let inQuotes = false
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i]
+    const nextChar = line[i + 1]
+
+    if (char === '"') {
+      if (inQuotes && nextChar === '"') {
+        // Escaped quote
+        current += '"'
+        i++
+      } else {
+        // Toggle quote mode
+        inQuotes = !inQuotes
+      }
+    } else if (char === "," && !inQuotes) {
+      // Field separator
+      result.push(current.trim())
+      current = ""
+    } else {
+      current += char
+    }
+  }
+  result.push(current.trim())
+  return result
+}
+
 export async function parseCSV(file: File): Promise<TemplateImport[]> {
   const text = await file.text()
   const lines = text.split("\n").filter((line) => line.trim())
@@ -20,11 +53,11 @@ export async function parseCSV(file: File): Promise<TemplateImport[]> {
     throw new Error("CSV file must have at least a header row and one data row")
   }
 
-  const headers = lines[0].split(",").map((h) => h.trim())
+  const headers = parseCSVLine(lines[0]).map((h) => h.replace(/^"|"$/g, ""))
   const templates: TemplateImport[] = []
 
   for (let i = 1; i < lines.length; i++) {
-    const values = lines[i].split(",").map((v) => v.trim())
+    const values = parseCSVLine(lines[i]).map((v) => v.replace(/^"|"$/g, ""))
     const template: Record<string, unknown> = {}
 
     headers.forEach((header, index) => {
@@ -60,20 +93,33 @@ export async function parseJSON(file: File): Promise<TemplateImport[]> {
   })
 }
 
+/**
+ * Escape a CSV field value according to RFC 4180
+ */
+function escapeCSVField(value: string | undefined | null): string {
+  if (!value) return '""'
+  const stringValue = String(value)
+  // Escape quotes by doubling them and wrap in quotes if contains comma, quote, or newline
+  if (stringValue.includes('"') || stringValue.includes(",") || stringValue.includes("\n")) {
+    return `"${stringValue.replace(/"/g, '""')}"`
+  }
+  return `"${stringValue}"`
+}
+
 export function generateCSV(templates: Template[]): string {
   if (templates.length === 0) return ""
 
   const headers = ["title", "description", "category", "tags", "created_at", "updated_at"]
   const rows = templates.map((t) => [
-    t.title,
-    t.description,
-    t.category,
-    (t.tags || []).join("|"),
-    t.created_at,
-    t.updated_at,
+    escapeCSVField(t.title),
+    escapeCSVField(t.description),
+    escapeCSVField(t.category),
+    escapeCSVField((t.tags || []).join("|")),
+    escapeCSVField(t.created_at),
+    escapeCSVField(t.updated_at),
   ])
 
-  return [headers.join(","), ...rows.map((row) => row.map((cell) => `"${cell}"`).join(","))].join("\n")
+  return [headers.join(","), ...rows.map((row) => row.join(","))].join("\n")
 }
 
 export function generateJSON(templates: Template[]): string {
