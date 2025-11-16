@@ -1,7 +1,7 @@
 "use server"
 
-import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
+import { getAuthenticatedUser } from "@/lib/auth/server-auth"
 
 export async function completeOnboarding(data: {
   role: string
@@ -9,14 +9,10 @@ export async function completeOnboarding(data: {
   bio?: string
   experienceLevel: string
 }) {
-  const supabase = await createClient()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    return { error: "Not authenticated" }
+  if (error || !user) {
+    return { error: error || "Not authenticated" }
   }
 
   try {
@@ -49,24 +45,20 @@ export async function completeOnboarding(data: {
 }
 
 export async function skipOnboarding() {
-  const supabase = await createClient()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    return { error: "Not authenticated" }
+  if (error || !user) {
+    return { error: error || "Not authenticated" }
   }
 
   try {
-    const { error } = await supabase.from("profiles").update({ onboarding_completed: true }).eq("id", user.id)
+    const { error: updateError } = await supabase.from("profiles").update({ onboarding_completed: true }).eq("id", user.id)
 
-    if (error) throw error
+    if (updateError) throw updateError
 
     revalidatePath("/profile")
     return { success: true }
-  } catch (error) {
-    return { error: error instanceof Error ? error.message : "Failed to skip onboarding" }
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Failed to skip onboarding" }
   }
 }

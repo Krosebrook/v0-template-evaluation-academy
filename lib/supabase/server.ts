@@ -30,6 +30,5 @@ export async function createClient() {
   })
 }
 
-export async function createServerClient() {
-  return await createClient()
-}
+// Alias for clarity - both functions do the same thing
+export const createServerClient = createClient

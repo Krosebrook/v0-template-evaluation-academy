@@ -1,7 +1,7 @@
 "use server"
 
-import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
+import { getAuthenticatedUser } from "@/lib/auth/server-auth"
 
 export async function reportContent(
   contentId: string,
@@ -9,13 +9,9 @@ export async function reportContent(
   reason: string,
   description?: string,
 ) {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) {
-    return { success: false, error: "Not authenticated" }
+  const { supabase, user, error: authError } = await getAuthenticatedUser()
+  if (authError || !user) {
+    return { success: false, error: authError || "Not authenticated" }
   }
 
   const { error } = await supabase.from("reports").insert({
@@ -37,13 +33,9 @@ export async function reportContent(
 }
 
 export async function blockUser(userId: string, reason: string) {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) {
-    return { success: false, error: "Not authenticated" }
+  const { supabase, user, error: authError } = await getAuthenticatedUser()
+  if (authError || !user) {
+    return { success: false, error: authError || "Not authenticated" }
   }
 
   const { error } = await supabase.from("blocked_users").insert({
@@ -63,13 +55,9 @@ export async function blockUser(userId: string, reason: string) {
 }
 
 export async function moderateContent(reportId: string, action: "approve" | "remove" | "warn", notes?: string) {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) {
-    return { success: false, error: "Not authenticated" }
+  const { supabase, user, error: authError } = await getAuthenticatedUser()
+  if (authError || !user) {
+    return { success: false, error: authError || "Not authenticated" }
   }
 
   // Check if user is admin

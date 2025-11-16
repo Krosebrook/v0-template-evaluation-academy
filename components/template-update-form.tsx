@@ -13,6 +13,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { X, Plus } from "lucide-react"
+import { CATEGORIES, DIFFICULTIES } from "@/lib/constants/templates"
+import { addTag as addTagUtil, removeTag as removeTagUtil } from "@/lib/utils/tags"
 
 interface Template {
   id: string
@@ -75,14 +77,15 @@ export function TemplateUpdateForm({ template }: { template: Template }) {
   }
 
   const addTag = () => {
-    if (newTag.trim() && !formData.tags.includes(newTag.trim())) {
-      setFormData({ ...formData, tags: [...formData.tags, newTag.trim()] })
+    const newTags = addTagUtil(formData.tags, newTag)
+    if (newTags.length > formData.tags.length) {
+      setFormData({ ...formData, tags: newTags })
       setNewTag("")
     }
   }
 
   const removeTag = (tagToRemove: string) => {
-    setFormData({ ...formData, tags: formData.tags.filter((tag) => tag !== tagToRemove) })
+    setFormData({ ...formData, tags: removeTagUtil(formData.tags, tagToRemove) })
   }
 
   return (
@@ -129,13 +132,11 @@ export function TemplateUpdateForm({ template }: { template: Template }) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="E-commerce">E-commerce</SelectItem>
-                  <SelectItem value="SaaS">SaaS</SelectItem>
-                  <SelectItem value="Blog">Blog</SelectItem>
-                  <SelectItem value="Portfolio">Portfolio</SelectItem>
-                  <SelectItem value="AI">AI</SelectItem>
-                  <SelectItem value="Marketing">Marketing</SelectItem>
-                  <SelectItem value="Other">Other</SelectItem>
+                  {CATEGORIES.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -150,9 +151,11 @@ export function TemplateUpdateForm({ template }: { template: Template }) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Beginner">Beginner</SelectItem>
-                  <SelectItem value="Intermediate">Intermediate</SelectItem>
-                  <SelectItem value="Advanced">Advanced</SelectItem>
+                  {DIFFICULTIES.map((diff) => (
+                    <SelectItem key={diff} value={diff}>
+                      {diff}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

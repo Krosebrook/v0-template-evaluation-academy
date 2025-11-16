@@ -4,6 +4,5 @@ export function createClient() {
   return createBrowserClientSSR(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
 }
 
-export function createBrowserClient() {
-  return createBrowserClientSSR(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
-}
+// Alias for clarity - both functions do the same thing
+export const createBrowserClient = createClient

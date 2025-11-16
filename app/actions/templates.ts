@@ -2,19 +2,14 @@
 
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
-import { createServerClient } from "@/lib/supabase/server"
 import { createTemplate, updateTemplate, deleteTemplate } from "@/lib/supabase/database"
+import { getAuthenticatedUser } from "@/lib/auth/server-auth"
 
 export async function submitTemplate(formData: FormData) {
-  const supabase = createServerClient()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser()
-
-  if (authError || !user) {
-    return { error: "You must be logged in to submit a template" }
+  if (error || !user) {
+    return { error: error || "You must be logged in to submit a template" }
   }
 
   const title = formData.get("title") as string
@@ -50,15 +45,10 @@ export async function submitTemplate(formData: FormData) {
 }
 
 export async function updateTemplateAction(id: string, formData: FormData) {
-  const supabase = createServerClient()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser()
-
-  if (authError || !user) {
-    return { error: "You must be logged in" }
+  if (error || !user) {
+    return { error: error || "You must be logged in" }
   }
 
   const updates = {
@@ -86,15 +76,10 @@ export async function updateTemplateAction(id: string, formData: FormData) {
 }
 
 export async function deleteTemplateAction(id: string) {
-  const supabase = createServerClient()
+  const { supabase, user, error } = await getAuthenticatedUser()
 
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser()
-
-  if (authError || !user) {
-    return { error: "You must be logged in" }
+  if (error || !user) {
+    return { error: error || "You must be logged in" }
   }
 
   try {
