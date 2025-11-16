@@ -93,18 +93,7 @@ The project will start with default development settings. For full functionality
 3. **Payments** - ⚠️ Requires Stripe test keys
 4. **Database** - ⚠️ Requires Supabase setup
 
-### Adding Your Own Credentials (Optional)
-
-To enable full functionality in blink.new:
-
-1. Click the "Environment" tab in StackBlitz
-2. Add your credentials:
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your-key
-   ```
-3. The app will hot-reload with your credentials
+> 📖 **[Complete StackBlitz Guide](./STACKBLITZ.md)** - Detailed instructions for using this project on StackBlitz/blink.new
 
 ---
 
@@ -308,6 +297,7 @@ pnpm start
 
 ### Quick Start
 - **[AUDIT_OVERVIEW.md](./AUDIT_OVERVIEW.md)** - 🌟 **Comprehensive Audit Overview** (Start Here!)
+- **[STACKBLITZ.md](./STACKBLITZ.md)** - ⚡ **StackBlitz/blink.new Setup Guide**
 
 ### Planning & Roadmap
 - **[ROADMAP.md](./ROADMAP.md)** - Development roadmap with phases and milestones
