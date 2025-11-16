@@ -1,0 +1,8 @@
+{
+  "startCommand": "npm run dev",
+  "env": {
+    "NEXT_PUBLIC_APP_URL": "https://localhost:3000",
+    "NEXT_PUBLIC_SITE_URL": "https://localhost:3000",
+    "NODE_ENV": "development"
+  }
+}
