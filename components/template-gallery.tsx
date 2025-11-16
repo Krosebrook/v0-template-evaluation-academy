@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { TemplateCard } from "@/components/template-card"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -32,34 +32,42 @@ export function TemplateGallery({ initialTemplates }: { initialTemplates: Templa
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all")
   const [sortBy, setSortBy] = useState<string>("recent")
 
-  // Get unique categories and difficulties
-  const categories = ["all", ...Array.from(new Set(initialTemplates.map((t) => t.category)))]
+  // Memoize unique categories and difficulties
+  const categories = useMemo(
+    () => ["all", ...Array.from(new Set(initialTemplates.map((t) => t.category)))],
+    [initialTemplates],
+  )
   const difficulties = ["all", "Beginner", "Intermediate", "Advanced"]
 
-  // Filter templates
-  const filteredTemplates = initialTemplates
-    .filter((template) => {
-      const matchesSearch =
-        template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        template.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        template.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  // Memoize filtered and sorted templates to avoid recomputation on every render
+  const filteredTemplates = useMemo(() => {
+    const searchLower = searchQuery.toLowerCase()
 
-      const matchesCategory = selectedCategory === "all" || template.category === selectedCategory
-      const matchesDifficulty = selectedDifficulty === "all" || template.difficulty === selectedDifficulty
+    return initialTemplates
+      .filter((template) => {
+        // Early return for performance
+        if (selectedCategory !== "all" && template.category !== selectedCategory) return false
+        if (selectedDifficulty !== "all" && template.difficulty !== selectedDifficulty) return false
 
-      return matchesSearch && matchesCategory && matchesDifficulty
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case "rating":
-          return (b.averageScore || 0) - (a.averageScore || 0)
-        case "evaluations":
-          return b.evaluationCount - a.evaluationCount
-        case "recent":
-        default:
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      }
-    })
+        if (!searchQuery) return true
+
+        // Optimized search - check title first (most common match)
+        if (template.title.toLowerCase().includes(searchLower)) return true
+        if (template.description.toLowerCase().includes(searchLower)) return true
+        return template.tags.some((tag) => tag.toLowerCase().includes(searchLower))
+      })
+      .sort((a, b) => {
+        switch (sortBy) {
+          case "rating":
+            return (b.averageScore || 0) - (a.averageScore || 0)
+          case "evaluations":
+            return b.evaluationCount - a.evaluationCount
+          case "recent":
+          default:
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        }
+      })
+  }, [initialTemplates, searchQuery, selectedCategory, selectedDifficulty, sortBy])
 
   return (
     <div className="space-y-6">

@@ -11,6 +11,8 @@ export async function getTemplates(filters?: {
 }) {
   const supabase = await createServerClient()
 
+  // Note: Consider adding average_score as a computed column in the database
+  // to avoid fetching all evaluations for each template
   let query = supabase
     .from("templates")
     .select(`
