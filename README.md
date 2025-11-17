@@ -1,5 +1,6 @@
 # Template Evaluation Academy
 
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/Krosebrook/v0-template-evaluation-academy)
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/flash-fusion/v0-template-evaluation-academy)
 [![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/projects/SQmhxp8xG5F)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
@@ -65,6 +66,34 @@ Before you begin, ensure you have the following installed:
 6. **Open your browser**
    
    Navigate to [http://localhost:3000](http://localhost:3000)
+
+---
+
+## ⚡ Try it on blink.new
+
+**One-Click Development Environment**
+
+Want to try this project without installing anything? Use blink.new (powered by StackBlitz WebContainer) to run the entire development environment in your browser!
+
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/Krosebrook/v0-template-evaluation-academy)
+
+### What You Get with blink.new
+
+- ✨ **Instant Setup** - No local installation required
+- 🌐 **Browser-Based** - Full development environment in your browser
+- 🔥 **Hot Reload** - See changes instantly as you code
+- 📦 **Pre-configured** - All dependencies and settings ready to go
+
+### Features Available
+
+The project will start with default development settings. For full functionality:
+
+1. **Basic UI/UX Testing** - ✅ Works out of the box
+2. **Authentication** - ⚠️ Requires Supabase configuration
+3. **Payments** - ⚠️ Requires Stripe test keys
+4. **Database** - ⚠️ Requires Supabase setup
+
+> 📖 **[Complete StackBlitz Guide](./STACKBLITZ.md)** - Detailed instructions for using this project on StackBlitz/blink.new
 
 ---
 
@@ -268,6 +297,7 @@ pnpm start
 
 ### Quick Start
 - **[AUDIT_OVERVIEW.md](./AUDIT_OVERVIEW.md)** - 🌟 **Comprehensive Audit Overview** (Start Here!)
+- **[STACKBLITZ.md](./STACKBLITZ.md)** - ⚡ **StackBlitz/blink.new Setup Guide**
 
 ### Planning & Roadmap
 - **[ROADMAP.md](./ROADMAP.md)** - Development roadmap with phases and milestones

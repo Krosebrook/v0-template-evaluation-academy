@@ -16,12 +16,12 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (but allow .env.example)
+# env files (but allow .env.example and .env.development for StackBlitz)
 .env
 .env*.local
-.env.development
 .env.production
 !.env.example
+!.env.development
 
 # vercel
 .vercel
