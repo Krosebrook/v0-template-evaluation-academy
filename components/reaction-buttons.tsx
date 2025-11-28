@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { Heart, Lightbulb, CheckCircle, MessageCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { createBrowserClient } from "@/lib/supabase/client"
@@ -33,18 +33,12 @@ export function ReactionButtons({ targetId, targetType, reactions: initialReacti
   const [reactions, setReactions] = useState<Record<string, number>>(initialReactions)
   const [userReactions, setUserReactions] = useState<Set<string>>(new Set())
   const [loading, setLoading] = useState(false)
+  const supabase = useMemo(() => createBrowserClient(), [])
 
   const tableName = targetType === "evaluation" ? "evaluation_reactions" : "comment_reactions"
   const idColumn = targetType === "evaluation" ? "evaluation_id" : "comment_id"
 
-  useEffect(() => {
-    if (user) {
-      loadUserReactions()
-    }
-  }, [user, targetId])
-
-  const loadUserReactions = async () => {
-    const supabase = createBrowserClient()
+  const loadUserReactions = useCallback(async () => {
     const { data } = await supabase
       .from(tableName)
       .select("reaction_type")
@@ -54,7 +48,13 @@ export function ReactionButtons({ targetId, targetType, reactions: initialReacti
     if (data) {
       setUserReactions(new Set(data.map((r) => r.reaction_type)))
     }
-  }
+  }, [supabase, tableName, idColumn, targetId, user?.id])
+
+  useEffect(() => {
+    if (user) {
+      loadUserReactions()
+    }
+  }, [user, loadUserReactions])
 
   const handleReaction = async (reactionType: string) => {
     if (!user) return

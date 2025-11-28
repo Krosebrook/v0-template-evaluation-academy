@@ -26,10 +26,20 @@ interface Template {
   }
 }
 
+interface Evaluation {
+  code_quality?: number
+  documentation?: number
+  design?: number
+  functionality?: number
+  performance?: number
+  innovation?: number
+  [key: string]: number | undefined
+}
+
 interface TemplateComparisonProps {
   selectedTemplates: Template[]
   allTemplates: { id: string; title: string; category: string }[]
-  evaluationsMap: Record<string, any[]>
+  evaluationsMap: Record<string, Evaluation[]>
 }
 
 export function TemplateComparison({ selectedTemplates, allTemplates, evaluationsMap }: TemplateComparisonProps) {
@@ -52,17 +62,17 @@ export function TemplateComparison({ selectedTemplates, allTemplates, evaluation
     router.push(`/templates/compare?ids=${newIds.join(",")}`)
   }
 
-  const calculateAverageScore = (evaluations: any[]) => {
+  const calculateAverageScore = (evaluations: Evaluation[]) => {
     if (evaluations.length === 0) return null
 
     const sum = evaluations.reduce((acc, e) => {
-      return acc + (e.code_quality + e.documentation + e.design + e.functionality + e.performance + e.innovation) / 6
+      return acc + ((e.code_quality ?? 0) + (e.documentation ?? 0) + (e.design ?? 0) + (e.functionality ?? 0) + (e.performance ?? 0) + (e.innovation ?? 0)) / 6
     }, 0)
 
     return sum / evaluations.length
   }
 
-  const calculateCriteriaAverage = (evaluations: any[], criterion: string) => {
+  const calculateCriteriaAverage = (evaluations: Evaluation[], criterion: string) => {
     if (evaluations.length === 0) return 0
     const sum = evaluations.reduce((acc, e) => acc + (e[criterion] || 0), 0)
     return sum / evaluations.length

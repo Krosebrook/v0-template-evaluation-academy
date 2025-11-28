@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback, useMemo } from "react"
 import { createBrowserClient } from "@/lib/supabase/client"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -17,16 +17,29 @@ interface Template {
   preview_image?: string
 }
 
+interface SimilarTemplateResult {
+  templates: Template
+}
+
 export function RecommendedTemplates({ userId }: { userId?: string }) {
   const [recommendations, setRecommendations] = useState<Template[]>([])
   const [loading, setLoading] = useState(true)
-  const supabase = createBrowserClient()
+  const supabase = useMemo(() => createBrowserClient(), [])
 
-  useEffect(() => {
-    loadRecommendations()
-  }, [userId])
+  const loadTrendingTemplates = useCallback(async () => {
+    // Get templates with most recent interactions
+    const { data: trending } = await supabase
+      .from("templates")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(6)
 
-  const loadRecommendations = async () => {
+    if (trending) {
+      setRecommendations(trending)
+    }
+  }, [supabase])
+
+  const loadRecommendations = useCallback(async () => {
     try {
       if (userId) {
         // Get personalized recommendations based on user behavior
@@ -48,7 +61,7 @@ export function RecommendedTemplates({ userId }: { userId?: string }) {
             .limit(6)
 
           if (similarTemplates) {
-            setRecommendations(similarTemplates.map((s: any) => s.templates))
+            setRecommendations(similarTemplates.map((s: SimilarTemplateResult) => s.templates))
           }
         } else {
           // New user - show trending templates
@@ -64,20 +77,11 @@ export function RecommendedTemplates({ userId }: { userId?: string }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [userId, supabase, loadTrendingTemplates])
 
-  const loadTrendingTemplates = async () => {
-    // Get templates with most recent interactions
-    const { data: trending } = await supabase
-      .from("templates")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(6)
-
-    if (trending) {
-      setRecommendations(trending)
-    }
-  }
+  useEffect(() => {
+    loadRecommendations()
+  }, [loadRecommendations])
 
   if (loading) {
     return (

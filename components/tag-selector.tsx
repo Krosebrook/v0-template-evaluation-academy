@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { X, Plus } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -37,38 +37,38 @@ export function TagSelector({ selectedTags, onChange, maxTags = 10 }: TagSelecto
   const [searchQuery, setSearchQuery] = useState("")
   const [open, setOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
+  const supabase = useMemo(() => createBrowserClient(), [])
 
-  useEffect(() => {
-    loadTags()
-  }, [])
-
-  useEffect(() => {
-    filterTags()
-  }, [searchQuery, selectedCategory, allTags])
-
-  const loadTags = async () => {
-    const supabase = createBrowserClient()
+  const loadTags = useCallback(async () => {
     const { data } = await supabase.from("tags").select("*").order("name")
 
     if (data) {
       setAllTags(data)
       setFilteredTags(data)
     }
-  }
+  }, [supabase])
 
-  const filterTags = () => {
+  const filterTags = useCallback(() => {
     let filtered = allTags
-
-    if (selectedCategory !== "all") {
-      filtered = filtered.filter((tag) => tag.category === selectedCategory)
-    }
 
     if (searchQuery) {
       filtered = filtered.filter((tag) => tag.name.toLowerCase().includes(searchQuery.toLowerCase()))
     }
 
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter((tag) => tag.category === selectedCategory)
+    }
+
     setFilteredTags(filtered)
-  }
+  }, [allTags, searchQuery, selectedCategory])
+
+  useEffect(() => {
+    loadTags()
+  }, [loadTags])
+
+  useEffect(() => {
+    filterTags()
+  }, [filterTags])
 
   const toggleTag = (tagId: string) => {
     if (selectedTags.includes(tagId)) {

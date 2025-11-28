@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { createBrowserClient } from "@/lib/supabase/client"
@@ -22,13 +22,9 @@ interface TagFilterProps {
 
 export function TagFilter({ selectedTags, onChange, category }: TagFilterProps) {
   const [tags, setTags] = useState<Tag[]>([])
+  const supabase = useMemo(() => createBrowserClient(), [])
 
-  useEffect(() => {
-    loadTags()
-  }, [category])
-
-  const loadTags = async () => {
-    const supabase = createBrowserClient()
+  const loadTags = useCallback(async () => {
     let query = supabase.from("tags").select("*").order("name")
 
     if (category) {
@@ -40,7 +36,11 @@ export function TagFilter({ selectedTags, onChange, category }: TagFilterProps) 
     if (data) {
       setTags(data)
     }
-  }
+  }, [supabase, category])
+
+  useEffect(() => {
+    loadTags()
+  }, [loadTags])
 
   const toggleTag = (tagId: string) => {
     if (selectedTags.includes(tagId)) {
