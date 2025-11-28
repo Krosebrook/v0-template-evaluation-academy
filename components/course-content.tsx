@@ -10,12 +10,26 @@ import { BookOpen, CheckCircle, ArrowLeft } from "lucide-react"
 import { createBrowserClient } from "@/lib/supabase/client"
 import Link from "next/link"
 
+interface Course {
+  id: string
+  title: string
+  description: string
+  content?: string
+  duration_minutes: number
+}
+
+interface CourseProgress {
+  id: string
+  completed: boolean
+  quiz_score?: number
+}
+
 export function CourseContent({
   course,
   progress,
 }: {
-  course: any
-  progress: any
+  course: Course
+  progress: CourseProgress | null
 }) {
   const router = useRouter()
   const supabase = createBrowserClient()

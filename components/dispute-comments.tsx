@@ -2,24 +2,32 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { createBrowserClient } from "@/lib/supabase/client"
 import { MessageSquare } from "lucide-react"
 
+interface DisputeComment {
+  id: string
+  dispute_id: string
+  user_id: string
+  comment: string
+  created_at: string
+  profiles?: {
+    username?: string
+    avatar_url?: string
+  }
+}
+
 export function DisputeComments({ disputeId }: { disputeId: string }) {
-  const supabase = createBrowserClient()
-  const [comments, setComments] = useState<any[]>([])
+  const supabase = useMemo(() => createBrowserClient(), [])
+  const [comments, setComments] = useState<DisputeComment[]>([])
   const [newComment, setNewComment] = useState("")
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    fetchComments()
-  }, [disputeId])
-
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     const { data } = await supabase
       .from("dispute_comments")
       .select(`
@@ -30,9 +38,13 @@ export function DisputeComments({ disputeId }: { disputeId: string }) {
       .order("created_at", { ascending: true })
 
     if (data) {
-      setComments(data)
+      setComments(data as DisputeComment[])
     }
-  }
+  }, [supabase, disputeId])
+
+  useEffect(() => {
+    fetchComments()
+  }, [fetchComments])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

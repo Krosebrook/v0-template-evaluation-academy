@@ -6,14 +6,13 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useState } from "react"
 
 interface ShareButtonProps {
-  title: string
   text: string
   url?: string
   variant?: "default" | "outline" | "ghost"
   size?: "default" | "sm" | "lg" | "icon"
 }
 
-export function ShareButton({ title, text, url, variant = "outline", size = "default" }: ShareButtonProps) {
+export function ShareButton({ text, url, variant = "outline", size = "default" }: ShareButtonProps) {
   const [copied, setCopied] = useState(false)
   const shareUrl = url || (typeof window !== "undefined" ? window.location.href : "")
   const encodedText = encodeURIComponent(text)

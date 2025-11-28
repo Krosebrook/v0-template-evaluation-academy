@@ -10,7 +10,7 @@ interface Test {
   test_type: string
   status: string
   score: number | null
-  results: any
+  results: Record<string, unknown>
   error_message: string | null
   run_at: string
 }
@@ -57,7 +57,7 @@ export function TestResults({ tests }: TestResultsProps) {
   if (tests.length === 0) {
     return (
       <Card className="p-8 text-center">
-        <p className="text-muted-foreground">No tests have been run yet. Click "Run All Tests" to start.</p>
+        <p className="text-muted-foreground">No tests have been run yet. Click &quot;Run All Tests&quot; to start.</p>
       </Card>
     )
   }

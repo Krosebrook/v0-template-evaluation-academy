@@ -53,7 +53,7 @@ export function TemplateUpdateForm({ template }: { template: Template }) {
     setError(null)
 
     try {
-      const { data, error: rpcError } = await supabase.rpc("create_template_version", {
+      const { error: rpcError } = await supabase.rpc("create_template_version", {
         p_template_id: template.id,
         p_title: formData.title,
         p_description: formData.description,

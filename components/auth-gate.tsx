@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import type { LucideIcon } from "lucide-react"
 
 import { useEffect, useState } from "react"
 import { createBrowserClient } from "@/lib/supabase/client"
@@ -8,7 +9,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Lock, Star, MessageSquare, Heart, Award, TrendingUp, Shield, Zap } from "lucide-react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 
 interface AuthGateProps {
   feature: string
@@ -19,7 +19,6 @@ interface AuthGateProps {
 export function AuthGate({ feature, children, requireRole }: AuthGateProps) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const [hasRole, setHasRole] = useState<boolean | null>(null)
-  const router = useRouter()
   const supabase = createBrowserClient()
 
   useEffect(() => {
@@ -135,7 +134,7 @@ export function AuthGate({ feature, children, requireRole }: AuthGateProps) {
   return <>{children}</>
 }
 
-function FeatureBenefit({ icon: Icon, title, description }: { icon: any; title: string; description: string }) {
+function FeatureBenefit({ icon: Icon, title, description }: { icon: LucideIcon; title: string; description: string }) {
   return (
     <div className="flex gap-3 p-3 rounded-lg bg-muted/50">
       <Icon className="h-5 w-5 text-primary shrink-0 mt-0.5" />

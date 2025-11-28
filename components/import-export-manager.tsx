@@ -10,12 +10,47 @@ import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Upload, Download, Package, Check, X, AlertCircle } from "lucide-react"
 
+interface ExportPrompt {
+  id?: string
+  name?: string
+  content?: string
+  createdAt?: string
+}
+
+interface ExportConfig {
+  name?: string
+  description?: string
+  personas?: unknown[]
+  layers?: unknown[]
+  promptType?: string
+  temperature?: number
+  complexity?: number
+}
+
+interface ExportHistoryItem {
+  id?: string
+  timestamp?: string
+  data?: unknown
+}
+
+interface ExportFavorite {
+  id?: string
+  name?: string
+  content?: string
+}
+
+interface ExportTutorial {
+  id?: string
+  name?: string
+  steps?: unknown[]
+}
+
 interface ExportData {
-  prompts?: any[]
-  configs?: any[]
-  history?: any[]
-  favorites?: any[]
-  tutorials?: any[]
+  prompts?: ExportPrompt[]
+  configs?: ExportConfig[]
+  history?: ExportHistoryItem[]
+  favorites?: ExportFavorite[]
+  tutorials?: ExportTutorial[]
 }
 
 interface ImportExportManagerProps {
@@ -86,7 +121,7 @@ export function ImportExportManager({ onClose, onImport }: ImportExportManagerPr
     const template = {
       name: "Custom Template Pack",
       version: "1.0.0",
-      templates: parsedConfigs.map((config: any) => ({
+      templates: parsedConfigs.map((config: ExportConfig) => ({
         name: config.name,
         description: config.description || "Custom template",
         config: {
@@ -119,7 +154,7 @@ export function ImportExportManager({ onClose, onImport }: ImportExportManagerPr
         const json = JSON.parse(event.target?.result as string)
         setImportPreview(json.data || json)
         setImportStatus("idle")
-      } catch (error) {
+      } catch {
         setImportStatus("error")
         setImportPreview(null)
       }
@@ -160,7 +195,7 @@ export function ImportExportManager({ onClose, onImport }: ImportExportManagerPr
       setTimeout(() => {
         onClose()
       }, 1500)
-    } catch (error) {
+    } catch {
       setImportStatus("error")
     }
   }
@@ -176,7 +211,7 @@ export function ImportExportManager({ onClose, onImport }: ImportExportManagerPr
             </Button>
           </div>
 
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
+          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "export" | "import")}>
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="export">
                 <Download className="w-4 h-4 mr-2" />

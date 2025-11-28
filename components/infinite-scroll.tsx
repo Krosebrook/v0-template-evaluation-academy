@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useCallback } from "react"
 
 interface InfiniteScrollProps<T> {
   loadMore: (page: number) => Promise<T[]>
@@ -28,6 +28,23 @@ export function InfiniteScroll<T>({
   const observerTarget = useRef<HTMLDivElement>(null)
   const observerRef = useRef<IntersectionObserver | null>(null)
 
+  const loadMoreItems = useCallback(async () => {
+    setLoading(true)
+    try {
+      const newItems = await loadMore(page + 1)
+      if (newItems.length === 0) {
+        setHasMoreItems(false)
+      } else {
+        setItems((prev) => [...prev, ...newItems])
+        setPage((prev) => prev + 1)
+      }
+    } catch (error) {
+      console.error("[v0] Infinite scroll error:", error)
+    } finally {
+      setLoading(false)
+    }
+  }, [loadMore, page])
+
   useEffect(() => {
     // Reuse observer instance instead of recreating it
     if (!observerRef.current) {
@@ -51,7 +68,7 @@ export function InfiniteScroll<T>({
         observerRef.current.unobserve(currentTarget)
       }
     }
-  }, [hasMoreItems, loading, page])
+  }, [hasMoreItems, loading, loadMoreItems])
 
   // Cleanup observer on unmount
   useEffect(() => {
@@ -62,23 +79,6 @@ export function InfiniteScroll<T>({
       }
     }
   }, [])
-
-  const loadMoreItems = async () => {
-    setLoading(true)
-    try {
-      const newItems = await loadMore(page + 1)
-      if (newItems.length === 0) {
-        setHasMoreItems(false)
-      } else {
-        setItems((prev) => [...prev, ...newItems])
-        setPage((prev) => prev + 1)
-      }
-    } catch (error) {
-      console.error("[v0] Infinite scroll error:", error)
-    } finally {
-      setLoading(false)
-    }
-  }
 
   return (
     <div>

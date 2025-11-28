@@ -6,7 +6,7 @@ import { createTemplate, updateTemplate, deleteTemplate } from "@/lib/supabase/d
 import { getAuthenticatedUser } from "@/lib/auth/server-auth"
 
 export async function submitTemplate(formData: FormData) {
-  const { supabase, user, error } = await getAuthenticatedUser()
+  const { user, error } = await getAuthenticatedUser()
 
   if (error || !user) {
     return { error: error || "You must be logged in to submit a template" }
@@ -45,7 +45,7 @@ export async function submitTemplate(formData: FormData) {
 }
 
 export async function updateTemplateAction(id: string, formData: FormData) {
-  const { supabase, user, error } = await getAuthenticatedUser()
+  const { user, error } = await getAuthenticatedUser()
 
   if (error || !user) {
     return { error: error || "You must be logged in" }
@@ -76,7 +76,7 @@ export async function updateTemplateAction(id: string, formData: FormData) {
 }
 
 export async function deleteTemplateAction(id: string) {
-  const { supabase, user, error } = await getAuthenticatedUser()
+  const { user, error } = await getAuthenticatedUser()
 
   if (error || !user) {
     return { error: error || "You must be logged in" }

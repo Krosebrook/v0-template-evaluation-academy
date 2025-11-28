@@ -12,7 +12,8 @@ export function measurePerformance(name: string) {
   }
 }
 
-export function reportWebVitals(metric: {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function reportWebVitals(_metric: {
   id: string
   name: string
   value: number

@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { StatsWidget } from "./widgets/stats-widget"
@@ -25,15 +24,16 @@ interface DashboardWidgetsProps {
 }
 
 export function DashboardWidgets({ data }: DashboardWidgetsProps) {
-  const [widgets, setWidgets] = useState([
-    { id: "stats", component: StatsWidget, enabled: true, size: "full" },
-    { id: "quick-actions", component: QuickActionsWidget, enabled: true, size: "half" },
-    { id: "recent-activity", component: RecentActivityWidget, enabled: true, size: "half" },
-    { id: "gpt-generator", component: GPTGeneratorWidget, enabled: true, size: "half" },
-    { id: "claude-skill", component: ClaudeSkillWidget, enabled: true, size: "half" },
-    { id: "notifications", component: NotificationsWidget, enabled: true, size: "half" },
-    { id: "platform-activity", component: PlatformActivityWidget, enabled: true, size: "half" },
-  ])
+  // Widget configuration for future drag-and-drop customization
+  // const widgetConfig = [
+  //   { id: "stats", component: StatsWidget, enabled: true, size: "full" },
+  //   { id: "quick-actions", component: QuickActionsWidget, enabled: true, size: "half" },
+  //   { id: "recent-activity", component: RecentActivityWidget, enabled: true, size: "half" },
+  //   { id: "gpt-generator", component: GPTGeneratorWidget, enabled: true, size: "half" },
+  //   { id: "claude-skill", component: ClaudeSkillWidget, enabled: true, size: "half" },
+  //   { id: "notifications", component: NotificationsWidget, enabled: true, size: "half" },
+  //   { id: "platform-activity", component: PlatformActivityWidget, enabled: true, size: "half" },
+  // ]
 
   return (
     <div className="space-y-6">

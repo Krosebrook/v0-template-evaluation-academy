@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache"
 import { getAuthenticatedUser } from "@/lib/auth/server-auth"
 
 export async function startSubscriptionCheckout(planId: string) {
-  const { supabase, user, error } = await getAuthenticatedUser()
+  const { user, error } = await getAuthenticatedUser()
 
   if (error || !user) {
     throw new Error(error || "User not authenticated")
@@ -48,7 +48,7 @@ export async function startSubscriptionCheckout(planId: string) {
 }
 
 export async function startCreditsCheckout(packageId: string) {
-  const { supabase, user, error } = await getAuthenticatedUser()
+  const { user, error } = await getAuthenticatedUser()
 
   if (error || !user) {
     throw new Error(error || "User not authenticated")

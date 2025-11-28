@@ -4,7 +4,8 @@ import { SocialShare } from "@/components/social-share"
 import { ArrowLeft } from "lucide-react"
 import Link from "next/link"
 
-export function GenerationHeader({ templateId }: { templateId: string }) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function GenerationHeader(_props: { templateId: string }) {
   return (
     <div className="border-b border-border">
       <div className="container mx-auto px-4 py-6">

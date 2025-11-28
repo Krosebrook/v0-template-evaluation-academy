@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { ThumbsUp, ThumbsDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { createBrowserClient } from "@/lib/supabase/client"
@@ -19,15 +19,9 @@ export function TemplateVoting({ templateId, initialUpvotes = 0, initialDownvote
   const [downvotes, setDownvotes] = useState(initialDownvotes)
   const [userVote, setUserVote] = useState<"upvote" | "downvote" | null>(null)
   const [loading, setLoading] = useState(false)
+  const supabase = useMemo(() => createBrowserClient(), [])
 
-  useEffect(() => {
-    if (user) {
-      loadUserVote()
-    }
-  }, [user, templateId])
-
-  const loadUserVote = async () => {
-    const supabase = createBrowserClient()
+  const loadUserVote = useCallback(async () => {
     const { data } = await supabase
       .from("template_votes")
       .select("vote_type")
@@ -38,7 +32,13 @@ export function TemplateVoting({ templateId, initialUpvotes = 0, initialDownvote
     if (data) {
       setUserVote(data.vote_type as "upvote" | "downvote")
     }
-  }
+  }, [supabase, templateId, user?.id])
+
+  useEffect(() => {
+    if (user) {
+      loadUserVote()
+    }
+  }, [user, loadUserVote])
 
   const handleVote = async (voteType: "upvote" | "downvote") => {
     if (!user) return
