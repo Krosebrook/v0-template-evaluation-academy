@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -152,11 +153,14 @@ export function TemplateComparison({ selectedTemplates, allTemplates, evaluation
                   </CardHeader>
                   <CardContent className="space-y-4">
                     {template.preview_image && (
-                      <img
-                        src={template.preview_image || "/placeholder.svg"}
-                        alt={template.title}
-                        className="w-full h-32 object-cover rounded-lg"
-                      />
+                      <div className="relative w-full h-32 rounded-lg overflow-hidden">
+                        <Image
+                          src={template.preview_image || "/placeholder.svg"}
+                          alt={template.title}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
                     )}
 
                     <div className="space-y-2">

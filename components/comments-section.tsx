@@ -120,8 +120,6 @@ export function CommentsSection({ templateId }: CommentsSectionProps) {
       supabase.removeChannel(channel)
     }
   }, [templateId, supabase, loadComments, checkUser])
-    }
-  }
 
   async function handleSubmitComment() {
     if (!newComment.trim()) return

@@ -81,9 +81,6 @@ export function NotificationsDropdown() {
       supabase.removeChannel(channel)
     }
   }, [supabase, fetchNotifications])
-      setLoading(false)
-    }
-  }
 
   async function markAsRead(id: string) {
     try {
