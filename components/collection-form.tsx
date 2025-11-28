@@ -12,10 +12,17 @@ import { Switch } from "@/components/ui/switch"
 import { Card } from "@/components/ui/card"
 import { createBrowserClient } from "@/lib/supabase/client"
 
+interface Collection {
+  id: string
+  name: string
+  description?: string
+  is_public: boolean
+}
+
 export function CollectionForm({
   collection,
 }: {
-  collection?: any
+  collection?: Collection
 }) {
   const router = useRouter()
   const supabase = createBrowserClient()

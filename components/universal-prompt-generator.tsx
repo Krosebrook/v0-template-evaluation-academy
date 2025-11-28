@@ -324,7 +324,8 @@ function PromptGenerator() {
   const [category, setCategory] = useState("codegen")
   const [template, setTemplate] = useState(null)
   const [framework, setFramework] = useState("RISE")
-  const [customVars, setCustomVars] = useState({})
+  // Reserved for future custom variables feature
+  // const [customVars, setCustomVars] = useState({})
   const [generatedPrompt, setGeneratedPrompt] = useState("")
   const [activeTab, setActiveTab] = useState("builder")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)

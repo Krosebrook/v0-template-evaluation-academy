@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useMemo } from "react"
 import { createBrowserClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -37,8 +37,63 @@ export function CommentsSection({ templateId }: CommentsSectionProps) {
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
-  const supabase = createBrowserClient()
+  const supabase = useMemo(() => createBrowserClient(), [])
   const router = useRouter()
+
+  const checkUser = useCallback(async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    setCurrentUserId(user?.id || null)
+  }, [supabase])
+
+  const loadComments = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from("comments")
+        .select(`
+          *,
+          profiles:user_id (
+            display_name,
+            role
+          )
+        `)
+        .eq("template_id", templateId)
+        .order("created_at", { ascending: true })
+
+      if (error) throw error
+
+      // Organize comments into threads
+      const commentMap = new Map<string, Comment>()
+      const rootComments: Comment[] = []
+
+      data?.forEach((comment: Comment) => {
+        const commentWithReplies = { ...comment, replies: [] }
+        commentMap.set(comment.id, commentWithReplies)
+
+        if (!comment.parent_id) {
+          rootComments.push(commentWithReplies)
+        }
+      })
+
+      // Add replies to parent comments
+      data?.forEach((comment: Comment) => {
+        if (comment.parent_id) {
+          const parent = commentMap.get(comment.parent_id)
+          if (parent) {
+            parent.replies = parent.replies || []
+            parent.replies.push(commentMap.get(comment.id)!)
+          }
+        }
+      })
+
+      setComments(rootComments)
+    } catch (error) {
+      console.error("Error loading comments:", error)
+    } finally {
+      setLoading(false)
+    }
+  }, [supabase, templateId])
 
   useEffect(() => {
     loadComments()
@@ -64,60 +119,7 @@ export function CommentsSection({ templateId }: CommentsSectionProps) {
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [templateId])
-
-  async function checkUser() {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    setCurrentUserId(user?.id || null)
-  }
-
-  async function loadComments() {
-    try {
-      const { data, error } = await supabase
-        .from("comments")
-        .select(`
-          *,
-          profiles:user_id (
-            display_name,
-            role
-          )
-        `)
-        .eq("template_id", templateId)
-        .order("created_at", { ascending: true })
-
-      if (error) throw error
-
-      // Organize comments into threads
-      const commentMap = new Map<string, Comment>()
-      const rootComments: Comment[] = []
-
-      data?.forEach((comment: any) => {
-        const commentWithReplies = { ...comment, replies: [] }
-        commentMap.set(comment.id, commentWithReplies)
-
-        if (!comment.parent_id) {
-          rootComments.push(commentWithReplies)
-        }
-      })
-
-      // Add replies to parent comments
-      data?.forEach((comment: any) => {
-        if (comment.parent_id) {
-          const parent = commentMap.get(comment.parent_id)
-          if (parent) {
-            parent.replies = parent.replies || []
-            parent.replies.push(commentMap.get(comment.id)!)
-          }
-        }
-      })
-
-      setComments(rootComments)
-    } catch (error) {
-      console.error("Error loading comments:", error)
-    } finally {
-      setLoading(false)
+  }, [templateId, supabase, loadComments, checkUser])
     }
   }
 
