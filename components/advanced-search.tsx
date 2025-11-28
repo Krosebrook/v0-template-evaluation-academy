@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Search, Filter, X, Save } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -22,6 +22,28 @@ interface SearchFilters {
   sortOrder: "asc" | "desc"
 }
 
+interface Evaluation {
+  overall_score?: number
+  code_quality?: number
+  documentation?: number
+  usability?: number
+  innovation?: number
+  performance?: number
+  maintainability?: number
+}
+
+interface SearchTemplate {
+  id: string
+  title: string
+  description?: string
+  category?: string
+  difficulty?: string
+  status?: string
+  evaluations?: Evaluation[]
+  averageScore?: number
+  evaluationCount?: number
+}
+
 export function AdvancedSearch() {
   const [filters, setFilters] = useState<SearchFilters>({
     query: "",
@@ -32,16 +54,12 @@ export function AdvancedSearch() {
     sortBy: "created_at",
     sortOrder: "desc",
   })
-  const [templates, setTemplates] = useState<any[]>([])
+  const [templates, setTemplates] = useState<SearchTemplate[]>([])
   const [loading, setLoading] = useState(false)
   const [showFilters, setShowFilters] = useState(true)
   const [savedSearches, setSavedSearches] = useState<SearchFilters[]>([])
 
-  useEffect(() => {
-    searchTemplates()
-  }, [filters])
-
-  const searchTemplates = async () => {
+  const searchTemplates = useCallback(async () => {
     setLoading(true)
     const supabase = createBrowserClient()
 
@@ -87,11 +105,11 @@ export function AdvancedSearch() {
       if (error) throw error
 
       // Calculate average scores and filter by score range
-      const templatesWithScores = (data || []).map((template) => {
+      const templatesWithScores = (data || []).map((template: SearchTemplate) => {
         const evaluations = template.evaluations || []
         const avgScore =
           evaluations.length > 0
-            ? evaluations.reduce((sum: number, e: any) => sum + (e.overall_score || 0), 0) / evaluations.length
+            ? evaluations.reduce((sum: number, e: Evaluation) => sum + (e.overall_score || 0), 0) / evaluations.length
             : 0
 
         return {
@@ -103,7 +121,7 @@ export function AdvancedSearch() {
 
       // Filter by score range
       const filtered = templatesWithScores.filter(
-        (t) => t.averageScore >= filters.minScore && t.averageScore <= filters.maxScore,
+        (t) => (t.averageScore ?? 0) >= filters.minScore && (t.averageScore ?? 0) <= filters.maxScore,
       )
 
       setTemplates(filtered)
@@ -112,16 +130,16 @@ export function AdvancedSearch() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [filters])
+
+  useEffect(() => {
+    searchTemplates()
+  }, [searchTemplates])
 
   const saveSearch = () => {
     const saved = [...savedSearches, filters]
     setSavedSearches(saved)
     localStorage.setItem("savedSearches", JSON.stringify(saved))
-  }
-
-  const loadSavedSearch = (search: SearchFilters) => {
-    setFilters(search)
   }
 
   const clearFilters = () => {

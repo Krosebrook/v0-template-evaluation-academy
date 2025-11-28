@@ -1,10 +1,10 @@
 // Redis caching for frequently accessed data
-const CACHE_TTL = {
+export const CACHE_TTL = {
   TEMPLATES: 300, // 5 minutes
   PROFILES: 600, // 10 minutes
   LEADERBOARD: 180, // 3 minutes
   STATS: 120, // 2 minutes
-}
+} as const
 
 export async function getCachedData<T>(key: string): Promise<T | null> {
   try {
@@ -50,5 +50,6 @@ export async function invalidateCache(pattern: string): Promise<void> {
 }
 
 declare global {
+  // eslint-disable-next-line no-var
   var __cache: Map<string, { data: unknown; expires: number }> | undefined
 }

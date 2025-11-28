@@ -1,3 +1,11 @@
+export interface Template {
+  id: string
+  category?: string
+  tags?: string[]
+  views?: number
+  rating?: number
+}
+
 export interface Recommendation {
   templateId: string
   score: number
@@ -12,7 +20,7 @@ export function generateRecommendations(
     favoriteCategories: string[]
     favoriteTags: string[]
   },
-  allTemplates: any[],
+  allTemplates: Template[],
 ): Recommendation[] {
   const recommendations: Recommendation[] = []
 

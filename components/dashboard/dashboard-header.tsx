@@ -31,7 +31,7 @@ export function DashboardHeader({ user, profile }: DashboardHeaderProps) {
     <div className="flex items-center justify-between mb-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight mb-1">Welcome back, {displayName}</h1>
-        <p className="text-muted-foreground">Here's what's happening with your templates today.</p>
+        <p className="text-muted-foreground">Here&apos;s what&apos;s happening with your templates today.</p>
       </div>
 
       <div className="flex items-center gap-3">

@@ -1,11 +1,58 @@
 "use client"
 
-import { useEffect, useState, useMemo } from "react"
+import { useEffect, useState, useMemo, useCallback } from "react"
 import { createBrowserClient } from "./client"
-import type { RealtimeChannel } from "@supabase/supabase-js"
+import type { RealtimeChannel, RealtimePostgresChangesPayload } from "@supabase/supabase-js"
+
+interface RealtimeTemplate {
+  id: string
+  title?: string
+  description?: string
+  content?: string
+  category?: string
+  tags?: string[]
+  author_id?: string
+  submitted_by?: string
+  created_at?: string
+  updated_at?: string
+  status?: string
+  views?: number
+  generations?: number
+  average_score?: number
+  profiles?: {
+    display_name?: string
+    avatar_url?: string
+  } | null
+}
+
+interface RealtimeGeneration {
+  id: string
+  template_id?: string
+  user_id?: string
+  overall_score?: number
+  criteria_scores?: Record<string, number>
+  feedback?: string
+  created_at?: string
+  status?: string
+  evaluator?: {
+    display_name?: string
+    avatar_url?: string
+  } | null
+}
+
+interface RealtimeNotification {
+  id: string
+  user_id?: string
+  type?: string
+  title?: string
+  message?: string
+  read?: boolean
+  created_at?: string
+  action_url?: string
+}
 
 export function useRealtimeTemplates() {
-  const [templates, setTemplates] = useState<any[]>([])
+  const [templates, setTemplates] = useState<RealtimeTemplate[]>([])
   const [loading, setLoading] = useState(true)
   // Memoize Supabase client to prevent recreation on every render
   const supabase = useMemo(() => createBrowserClient(), [])
@@ -19,7 +66,7 @@ export function useRealtimeTemplates() {
         .order("created_at", { ascending: false })
 
       if (data) {
-        setTemplates(data)
+        setTemplates(data as RealtimeTemplate[])
       }
       setLoading(false)
     }
@@ -29,21 +76,21 @@ export function useRealtimeTemplates() {
     // Subscribe to real-time changes
     const channel: RealtimeChannel = supabase
       .channel("templates-changes")
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "templates" }, (payload) => {
-        setTemplates((current) => [payload.new as any, ...current])
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "templates" }, (payload: RealtimePostgresChangesPayload<RealtimeTemplate>) => {
+        setTemplates((current) => [payload.new as RealtimeTemplate, ...current])
       })
-      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "templates" }, (payload) => {
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "templates" }, (payload: RealtimePostgresChangesPayload<RealtimeTemplate>) => {
         // Optimized: Use findIndex for single operation instead of map
         setTemplates((current) => {
-          const index = current.findIndex((t) => t.id === payload.new.id)
+          const index = current.findIndex((t) => t.id === (payload.new as RealtimeTemplate).id)
           if (index === -1) return current
           const updated = [...current]
-          updated[index] = payload.new as any
+          updated[index] = payload.new as RealtimeTemplate
           return updated
         })
       })
-      .on("postgres_changes", { event: "DELETE", schema: "public", table: "templates" }, (payload) => {
-        setTemplates((current) => current.filter((t) => t.id !== payload.old.id))
+      .on("postgres_changes", { event: "DELETE", schema: "public", table: "templates" }, (payload: RealtimePostgresChangesPayload<RealtimeTemplate>) => {
+        setTemplates((current) => current.filter((t) => t.id !== (payload.old as RealtimeTemplate).id))
       })
       .subscribe()
 
@@ -57,7 +104,7 @@ export function useRealtimeTemplates() {
 }
 
 export function useRealtimeGenerations(templateId: string) {
-  const [generations, setGenerations] = useState<any[]>([])
+  const [generations, setGenerations] = useState<RealtimeGeneration[]>([])
   const [loading, setLoading] = useState(true)
   // Memoize Supabase client to prevent recreation on every render
   const supabase = useMemo(() => createBrowserClient(), [])
@@ -72,7 +119,7 @@ export function useRealtimeGenerations(templateId: string) {
         .order("created_at", { ascending: false })
 
       if (data) {
-        setGenerations(data)
+        setGenerations(data as RealtimeGeneration[])
       }
       setLoading(false)
     }
@@ -90,8 +137,8 @@ export function useRealtimeGenerations(templateId: string) {
           table: "evaluations",
           filter: `template_id=eq.${templateId}`,
         },
-        (payload) => {
-          setGenerations((current) => [payload.new as any, ...current])
+        (payload: RealtimePostgresChangesPayload<RealtimeGeneration>) => {
+          setGenerations((current) => [payload.new as RealtimeGeneration, ...current])
         },
       )
       .on(
@@ -102,13 +149,13 @@ export function useRealtimeGenerations(templateId: string) {
           table: "evaluations",
           filter: `template_id=eq.${templateId}`,
         },
-        (payload) => {
+        (payload: RealtimePostgresChangesPayload<RealtimeGeneration>) => {
           // Optimized: Use findIndex for single operation instead of map
           setGenerations((current) => {
-            const index = current.findIndex((g) => g.id === payload.new.id)
+            const index = current.findIndex((g) => g.id === (payload.new as RealtimeGeneration).id)
             if (index === -1) return current
             const updated = [...current]
-            updated[index] = payload.new as any
+            updated[index] = payload.new as RealtimeGeneration
             return updated
           })
         },
@@ -125,7 +172,7 @@ export function useRealtimeGenerations(templateId: string) {
 }
 
 export function useRealtimeNotifications(userId: string) {
-  const [notifications, setNotifications] = useState<any[]>([])
+  const [notifications, setNotifications] = useState<RealtimeNotification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   // Memoize Supabase client to prevent recreation on every render
   const supabase = useMemo(() => createBrowserClient(), [])
@@ -143,7 +190,7 @@ export function useRealtimeNotifications(userId: string) {
         .limit(20)
 
       if (data) {
-        setNotifications(data)
+        setNotifications(data as RealtimeNotification[])
         setUnreadCount(data.filter((n) => !n.read).length)
       }
     }
@@ -161,8 +208,8 @@ export function useRealtimeNotifications(userId: string) {
           table: "notifications",
           filter: `user_id=eq.${userId}`,
         },
-        (payload) => {
-          setNotifications((current) => [payload.new as any, ...current])
+        (payload: RealtimePostgresChangesPayload<RealtimeNotification>) => {
+          setNotifications((current) => [payload.new as RealtimeNotification, ...current])
           setUnreadCount((count) => count + 1)
         },
       )
@@ -174,16 +221,17 @@ export function useRealtimeNotifications(userId: string) {
           table: "notifications",
           filter: `user_id=eq.${userId}`,
         },
-        (payload) => {
+        (payload: RealtimePostgresChangesPayload<RealtimeNotification>) => {
           // Optimized: Use findIndex for single operation instead of map
           setNotifications((current) => {
-            const index = current.findIndex((n) => n.id === payload.new.id)
+            const newNotification = payload.new as RealtimeNotification
+            const index = current.findIndex((n) => n.id === newNotification.id)
             if (index === -1) return current
             const updated = [...current]
-            updated[index] = payload.new as any
+            updated[index] = newNotification
             return updated
           })
-          if ((payload.new as any).read) {
+          if ((payload.new as RealtimeNotification).read) {
             setUnreadCount((count) => Math.max(0, count - 1))
           }
         },
@@ -196,14 +244,14 @@ export function useRealtimeNotifications(userId: string) {
     }
   }, [userId, supabase])
 
-  const markAsRead = async (notificationId: string) => {
+  const markAsRead = useCallback(async (notificationId: string) => {
     await supabase.from("notifications").update({ read: true }).eq("id", notificationId)
-  }
+  }, [supabase])
 
-  const markAllAsRead = async () => {
+  const markAllAsRead = useCallback(async () => {
     await supabase.from("notifications").update({ read: true }).eq("user_id", userId).eq("read", false)
     setUnreadCount(0)
-  }
+  }, [supabase, userId])
 
   return { notifications, unreadCount, markAsRead, markAllAsRead }
 }

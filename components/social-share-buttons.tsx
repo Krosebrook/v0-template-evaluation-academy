@@ -19,11 +19,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 interface SocialShareButtonsProps {
   templateId: string
   title: string
-  description: string
   url: string
 }
 
-export function SocialShareButtons({ templateId, title, description, url }: SocialShareButtonsProps) {
+export function SocialShareButtons({ templateId, title, url }: SocialShareButtonsProps) {
   const [copied, setCopied] = useState(false)
   const supabase = createBrowserClient()
 

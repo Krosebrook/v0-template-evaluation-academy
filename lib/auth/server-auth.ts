@@ -3,7 +3,6 @@
  */
 
 import { createClient } from "@/lib/supabase/server"
-import type { SupabaseClient } from "@supabase/supabase-js"
 
 /**
  * Get authenticated user and Supabase client for server actions
