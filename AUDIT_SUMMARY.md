@@ -158,6 +158,7 @@ Weeks 13-16: Scale & polish (accessibility, i18n, PWA)
 - **Setup Questions:** See [README.md](./README.md)
 - **Implementation Questions:** See [ACTION_PLAN.md](./ACTION_PLAN.md)
 - **Architecture Questions:** See [COMPLETE_SYSTEM_SPECIFICATION.md](./COMPLETE_SYSTEM_SPECIFICATION.md)
+- **Depth Analysis:** See [FULL_DEPTH_AUDIT.md](./FULL_DEPTH_AUDIT.md) or [DEPTH_ANALYSIS_SUMMARY.md](./DEPTH_ANALYSIS_SUMMARY.md)
 - **Bug Reports:** Open a GitHub issue
 
 ---
