@@ -47,6 +47,15 @@ Welcome to the comprehensive documentation for the Template Evaluation Academy p
 - Architectural patterns revealed at depth
 - Navigation and organization recommendations
 
+**[DEPTH_ANALYSIS_SUMMARY.md](./DEPTH_ANALYSIS_SUMMARY.md)** - 📊 Depth Complexity Summary (10KB) ⭐ NEW
+- Quick depth statistics and distribution
+- Top 10 deepest paths
+- Complexity assessment by depth level
+- Impact on development and navigation
+- Prioritized recommendations (P0-P3)
+- Best practices for deep structures
+- Comparison with industry standards
+
 **[AUDIT_SUMMARY.md](./AUDIT_SUMMARY.md)** - Quick Reference (5KB)
 - One-page summary
 - Immediate action items
