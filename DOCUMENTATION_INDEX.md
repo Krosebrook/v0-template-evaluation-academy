@@ -14,6 +14,7 @@ Welcome to the comprehensive documentation for the Template Evaluation Academy p
 1. **[README.md](./README.md)** - Project overview, setup instructions, quick start
 2. **[AUDIT_SUMMARY.md](./AUDIT_SUMMARY.md)** - Quick audit summary with immediate actions
 3. **[AUDIT_OVERVIEW.md](./AUDIT_OVERVIEW.md)** - 🌟 Comprehensive audit (recommended reading)
+4. **[FULL_DEPTH_AUDIT.md](./FULL_DEPTH_AUDIT.md)** - 🔍 Complete structure analysis at maximum depth
 
 ### Ready to Contribute?
 1. **[CONTRIBUTING.md](./CONTRIBUTING.md)** - Contribution guidelines and standards
@@ -35,6 +36,16 @@ Welcome to the comprehensive documentation for the Template Evaluation Academy p
 - Critical issues and recommendations
 - Success metrics and KPIs
 - Complete roadmap to production
+
+**[FULL_DEPTH_AUDIT.md](./FULL_DEPTH_AUDIT.md)** - 🔍 Maximum Depth Analysis (25KB) ⭐ NEW
+- Complete directory structure (all 6 levels)
+- 245 files across 138 directories analyzed
+- 76 page routes with full nesting details
+- 12 API endpoints mapped completely
+- 11 dynamic routes documented
+- Deepest path analysis and complexity metrics
+- Architectural patterns revealed at depth
+- Navigation and organization recommendations
 
 **[AUDIT_SUMMARY.md](./AUDIT_SUMMARY.md)** - Quick Reference (5KB)
 - One-page summary
