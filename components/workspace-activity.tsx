@@ -3,20 +3,10 @@
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Activity, UserPlus, UserX, FileText, Settings, Trash2 } from "lucide-react"
-
-interface WorkspaceActivityItem {
-  id: string
-  action: string
-  details: any
-  created_at: string
-  profiles: {
-    username: string
-    avatar_url?: string
-  }
-}
+import type { WorkspaceActivity, WorkspaceActivityDetails } from "@/types/workspace"
 
 interface WorkspaceActivityProps {
-  activities: WorkspaceActivityItem[] | null
+  activities: WorkspaceActivity[] | null
 }
 
 const getActivityIcon = (action: string) => {
@@ -36,12 +26,29 @@ const getActivityIcon = (action: string) => {
   }
 }
 
-const getActivityDescription = (action: string, details: any, username: string) => {
+const getActivityDescription = (action: string, details: WorkspaceActivityDetails | Record<string, unknown>, username: string) => {
+  // Type guard for discriminated union
+  if ('type' in details) {
+    switch (details.type) {
+      case 'workspace_created':
+        return `${username} created the workspace`
+      case 'member_invited':
+        return `${username} invited ${details.email} as ${details.role}`
+      case 'member_removed':
+        return `${username} removed a member from the workspace`
+      case 'template_added':
+        return `${username} added a template to the workspace`
+      case 'template_removed':
+        return `${username} removed a template from the workspace`
+    }
+  }
+  
+  // Fallback for legacy data
   switch (action) {
     case "workspace_created":
       return `${username} created the workspace`
     case "member_invited":
-      return `${username} invited ${details.email} as ${details.role}`
+      return `${username} invited a member to the workspace`
     case "member_removed":
       return `${username} removed a member from the workspace`
     case "template_added":

@@ -26,20 +26,21 @@ export interface WorkspaceTemplate {
   }
 }
 
-// Discriminated union for different activity types
+// Discriminated union for different activity types - strict typing
 export type WorkspaceActivityDetails =
   | { type: 'workspace_created'; name: string }
   | { type: 'member_invited'; email: string; role: string }
   | { type: 'member_removed'; removed_user_id: string }
   | { type: 'template_added'; template_id: string }
   | { type: 'template_removed'; template_id: string }
+  | { type: 'unknown' } // For legacy or unknown activities
 
 export interface WorkspaceActivity {
   id: string
   workspace_id: string
   user_id: string
   action: string
-  details: WorkspaceActivityDetails | Record<string, unknown>
+  details: WorkspaceActivityDetails | Record<string, unknown> // Keep fallback for database compatibility
   created_at: string
   profiles?: {
     username?: string

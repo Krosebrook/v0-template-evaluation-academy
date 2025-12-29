@@ -49,15 +49,15 @@ export function WorkspaceTemplates({ templates, workspaceId, canManage }: Worksp
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-2">
-                <h3 className="text-xl font-semibold">{item.templates.title}</h3>
-                <Badge className={getStatusColor(item.templates.status)}>
-                  {item.templates.status}
+                <h3 className="text-xl font-semibold">{item.templates?.title || 'Untitled Template'}</h3>
+                <Badge className={getStatusColor(item.templates?.status || 'draft')}>
+                  {item.templates?.status || 'draft'}
                 </Badge>
               </div>
-              <p className="text-muted-foreground mb-3">{item.templates.description}</p>
+              <p className="text-muted-foreground mb-3">{item.templates?.description || 'No description'}</p>
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <span>
-                  Created {new Date(item.templates.created_at).toLocaleDateString()}
+                  Created {item.templates?.created_at ? new Date(item.templates.created_at).toLocaleDateString() : 'N/A'}
                 </span>
                 <span>
                   Added to workspace {new Date(item.added_at).toLocaleDateString()}
