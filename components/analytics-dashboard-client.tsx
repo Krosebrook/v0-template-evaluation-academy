@@ -27,17 +27,10 @@ import {
 import { AnalyticsChart } from "@/components/analytics-chart"
 import { TemplatePerformanceTable } from "@/components/template-performance-table"
 import { toast } from "sonner"
+import type { AnalyticsSummary } from "@/types/analytics"
 
 interface AnalyticsDashboardClientProps {
-  initialData: {
-    totalViews: number
-    totalGenerations: number
-    totalEngagement: number
-    creditsBalance: number
-    templates: any[]
-    analytics: any[]
-    subscription: any
-  }
+  initialData: AnalyticsSummary
 }
 
 export function AnalyticsDashboardClient({ initialData }: AnalyticsDashboardClientProps) {

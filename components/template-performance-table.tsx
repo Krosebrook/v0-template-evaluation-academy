@@ -3,10 +3,11 @@
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import Link from "next/link"
+import type { TemplateAnalytics, AnalyticsData } from "@/types/analytics"
 
 interface TemplatePerformanceTableProps {
-  templates: any[]
-  analytics: any[]
+  templates: TemplateAnalytics[]
+  analytics: AnalyticsData[]
 }
 
 export function TemplatePerformanceTable({ templates, analytics }: TemplatePerformanceTableProps) {

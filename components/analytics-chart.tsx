@@ -1,9 +1,10 @@
 "use client"
 
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
+import type { AnalyticsData } from "@/types/analytics"
 
 interface AnalyticsChartProps {
-  data: any[]
+  data: AnalyticsData[]
   type: "views-generations" | "engagement"
 }
 

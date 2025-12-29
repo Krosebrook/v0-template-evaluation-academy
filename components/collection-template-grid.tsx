@@ -92,19 +92,12 @@ export function CollectionTemplateGrid({ templates, collectionId, canManage }: C
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Link href={`/templates/${template.id}`} className="flex-1">
-              <Button variant="outline" size="sm" className="w-full">
-                <Eye className="h-4 w-4 mr-2" />
-                View
-              </Button>
-            </Link>
-            <Link href={`/templates/${template.id}`}>
-              <Button size="sm">
-                <ExternalLink className="h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
+          <Link href={`/templates/${template.id}`} className="w-full">
+            <Button variant="outline" size="sm" className="w-full">
+              <Eye className="h-4 w-4 mr-2" />
+              View Template
+            </Button>
+          </Link>
         </Card>
       ))}
     </div>

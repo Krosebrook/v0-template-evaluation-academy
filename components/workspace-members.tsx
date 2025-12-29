@@ -13,20 +13,10 @@ import {
 import { MoreVertical, UserX, Shield, Mail } from "lucide-react"
 import { removeFromWorkspace } from "@/app/actions/workspaces"
 import { toast } from "sonner"
-
-interface Member {
-  role: string
-  user_id: string
-  joined_at: string
-  profiles?: {
-    username?: string
-    avatar_url?: string
-    display_name?: string
-  }
-}
+import type { WorkspaceMember } from "@/types/workspace"
 
 interface WorkspaceMembersProps {
-  members: any[] | null
+  members: WorkspaceMember[] | null
   workspaceId: string
   currentUserRole: string
 }

@@ -68,7 +68,7 @@ export default async function WorkspaceDetailPage({ params }: PageProps) {
       joined_at,
       profiles:user_id(username, avatar_url, display_name)
     `)
-    .eq("workspace_id", id) as { data: any[] | null }
+    .eq("workspace_id", id)
 
   // Fetch workspace templates
   const { data: workspaceTemplates } = await supabase

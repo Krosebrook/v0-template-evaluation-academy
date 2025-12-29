@@ -5,20 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { FileText, Trash2, ExternalLink } from "lucide-react"
 import Link from "next/link"
-
-interface WorkspaceTemplate {
-  id: string
-  template_id: string
-  added_at: string
-  templates: {
-    id: string
-    title: string
-    description: string
-    author_id: string
-    created_at: string
-    status: string
-  }
-}
+import type { WorkspaceTemplate } from "@/types/workspace"
 
 interface WorkspaceTemplatesProps {
   templates: WorkspaceTemplate[] | null

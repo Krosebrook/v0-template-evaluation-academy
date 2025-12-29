@@ -26,12 +26,20 @@ export interface WorkspaceTemplate {
   }
 }
 
+// Discriminated union for different activity types
+export type WorkspaceActivityDetails =
+  | { type: 'workspace_created'; name: string }
+  | { type: 'member_invited'; email: string; role: string }
+  | { type: 'member_removed'; removed_user_id: string }
+  | { type: 'template_added'; template_id: string }
+  | { type: 'template_removed'; template_id: string }
+
 export interface WorkspaceActivity {
   id: string
   workspace_id: string
   user_id: string
   action: string
-  details: Record<string, any>
+  details: WorkspaceActivityDetails | Record<string, unknown>
   created_at: string
   profiles?: {
     username?: string
