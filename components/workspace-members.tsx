@@ -18,15 +18,15 @@ interface Member {
   role: string
   user_id: string
   joined_at: string
-  profiles: {
-    username: string
+  profiles?: {
+    username?: string
     avatar_url?: string
     display_name?: string
   }
 }
 
 interface WorkspaceMembersProps {
-  members: Member[] | null
+  members: any[] | null
   workspaceId: string
   currentUserRole: string
 }
