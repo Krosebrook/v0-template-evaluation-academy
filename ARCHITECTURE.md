@@ -165,7 +165,8 @@ External Client → API Route → Auth Check → Business Logic →
 
 - **React 19** - UI library
   - *Why:* Latest features, server components, concurrent rendering
-  - *Note:* Peer dependency mismatch with Next.js 14 (expects React 18)
+  - *Status:* Using React 19 (released December 2024)
+  - *Note:* Peer dependency mismatch with Next.js 14 (expects React 18) - will resolve with Next.js 15
 
 - **TypeScript 5** - Type safety
   - *Why:* Catch errors early, better IDE support, self-documenting code
