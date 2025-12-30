@@ -40,7 +40,7 @@ Gemini is Google's most capable AI model family, offering:
 ### Current Status: Planning Phase
 
 **Phase:** 📋 Design & Planning  
-**Expected Release:** Q3 2026  
+**Expected Release:** Q4 2026 (subject to Anthropic/Google roadmaps)  
 **Priority:** Medium
 
 **Status Overview:**

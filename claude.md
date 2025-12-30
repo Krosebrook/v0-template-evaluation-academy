@@ -558,10 +558,10 @@ Check this code for problems.
 - [ ] Collaborative skill editing
 
 #### Q2 2026
-- [ ] Integration with Claude Projects
+- [ ] Integration with Claude Projects (pending Anthropic API availability)
 - [ ] Real-time skill performance metrics
 - [ ] Automated skill optimization
-- [ ] Multi-model support (GPT-4, Gemini)
+- [ ] Multi-model support preparation (GPT-4, Gemini - dependent on respective API maturity)
 
 #### Q3 2026
 - [ ] Visual skill builder (no-code)

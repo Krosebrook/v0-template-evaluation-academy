@@ -1163,16 +1163,26 @@ Managed in Vercel dashboard:
 **Date:** 2025-Q4  
 **Decision:** Use React 19 (bleeding edge)
 
-**Context:** React 19 offers new features but creates peer dependency warnings.
+**Context:** React 19 offers new features but creates peer dependency warnings with Next.js 14.2.25.
 
-**Decision:** Accept peer dependency warnings for React 19 features.
+**Decision:** Accept peer dependency warnings for React 19 features, with planned resolution.
+
+**Rationale for React 19:**
+- React Server Components improvements (better streaming)
+- Enhanced Suspense boundaries
+- Improved hydration error messages
+- New `use()` hook for resource fetching
+- Better TypeScript integration
+- Performance improvements in concurrent rendering
 
 **Consequences:**
-- ✅ Latest React features
-- ✅ Better performance
-- ❌ Peer dependency warnings
-- ❌ Potential compatibility issues
-- 🔄 May need to downgrade to React 18 or upgrade Next.js to 15
+- ✅ Latest React features and performance improvements
+- ✅ Future-proofing (React 19 will be standard soon)
+- ✅ Better developer experience with improved error messages
+- ❌ Peer dependency warnings during installation
+- ❌ Potential compatibility issues (not observed yet)
+- 🔄 Resolution path: Upgrade to Next.js 15 when React 19 is officially supported (Expected Q1 2026)
+- ⚠️ Alternative: Downgrade to React 18 if critical issues arise
 
 ---
 

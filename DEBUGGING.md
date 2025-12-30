@@ -29,7 +29,7 @@
 **Affected Components:** Entire application
 
 **Description:**
-Next.js 14.2.25 expects React 18, but React 19 is installed, causing peer dependency warnings and potential compatibility issues.
+As of December 2025, Next.js 14.2.25 expects React 18, but React 19 is installed, causing peer dependency warnings and potential compatibility issues. This may resolve when Next.js 15 is released with official React 19 support.
 
 **Impact:**
 - npm/pnpm install shows warnings
